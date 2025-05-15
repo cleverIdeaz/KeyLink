@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>KeyLink Pure HTML/JS Demo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body { background: #222; color: #fff; font-family: sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; }
+    .row { display: flex; align-items: center; gap: 16px; margin-bottom: 32px; }
+    .bigbtn { border-radius: 10px; padding: 16px 32px; font-size: 36px; font-weight: 600; border: none; cursor: pointer; transition: background 0.2s; }
+    select, input[type=number] { font-size: 32px; border-radius: 8px; padding: 8px 16px; background: #333; color: #fff; border: none; }
+    .divider { width: 2px; height: 48px; background: #888; margin: 0 16px; }
+    .label { font-size: 24px; display: flex; align-items: center; gap: 8px; }
+    .status { margin-left: 32px; font-size: 18px; }
+    .log { background: #111; border-radius: 10px; padding: 24px; width: 600px; min-height: 120px; margin-top: 16px; font-size: 16px; overflow-y: auto; max-height: 200px; }
+    .log-title { color: #F5C242; font-weight: 600; margin-bottom: 8px; }
+    .log-entry { color: #ccc; margin-bottom: 4px; }
+    .log-time { color: #888; margin-right: 8px; }
+  </style>
+</head>
+<body>
+  <div class="row">
+    <button id="keylinkToggle" class="bigbtn" style="background:#F5C242;">KeyLink</button>
+    <select id="root"></select>
+    <select id="mode"></select>
+    <div class="divider"></div>
+    <button id="linkToggle" class="bigbtn" style="background:#888;">Link</button>
+    <input type="number" id="tempo" min="40" max="240" value="120" style="margin-left:8px; width:120px;" />
+  </div>
+  <div class="row">
+    <button id="chordLinkToggle" class="bigbtn" style="background:#F5C242;">ChordLink</button>
+    <select id="chordRoot"></select>
+    <select id="chordType"></select>
+    <span id="status" class="status" style="color:#f55;">Disconnected</span>
+  </div>
+  <div class="log">
+    <div class="log-title">Network Activity</div>
+    <div id="log"></div>
+  </div>
+  <script>
+    const ROOTS = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+    const MODES = ['Ionian', 'Dorian', 'Phrygian', 'Lydian', 'Mixolydian', 'Aeolian', 'Locrian'];
+    const CHORD_TYPES = ['maj', 'min', '7', 'maj7', 'min7', 'dim', 'aug', 'sus2', 'sus4', 'none'];
+
+    // Populate selects
+    const rootSel = document.getElementById('root');
+    ROOTS.forEach(r => { let o = document.createElement('option'); o.value = o.text = r; rootSel.appendChild(o); });
+    const modeSel = document.getElementById('mode');
+    MODES.forEach(m => { let o = document.createElement('option'); o.value = o.text = m; modeSel.appendChild(o); });
+
+    const chordRootSel = document.getElementById('chordRoot');
+    ROOTS.forEach(r => { let o = document.createElement('option'); o.value = o.text = r; chordRootSel.appendChild(o); });
+    const chordTypeSel = document.getElementById('chordType');
+    CHORD_TYPES.forEach(c => {
+      let o = document.createElement('option');
+      o.value = c;
+      o.text = c === 'none' ? '(no chord)' : c;
+      chordTypeSel.appendChild(o);
+    });
+
+    // State
+    let keylinkOn = true;
+    let linkOn = false;
+    let chordLinkOn = true;
+    let ws;
+    let logDiv = document.getElementById('log');
+    let state = {
+      root: rootSel.value,
+      mode: modeSel.value,
+      keylinkEnabled: keylinkOn,
+      abletonLinkEnabled: linkOn,
+      tempo: 120,
+      source: 'web-html-demo',
+      timestamp: Date.now()
+    };
+
+    // UI elements
+    const keylinkBtn = document.getElementById('keylinkToggle');
+    const linkBtn = document.getElementById('linkToggle');
+    const tempoInput = document.getElementById('tempo');
+    const chordLinkBtn = document.getElementById('chordLinkToggle');
+
+    // Toggle logic
+    keylinkBtn.onclick = () => {
+      keylinkOn = !keylinkOn;
+      keylinkBtn.style.background = keylinkOn ? '#F5C242' : '#888';
+      state.keylinkEnabled = keylinkOn;
+      sendState();
+    };
+    linkBtn.onclick = () => {
+      linkOn = !linkOn;
+      linkBtn.style.background = linkOn ? '#F5C242' : '#888';
+      state.abletonLinkEnabled = linkOn;
+      sendState();
+    };
+    chordLinkBtn.onclick = () => {
+      chordLinkOn = !chordLinkOn;
+      chordLinkBtn.style.background = chordLinkOn ? '#F5C242' : '#888';
+      chordRootSel.disabled = chordTypeSel.disabled = !chordLinkOn;
+      sendState();
+    };
+    chordRootSel.disabled = chordTypeSel.disabled = !chordLinkOn;
+
+    // UI events
+    rootSel.onchange = () => { state.root = rootSel.value; sendState(); };
+    modeSel.onchange = () => { state.mode = modeSel.value; sendState(); };
+    chordRootSel.onchange = sendState;
+    chordTypeSel.onchange = sendState;
+    tempoInput.oninput = e => { state.tempo = Number(e.target.value) || 120; sendState(); };
+
+    // WebSocket
+    function log(msg) {
+      let d = document.createElement('div');
+      d.className = 'log-entry';
+      d.innerHTML = `<span class='log-time'>${new Date().toLocaleTimeString()}</span>${msg}`;
+      logDiv.insertBefore(d, logDiv.firstChild);
+      while (logDiv.childNodes.length > 100) logDiv.removeChild(logDiv.lastChild);
+    }
+    function setStatus(connected) {
+      let s = document.getElementById('status');
+      s.textContent = connected ? 'Connected' : 'Disconnected';
+      s.style.color = connected ? '#0f0' : '#f55';
+    }
+    function sendState() {
+      if (ws && ws.readyState === 1) {
+        state.timestamp = Date.now();
+        let msg = {
+          root: state.root,
+          mode: state.mode,
+          keylinkEnabled: keylinkOn,
+          abletonLinkEnabled: linkOn,
+          tempo: state.tempo,
+          source: state.source,
+          timestamp: state.timestamp
+        };
+        if (chordLinkOn && chordTypeSel.value !== 'none') {
+          msg.chord = {
+            root: chordRootSel.value,
+            type: chordTypeSel.value
+          };
+        }
+        if (keylinkOn || linkOn) {
+          ws.send(JSON.stringify(msg));
+        }
+      }
+    }
+    function connectWS() {
+      ws = new WebSocket('ws://localhost:20801');
+      ws.onopen = () => { setStatus(true); sendState(); };
+      ws.onclose = () => { setStatus(false); setTimeout(connectWS, 2000); };
+      ws.onmessage = e => {
+        try {
+          const msg = JSON.parse(e.data);
+          if (msg.source !== state.source) {
+            log('Received: ' + JSON.stringify(msg));
+            // Update KeyLink state
+            if (msg.keylinkEnabled) {
+              if (msg.root && rootSel.value !== msg.root) {
+                rootSel.value = msg.root;
+                state.root = msg.root;
+              }
+              if (msg.mode && modeSel.value !== msg.mode) {
+                modeSel.value = msg.mode;
+                state.mode = msg.mode;
+              }
+            }
+            // Update ChordLink state
+            if (msg.chord && chordLinkOn) {
+              if (msg.chord.root && chordRootSel.value !== msg.chord.root) chordRootSel.value = msg.chord.root;
+              if (msg.chord.type && chordTypeSel.value !== msg.chord.type) chordTypeSel.value = msg.chord.type;
+            }
+            // Update tempo if present
+            if (msg.tempo && tempoInput.value != msg.tempo) tempoInput.value = msg.tempo;
+          }
+        } catch {}
+      };
+    }
+    connectWS();
+  </script>
+</body>
+</html> 
