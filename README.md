@@ -4,6 +4,15 @@
 
 ---
 
+**Open Source License & Attribution**
+
+KeyLink is released as open source software and is freely available for use, modification, and distribution under the terms of its license. 
+
+**Attribution:**
+KeyLink was created and is maintained by Neal Anderson. Please credit Neal Anderson in any derivative works, publications, or presentations that use or build upon this project.
+
+---
+
 ## Protocol Overview
 
 - **Transport:**
