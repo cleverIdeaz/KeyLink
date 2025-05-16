@@ -4,7 +4,13 @@ import React, { useEffect, useRef, useState } from 'react';
 // Connects to relay server via WebSocket and syncs with LAN/Max/MSP/Node
 // Uses the KeyLink protocol (see README.md)
 
-const WS_URL = 'ws://localhost:20801'; // Change to your relay server URL for production
+const LAN_WS_URLS = [
+  'ws://localhost:20801',
+  'ws://192.168.1.1:20801',
+  'ws://192.168.0.1:20801',
+  'ws://10.0.0.1:20801',
+];
+const WAN_WS_URL = 'wss://your-wan-relay.example.com'; // Set your WAN relay URL here
 
 const ROOTS = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
 const MODES = ['Ionian', 'Dorian', 'Phrygian', 'Lydian', 'Mixolydian', 'Aeolian', 'Locrian'];
@@ -14,8 +20,25 @@ function now() {
   return new Date().toLocaleTimeString();
 }
 
+async function tryConnect(urls: string[]): Promise<string | null> {
+  for (const url of urls) {
+    try {
+      const ws = new window.WebSocket(url);
+      await new Promise<void>((resolve, reject) => {
+        ws.onopen = () => { ws.close(); resolve(); };
+        ws.onerror = () => { reject(undefined); };
+      });
+      return url;
+    } catch {}
+  }
+  return null;
+}
+
 export default function App() {
   // UI state
+  const [relayUrl, setRelayUrl] = useState<string | null>(null);
+  const [manualUrl, setManualUrl] = useState('');
+  const [showAdvanced, setShowAdvanced] = useState(false);
   const [room, setRoom] = useState('');
   const [roomInput, setRoomInput] = useState('');
   const [root, setRoot] = useState('C');
@@ -34,13 +57,26 @@ export default function App() {
   // Log helper
   const addLog = (msg: string) => setLog(l => [{ time: now(), msg }, ...l.slice(0, 99)]);
 
+  // On mount, try to connect to LAN relay
+  useEffect(() => {
+    (async () => {
+      const url = await tryConnect(LAN_WS_URLS);
+      if (url) {
+        setRelayUrl(url);
+        setStatus('Connected to LAN relay');
+      } else {
+        setStatus('No LAN relay found');
+      }
+    })();
+  }, []);
+
   // WebSocket connection
   useEffect(() => {
-    if (!room) return;
+    if (!relayUrl || !room) return;
     function connect() {
-      ws.current = new window.WebSocket(WS_URL);
+      ws.current = new window.WebSocket(relayUrl);
       ws.current.onopen = () => {
-        setStatus('Connected');
+        setStatus(relayUrl === WAN_WS_URL ? 'Connected to WAN relay' : 'Connected to LAN relay');
         addLog('WebSocket connected');
         // Send initial state
         if (ws.current && ws.current.readyState === 1) {
@@ -92,7 +128,7 @@ export default function App() {
     connect();
     return () => { ws.current?.close(); };
     // eslint-disable-next-line
-  }, [room]);
+  }, [relayUrl, room]);
 
   // UI event handlers
   const handleKeylinkToggle = () => { setKeylinkOn(on => { setTimeout(() => {}, 0); return !on; }); };
@@ -224,6 +260,41 @@ export default function App() {
             ))}
           </div>
         </div>
+      </div>
+      {/* Room/session controls and status */}
+      <div>
+        <div>Status: {status}</div>
+        {status === 'No LAN relay found' && (
+          <div>
+            <input
+              type="text"
+              placeholder="Enter LAN relay ws://... or leave blank for WAN"
+              value={manualUrl}
+              onChange={e => setManualUrl(e.target.value)}
+            />
+            <button onClick={() => setRelayUrl(manualUrl || WAN_WS_URL)}>
+              {manualUrl ? 'Connect to LAN relay' : 'Connect to WAN relay'}
+            </button>
+          </div>
+        )}
+      </div>
+      {/* Advanced/dev features toggle */}
+      <div>
+        <button onClick={() => setShowAdvanced(a => !a)}>
+          {showAdvanced ? 'Hide Advanced' : 'Show Advanced'}
+        </button>
+        {showAdvanced && (
+          <div>
+            <div>Network Activity</div>
+            <div style={{ maxHeight: 200, overflowY: 'auto' }}>
+              {log.map((entry, i) => (
+                <div key={i} style={{ color: '#ccc', marginBottom: 4 }}>
+                  <span style={{ color: '#888', marginRight: 8 }}>{entry.time}</span>{entry.msg}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
