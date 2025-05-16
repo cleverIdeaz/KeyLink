@@ -27,7 +27,6 @@ export default function App() {
   const [chordRoot, setChordRoot] = useState('C');
   const [chordType, setChordType] = useState('maj');
   const [status, setStatus] = useState('Disconnected');
-  const [connected, setConnected] = useState(false);
   const [log, setLog] = useState<{ time: string; msg: string }[]>([]);
   const ws = useRef<WebSocket | null>(null);
   const source = useRef('web-react-demo-' + Math.random().toString(36).slice(2));
@@ -41,7 +40,6 @@ export default function App() {
     function connect() {
       ws.current = new window.WebSocket(WS_URL);
       ws.current.onopen = () => {
-        setConnected(true);
         setStatus('Connected');
         addLog('WebSocket connected');
         // Send initial state
@@ -65,7 +63,6 @@ export default function App() {
         }
       };
       ws.current.onclose = () => {
-        setConnected(false);
         setStatus('Disconnected');
         addLog('WebSocket disconnected');
         setTimeout(connect, 2000);
@@ -194,7 +191,7 @@ export default function App() {
         ) : (
           <button
             style={{ ...styles.bigbtn(false), fontSize: 22, minWidth: 80, padding: '8px 16px', background: '#888' }}
-            onClick={() => { setRoom(''); setRoomInput(''); setConnected(false); setStatus('Disconnected'); }}
+            onClick={() => { setRoom(''); setRoomInput(''); }}
           >
             Leave
           </button>

@@ -6,6 +6,10 @@
 
 **KeyLink** is a universal, open-source protocol and SDK for sharing tonal information (key, mode, chord, etc.) across music apps and devices on a local network. It is designed to be the *tonal* counterpart to Ableton Link, but is a completely independent protocol and library. Developers can use KeyLink and Ableton Link together or independently, depending on their needs.
 
+## Why KeyLink? (A Real-World Scenario)
+
+Imagine a modern music collaboration: a composer is writing in Sibelius, a producer is building tracks in Ableton Live, someone else is live-sequencing on an OP-1, and another participant is generating music with an AI tool like Lemonaide, Udio, or Suno. They all want to work together, ensuring that every part—human or machine—stays in the same key and mode. Tempo sync is easy with Ableton Link, but there's no universal way to share key signature and harmonic context across all these platforms. KeyLink fills this gap, providing a simple, open protocol for sharing tonal information in real time, so every participant and every app can stay harmonically connected. This is the missing link for truly collaborative, cross-platform, and AI-integrated music creation.
+
 ---
 
 ## Table of Contents
@@ -21,6 +25,7 @@
 - [Why JSON? Why Not MIDI 2.0 or Integer Indexes?](#why-json-why-not-midi-20-or-integer-indexes)
 - [MIDI Integration and Toolkit Roadmap](#midi-integration-and-toolkit-roadmap)
 - [FAQ: Why Not Just Use MIDI?](#faq-why-not-just-use-midi)
+- [Collaborative Tonal and Temporal Control](#collaborative-tonal-and-temporal-control)
 - [License](#license)
 
 ---
@@ -206,6 +211,12 @@ KeyLink will provide a toolkit with utilities for:
 ## FAQ: Why Not Just Use MIDI?
 
 KeyLink is designed for LAN multiplayer sessions and recursive, multi-client control of key signatures, modes, and chords. MIDI 2.0 is great for device-to-device communication, but is not as flexible or easy to extend for modern, cross-platform, and web-based music tech. KeyLink offers a simple, comprehensive solution for these scenarios, with planned utilities for MIDI integration and audio/MIDI transposition.
+
+---
+
+## Collaborative Tonal and Temporal Control
+
+KeyLink is designed to encourage musicians and musical machines to collaborate and work together to find common musical goals. By sharing key, mode, chord, and tempo information in real time, KeyLink enables recursive control across all connected clients—whether human or algorithmic. This allows for dynamic, decentralized negotiation of tonal centers and harmonic context, fostering a new kind of musical interaction where all participants can influence and respond to the evolving musical environment. Temporal synchronization is supported via Ableton Link integration, ensuring that both timing and tonality can be shared and controlled collaboratively across the network.
 
 ---
 
