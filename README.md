@@ -159,5 +159,42 @@ kl.send({ root: 'C', mode: 'Dorian', keylinkEnabled: true });
 
 ---
 
+## Why JSON? Why Not MIDI 2.0 or Integer Indexes?
+
+KeyLink uses a human-readable JSON protocol for all network messages, rather than MIDI 2.0 UMP or integer-indexed OSC protocols. This is a deliberate choice for several reasons:
+
+- **Extensibility:** JSON allows for easy addition of new fields (e.g., microtonality, user tags, confidence, etc.) without breaking compatibility.
+- **Human-Readable:** Debugging, logging, and integration with web/mobile/modern apps is much easier with JSON.
+- **Flexible Vocabulary:** Supports arbitrary roots, modes, chords, and custom/experimental values, not just those in the MIDI spec.
+- **Interoperability:** JSON can be mapped to/from MIDI 2.0 UMP, OSC, or any other protocol as needed. We will provide utilities for this in the toolkit.
+- **Community-Friendly:** Easier for contributors and users to extend, adapt, and build upon.
+
+While MIDI 2.0 UMP is a powerful standard for device-to-device communication, it is binary, less flexible, and not as easy to use for rapid prototyping, web/mobile, or cross-platform development. KeyLink is designed to be a superset that can interoperate with MIDI 2.0, but is much easier to use and extend for modern music tech workflows.
+
+---
+
+## MIDI Integration and Toolkit Roadmap
+
+KeyLink will provide a toolkit with utilities for:
+- **MIDI Input/Output:** Mapping KeyLink JSON messages to and from MIDI 2.0 UMP and MIDI 1.0 messages.
+- **Audio/MIDI Transposition:** Functions to transpose audio or MIDI clips when changing key/mode/chord, e.g.:
+  - C Major to D Major: +2 semitones
+  - C Major to A minor: 0 semitones (relative minor)
+  - C Major to B minor: +2 semitones
+- **OSC/UDP Support:** Optional mapping to integer-indexed OSC for legacy/embedded/ultra-low-latency use.
+- **Max/MSP, Web, Node, and React Demos:** Each platform will have a simple, rock-solid demo showing:
+  - Ableton Link tempo sync
+  - KeyLink key signature/mode assignment
+  - Chord selection and sharing
+  - Recursive network control (all clients update in real time)
+
+---
+
+## FAQ: Why Not Just Use MIDI?
+
+KeyLink is designed for LAN multiplayer sessions and recursive, multi-client control of key signatures, modes, and chords. MIDI 2.0 is great for device-to-device communication, but is not as flexible or easy to extend for modern, cross-platform, and web-based music tech. KeyLink offers a simple, comprehensive solution for these scenarios, with planned utilities for MIDI integration and audio/MIDI transposition.
+
+---
+
 ## License
 MIT 
