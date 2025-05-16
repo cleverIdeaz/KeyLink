@@ -11,6 +11,9 @@ const LAN_WS_URLS = [
   'ws://10.0.0.1:20801',
 ];
 const WAN_WS_URL = 'wss://your-wan-relay.example.com'; // Set your WAN relay URL here
+const MAX_RETRIES = 3;
+
+type ConnectionState = 'disconnected' | 'connecting' | 'connected' | 'error';
 
 const ROOTS = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
 const MODES = ['Ionian', 'Dorian', 'Phrygian', 'Lydian', 'Mixolydian', 'Aeolian', 'Locrian'];
@@ -26,10 +29,13 @@ async function tryConnect(urls: string[]): Promise<string | null> {
       const ws = new window.WebSocket(url);
       await new Promise<void>((resolve, reject) => {
         ws.onopen = () => { ws.close(); resolve(); };
-        ws.onerror = () => { reject(undefined); };
+        ws.onerror = () => { reject(new Error('Connection failed')); };
+        setTimeout(() => reject(new Error('Timeout')), 2000);
       });
       return url;
-    } catch {}
+    } catch (e: any) {
+      console.debug(`Connection to ${url} failed: ${e.message}`);
+    }
   }
   return null;
 }
@@ -50,9 +56,11 @@ export default function App() {
   const [chordRoot, setChordRoot] = useState('C');
   const [chordType, setChordType] = useState('maj');
   const [status, setStatus] = useState('Disconnected');
+  const [connectionState, setConnectionState] = useState<ConnectionState>('disconnected');
   const [log, setLog] = useState<{ time: string; msg: string }[]>([]);
   const ws = useRef<WebSocket | null>(null);
   const source = useRef('web-react-demo-' + Math.random().toString(36).slice(2));
+  const retryCount = useRef(0);
 
   // Log helper
   const addLog = (msg: string) => setLog(l => [{ time: now(), msg }, ...l.slice(0, 99)]);
@@ -60,12 +68,15 @@ export default function App() {
   // On mount, try to connect to LAN relay
   useEffect(() => {
     (async () => {
+      setConnectionState('connecting');
       const url = await tryConnect(LAN_WS_URLS);
       if (url) {
         setRelayUrl(url);
         setStatus('Connected to LAN relay');
+        setConnectionState('connected');
       } else {
         setStatus('No LAN relay found');
+        setConnectionState('disconnected');
       }
     })();
   }, []);
@@ -73,10 +84,20 @@ export default function App() {
   // WebSocket connection
   useEffect(() => {
     if (!relayUrl || !room) return;
+    if (typeof relayUrl !== 'string') return; // Type guard
+    let localRetry = 0;
+    setConnectionState('connecting');
     function connect() {
-      ws.current = new window.WebSocket(relayUrl);
+      if (localRetry >= MAX_RETRIES) {
+        setConnectionState('error');
+        setStatus('Connection error: retry limit reached');
+        addLog('Connection error: retry limit reached');
+        return;
+      }
+      ws.current = new window.WebSocket(relayUrl as string);
       ws.current.onopen = () => {
         setStatus(relayUrl === WAN_WS_URL ? 'Connected to WAN relay' : 'Connected to LAN relay');
+        setConnectionState('connected');
         addLog('WebSocket connected');
         // Send initial state
         if (ws.current && ws.current.readyState === 1) {
@@ -100,8 +121,15 @@ export default function App() {
       };
       ws.current.onclose = () => {
         setStatus('Disconnected');
+        setConnectionState('disconnected');
         addLog('WebSocket disconnected');
+        localRetry++;
         setTimeout(connect, 2000);
+      };
+      ws.current.onerror = () => {
+        setConnectionState('error');
+        setStatus('Connection error');
+        addLog('WebSocket connection error');
       };
       ws.current.onmessage = e => {
         try {

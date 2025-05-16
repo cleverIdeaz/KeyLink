@@ -10,7 +10,7 @@
 		}
 ,
 		"classnamespace" : "box",
-		"rect" : [ 34.0, 87.0, 1067.0, 735.0 ],
+		"rect" : [ 34.0, 87.0, 1067.0, 734.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 13.0,
@@ -367,6 +367,8 @@
 					"outlettype" : [ "int", "", "" ],
 					"parameter_enable" : 0,
 					"patching_rect" : [ 102.0, 42.0, 100.0, 23.0 ],
+					"presentation" : 1,
+					"presentation_rect" : [ 102.0, 42.0, 100.0, 23.0 ],
 					"style" : "rnbohighcontrast"
 				}
 
@@ -381,6 +383,8 @@
 					"outlettype" : [ "int", "", "" ],
 					"parameter_enable" : 0,
 					"patching_rect" : [ 102.0, 16.0, 100.0, 23.0 ],
+					"presentation" : 1,
+					"presentation_rect" : [ 102.0, 16.0, 100.0, 23.0 ],
 					"style" : "rnbohighcontrast"
 				}
 
@@ -395,6 +399,8 @@
 					"outlettype" : [ "", "float" ],
 					"parameter_enable" : 1,
 					"patching_rect" : [ 307.0, 18.0, 50.0, 18.0 ],
+					"presentation" : 1,
+					"presentation_rect" : [ 307.0, 18.0, 50.0, 18.0 ],
 					"saved_attribute_attributes" : 					{
 						"valueof" : 						{
 							"parameter_enum" : [ "0", "1" ],
@@ -421,6 +427,8 @@
 					"outlettype" : [ "", "" ],
 					"parameter_enable" : 1,
 					"patching_rect" : [ 243.0, 17.0, 62.068968772888184, 20.689656257629395 ],
+					"presentation" : 1,
+					"presentation_rect" : [ 243.0, 17.0, 62.068968772888184, 20.689656257629395 ],
 					"rounded" : 5.0,
 					"saved_attribute_attributes" : 					{
 						"valueof" : 						{
@@ -449,6 +457,8 @@
 					"outlettype" : [ "", "" ],
 					"parameter_enable" : 1,
 					"patching_rect" : [ 38.0, 43.0, 62.068968772888184, 20.689656257629395 ],
+					"presentation" : 1,
+					"presentation_rect" : [ 38.0, 43.0, 62.068968772888184, 20.689656257629395 ],
 					"rounded" : 8.0,
 					"saved_attribute_attributes" : 					{
 						"valueof" : 						{
@@ -477,6 +487,8 @@
 					"outlettype" : [ "", "" ],
 					"parameter_enable" : 1,
 					"patching_rect" : [ 37.0, 17.0, 62.068968772888184, 20.689656257629395 ],
+					"presentation" : 1,
+					"presentation_rect" : [ 37.0, 17.0, 62.068968772888184, 20.689656257629395 ],
 					"rounded" : 8.0,
 					"saved_attribute_attributes" : 					{
 						"valueof" : 						{
