@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState } from 'react';
 // Connects to relay server via WebSocket and syncs with LAN/Max/MSP/Node
 // Uses the KeyLink protocol (see README.md)
 
-const WS_URL = 'ws://localhost:20801'; // Relay server WebSocket URL
+const WS_URL = 'ws://localhost:20801'; // Change to your relay server URL for production
 
 const ROOTS = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
 const MODES = ['Ionian', 'Dorian', 'Phrygian', 'Lydian', 'Mixolydian', 'Aeolian', 'Locrian'];
@@ -16,6 +16,8 @@ function now() {
 
 export default function App() {
   // UI state
+  const [room, setRoom] = useState('');
+  const [roomInput, setRoomInput] = useState('');
   const [root, setRoot] = useState('C');
   const [mode, setMode] = useState('Ionian');
   const [keylinkOn, setKeylinkOn] = useState(true);
@@ -35,6 +37,7 @@ export default function App() {
 
   // WebSocket connection
   useEffect(() => {
+    if (!room) return;
     function connect() {
       ws.current = new window.WebSocket(WS_URL);
       ws.current.onopen = () => {
@@ -44,6 +47,7 @@ export default function App() {
         // Send initial state
         if (ws.current && ws.current.readyState === 1) {
           const msg: any = {
+            room,
             root,
             mode,
             keylinkEnabled: keylinkOn,
@@ -69,6 +73,7 @@ export default function App() {
       ws.current.onmessage = e => {
         try {
           const msg = JSON.parse(e.data);
+          if (msg.room !== room) return; // Only process messages for this room
           if (msg.source !== source.current) {
             addLog('Received: ' + JSON.stringify(msg));
             // Update KeyLink state
@@ -90,7 +95,7 @@ export default function App() {
     connect();
     return () => { ws.current?.close(); };
     // eslint-disable-next-line
-  }, []);
+  }, [room]);
 
   // UI event handlers
   const handleKeylinkToggle = () => { setKeylinkOn(on => { setTimeout(() => {}, 0); return !on; }); };
@@ -104,8 +109,9 @@ export default function App() {
 
   // Send state on relevant changes
   useEffect(() => {
-    if (ws.current && ws.current.readyState === 1) {
+    if (ws.current && ws.current.readyState === 1 && room) {
       const msg: any = {
+        room,
         root,
         mode,
         keylinkEnabled: keylinkOn,
@@ -121,33 +127,105 @@ export default function App() {
         ws.current.send(JSON.stringify(msg));
       }
     }
-  }, [root, mode, keylinkOn, linkOn, tempo, chordLinkOn, chordRoot, chordType]);
+  }, [root, mode, keylinkOn, linkOn, tempo, chordLinkOn, chordRoot, chordType, room]);
 
-  // UI
+  // Responsive styles
+  const styles = {
+    container: {
+      background: '#222', color: '#fff', minHeight: '100vh', fontFamily: 'sans-serif',
+      display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-start',
+      padding: '0', width: '100vw', boxSizing: 'border-box',
+    },
+    roomBar: {
+      width: '100%', maxWidth: 600, display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
+      gap: 12, margin: '32px 0 16px 0', padding: '0 8px',
+    },
+    mainPanel: {
+      display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16, width: '100%', maxWidth: 600,
+    },
+    row: {
+      display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 16, marginBottom: 24, width: '100%', justifyContent: 'center',
+    },
+    log: {
+      background: '#111', borderRadius: 10, padding: 16, width: '100%', minHeight: 100, marginTop: 8, fontSize: 16, overflowY: 'auto', maxHeight: 200,
+    },
+    status: {
+      marginLeft: 16, fontSize: 18, color: connected ? '#0f0' : '#f55',
+    },
+    bigbtn: (active: boolean) => ({
+      borderRadius: 10, padding: '12px 24px', fontSize: 28, fontWeight: 600, border: 'none', cursor: 'pointer', background: active ? '#F5C242' : '#888', transition: 'background 0.2s',
+      minWidth: 120,
+    }),
+    select: { fontSize: 24, borderRadius: 8, padding: '8px 16px', background: '#333', color: '#fff', border: 'none' },
+    input: { fontSize: 24, borderRadius: 8, padding: '8px 16px', background: '#333', color: '#fff', border: 'none', width: 120 },
+    divider: { width: 2, height: 40, background: '#888', margin: '0 12px' },
+    '@media (maxWidth: 700px)': {
+      container: { padding: 0 },
+      mainPanel: { maxWidth: '100vw', padding: 0 },
+      row: { flexDirection: 'column', gap: 10, marginBottom: 16 },
+      log: { width: '98vw', maxWidth: '98vw', fontSize: 14 },
+      roomBar: { flexDirection: 'column', gap: 8, maxWidth: '98vw' },
+    },
+  };
+
+  // Responsive media query (simple JS approach)
+  const isMobile = window.innerWidth < 700;
+
   return (
-    <div style={{ background: '#222', color: '#fff', minHeight: '100vh', fontFamily: 'sans-serif', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 32 }}>
-        <button onClick={handleKeylinkToggle} className="bigbtn" style={{ borderRadius: 10, padding: '16px 32px', fontSize: 36, fontWeight: 600, border: 'none', cursor: 'pointer', background: keylinkOn ? '#F5C242' : '#888', transition: 'background 0.2s' }}>KeyLink</button>
-        <select value={root} onChange={handleRoot} style={{ fontSize: 32, borderRadius: 8, padding: '8px 16px', background: '#333', color: '#fff', border: 'none' }}>{ROOTS.map(r => <option key={r} value={r}>{r}</option>)}</select>
-        <select value={mode} onChange={handleMode} style={{ fontSize: 32, borderRadius: 8, padding: '8px 16px', background: '#333', color: '#fff', border: 'none' }}>{MODES.map(m => <option key={m} value={m}>{m}</option>)}</select>
-        <div style={{ width: 2, height: 48, background: '#888', margin: '0 16px' }} />
-        <button onClick={handleLinkToggle} className="bigbtn" style={{ borderRadius: 10, padding: '16px 32px', fontSize: 36, fontWeight: 600, border: 'none', cursor: 'pointer', background: linkOn ? '#F5C242' : '#888', transition: 'background 0.2s' }}>Link</button>
-        <input type="number" min={40} max={240} value={tempo} onChange={handleTempo} style={{ marginLeft: 8, width: 120, fontSize: 32, borderRadius: 8, padding: '8px 16px', background: '#333', color: '#fff', border: 'none' }} />
+    <div style={{ ...styles.container, ...(isMobile ? styles['@media (maxWidth: 700px)'].container : {}) }}>
+      {/* Room/session input bar */}
+      <div style={{ ...styles.roomBar, ...(isMobile ? styles['@media (maxWidth: 700px)'].roomBar : {}) }}>
+        <input
+          type="text"
+          placeholder="Enter room/session name"
+          value={roomInput}
+          onChange={e => setRoomInput(e.target.value)}
+          style={{ ...styles.input, width: isMobile ? '70vw' : 220 }}
+          disabled={!!room}
+        />
+        {!room ? (
+          <button
+            style={{ ...styles.bigbtn(true), fontSize: 22, minWidth: 80, padding: '8px 16px' }}
+            onClick={() => setRoom(roomInput.trim() || 'default')}
+            disabled={!roomInput.trim()}
+          >
+            Join
+          </button>
+        ) : (
+          <button
+            style={{ ...styles.bigbtn(false), fontSize: 22, minWidth: 80, padding: '8px 16px', background: '#888' }}
+            onClick={() => { setRoom(''); setRoomInput(''); setConnected(false); setStatus('Disconnected'); }}
+          >
+            Leave
+          </button>
+        )}
+        {room && <span style={{ marginLeft: 12, fontSize: 18, color: '#F5C242' }}>Room: <b>{room}</b></span>}
       </div>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 32 }}>
-        <button onClick={handleChordLinkToggle} className="bigbtn" style={{ borderRadius: 10, padding: '16px 32px', fontSize: 36, fontWeight: 600, border: 'none', cursor: 'pointer', background: chordLinkOn ? '#F5C242' : '#888', transition: 'background 0.2s' }}>ChordLink</button>
-        <select value={chordRoot} onChange={handleChordRoot} disabled={!chordLinkOn} style={{ fontSize: 32, borderRadius: 8, padding: '8px 16px', background: '#333', color: '#fff', border: 'none' }}>{ROOTS.map(r => <option key={r} value={r}>{r}</option>)}</select>
-        <select value={chordType} onChange={handleChordType} disabled={!chordLinkOn} style={{ fontSize: 32, borderRadius: 8, padding: '8px 16px', background: '#333', color: '#fff', border: 'none' }}>{CHORD_TYPES.map(c => <option key={c} value={c}>{c === 'none' ? '(no chord)' : c}</option>)}</select>
-        <span style={{ marginLeft: 32, fontSize: 18, color: connected ? '#0f0' : '#f55' }}>{status}</span>
-      </div>
-      <div style={{ background: '#111', borderRadius: 10, padding: 24, width: 600, minHeight: 120, marginTop: 16, fontSize: 16, overflowY: 'auto', maxHeight: 200 }}>
-        <div style={{ color: '#F5C242', fontWeight: 600, marginBottom: 8 }}>Network Activity</div>
-        <div>
-          {log.map((entry, i) => (
-            <div key={i} style={{ color: '#ccc', marginBottom: 4 }}>
-              <span style={{ color: '#888', marginRight: 8 }}>{entry.time}</span>{entry.msg}
-            </div>
-          ))}
+      {/* Main control panel */}
+      <div style={{ ...styles.mainPanel, ...(isMobile ? styles['@media (maxWidth: 700px)'].mainPanel : {}) }}>
+        <div style={{ ...styles.row, ...(isMobile ? styles['@media (maxWidth: 700px)'].row : {}) }}>
+          <button onClick={handleKeylinkToggle} className="bigbtn" style={styles.bigbtn(keylinkOn)}>KeyLink</button>
+          <select value={root} onChange={handleRoot} style={styles.select}>{ROOTS.map(r => <option key={r} value={r}>{r}</option>)}</select>
+          <select value={mode} onChange={handleMode} style={styles.select}>{MODES.map(m => <option key={m} value={m}>{m}</option>)}</select>
+          <div style={styles.divider} />
+          <button onClick={handleLinkToggle} className="bigbtn" style={styles.bigbtn(linkOn)}>Link</button>
+          <input type="number" min={40} max={240} value={tempo} onChange={handleTempo} style={{ ...styles.input, width: 80, marginLeft: 8 }} />
+        </div>
+        <div style={{ ...styles.row, ...(isMobile ? styles['@media (maxWidth: 700px)'].row : {}) }}>
+          <button onClick={handleChordLinkToggle} className="bigbtn" style={styles.bigbtn(chordLinkOn)}>ChordLink</button>
+          <select value={chordRoot} onChange={handleChordRoot} disabled={!chordLinkOn} style={styles.select}>{ROOTS.map(r => <option key={r} value={r}>{r}</option>)}</select>
+          <select value={chordType} onChange={handleChordType} disabled={!chordLinkOn} style={styles.select}>{CHORD_TYPES.map(c => <option key={c} value={c}>{c === 'none' ? '(no chord)' : c}</option>)}</select>
+          <span style={styles.status}>{status}</span>
+        </div>
+        <div style={{ ...styles.log, ...(isMobile ? styles['@media (maxWidth: 700px)'].log : {}) }}>
+          <div style={{ color: '#F5C242', fontWeight: 600, marginBottom: 8 }}>Network Activity</div>
+          <div>
+            {log.map((entry, i) => (
+              <div key={i} style={{ color: '#ccc', marginBottom: 4 }}>
+                <span style={{ color: '#888', marginRight: 8 }}>{entry.time}</span>{entry.msg}
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>
