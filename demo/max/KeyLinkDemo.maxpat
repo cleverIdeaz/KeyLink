@@ -40,12 +40,37 @@
 		"assistshowspatchername" : 0,
 		"boxes" : [ 			{
 				"box" : 				{
+					"id" : "obj-49",
+					"linecount" : 2,
+					"maxclass" : "message",
+					"numinlets" : 2,
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"patching_rect" : [ 189.0, 301.0, 124.0, 38.0 ],
+					"text" : "send dictionary Keylink"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-47",
+					"maxclass" : "newobj",
+					"numinlets" : 1,
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"patching_rect" : [ 31.0, 278.0, 88.0, 23.0 ],
+					"text" : "prepend send"
+				}
+
+			}
+, 			{
+				"box" : 				{
 					"id" : "obj-45",
 					"maxclass" : "newobj",
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 339.0, 198.0, 113.0, 23.0 ],
+					"patching_rect" : [ 31.0, 182.0, 113.0, 23.0 ],
 					"text" : "prepend set chord"
 				}
 
@@ -57,7 +82,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 356.0, 173.0, 136.0, 23.0 ],
+					"patching_rect" : [ 48.0, 157.0, 136.0, 23.0 ],
 					"text" : "prepend set chordroot"
 				}
 
@@ -69,7 +94,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 383.0, 148.0, 113.0, 23.0 ],
+					"patching_rect" : [ 75.0, 132.0, 113.0, 23.0 ],
 					"text" : "prepend set mode"
 				}
 
@@ -81,7 +106,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 400.0, 123.0, 103.0, 23.0 ],
+					"patching_rect" : [ 92.0, 107.0, 103.0, 23.0 ],
 					"text" : "prepend set root"
 				}
 
@@ -167,18 +192,6 @@
 					"numoutlets" : 0,
 					"patching_rect" : [ 30.0, 502.0, 508.0, 65.0 ],
 					"text" : "239.255.60.60 is a common multicast address for LAN music apps.\n20800 is the default KeyLink UDP port (adjust if your relay/server uses a different port).\n\n"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"id" : "obj-20",
-					"linecount" : 11,
-					"maxclass" : "comment",
-					"numinlets" : 1,
-					"numoutlets" : 0,
-					"patching_rect" : [ 650.0, 392.0, 150.0, 166.0 ],
-					"text" : "regarding the maxpatch - what should i put in the udpsend and receive and how to connect to the \"dict Keylink\" what to put in the dict?  and how to connect all to the keylink toggle, umenu. chordlink toggle, umenu and link toggle, numbox?"
 				}
 
 			}
@@ -488,7 +501,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 5,
 					"outlettype" : [ "dictionary", "", "", "", "" ],
-					"patching_rect" : [ 339.0, 251.0, 86.0, 23.0 ],
+					"patching_rect" : [ 31.0, 235.0, 86.0, 23.0 ],
 					"saved_object_attributes" : 					{
 						"embed" : 0,
 						"legacy" : 0,
@@ -55109,11 +55122,30 @@
 				}
 
 			}
+, 			{
+				"box" : 				{
+					"id" : "obj-51",
+					"maxclass" : "button",
+					"numinlets" : 1,
+					"numoutlets" : 1,
+					"outlettype" : [ "bang" ],
+					"parameter_enable" : 0,
+					"patching_rect" : [ 147.0, 205.0, 24.0, 24.0 ]
+				}
+
+			}
  ],
 		"lines" : [ 			{
 				"patchline" : 				{
 					"destination" : [ "obj-24", 0 ],
 					"source" : [ "msg1", 0 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-47", 0 ],
+					"source" : [ "obj-15", 0 ]
 				}
 
 			}
@@ -55177,9 +55209,23 @@
 			}
 , 			{
 				"patchline" : 				{
+					"destination" : [ "obj-49", 1 ],
+					"source" : [ "obj-47", 0 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
 					"destination" : [ "obj-17", 0 ],
 					"midpoints" : [ 252.5, 39.0, 240.5, 39.0 ],
 					"source" : [ "obj-5", 0 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-15", 0 ],
+					"source" : [ "obj-51", 0 ]
 				}
 
 			}

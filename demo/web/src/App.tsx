@@ -11,9 +11,6 @@ const LAN_WS_URLS = [
   'ws://10.0.0.1:20801',
 ];
 const WAN_WS_URL = 'wss://your-wan-relay.example.com'; // Set your WAN relay URL here
-const MAX_RETRIES = 3;
-
-type ConnectionState = 'disconnected' | 'connecting' | 'connected' | 'error';
 
 const ROOTS = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
 const MODES = ['Ionian', 'Dorian', 'Phrygian', 'Lydian', 'Mixolydian', 'Aeolian', 'Locrian'];
