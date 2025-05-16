@@ -1,6 +1,10 @@
 # KeyLink Toolkit
 
-This directory contains utilities and reference implementations to extend KeyLink's functionality and interoperability. Each tool is designed to be simple, modular, and easy to integrate with your own projects.
+This directory contains **reusable utilities, helpers, and adapters** for extending or integrating KeyLink into your own projects. These modules are intended to be imported or referenced by developers building new tools, bridges, or integrations with KeyLink.
+
+- Each file here is a mini-library or utility, not a full application or end-user demo.
+- For usage samples and "how-to" scripts, see the `examples/` directory.
+- For interactive, user-facing demos, see the `demo/` directory.
 
 ## Contents
 

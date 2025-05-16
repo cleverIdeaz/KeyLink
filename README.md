@@ -1,15 +1,76 @@
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Open Source](https://badges.frapsoft.com/os/v1/open-source.svg?v=103)](https://github.com/cleverIdeaz/KeyLink)
+[![Contributions Welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg)](CONTRIBUTING.md)
+
 # KeyLink
 
 **KeyLink** is a universal, open-source protocol and SDK for sharing tonal information (key, mode, chord, etc.) across music apps and devices on a local network. It is designed to be the *tonal* counterpart to Ableton Link, but is a completely independent protocol and library. Developers can use KeyLink and Ableton Link together or independently, depending on their needs.
 
 ---
 
-**Open Source License & Attribution**
+## Table of Contents
+- [Open Source License & Attribution](#open-source-license--attribution)
+- [Directory Structure](#directory-structure)
+- [Quick Start](#quick-start)
+- [Protocol Overview](#protocol-overview)
+- [Chord Info as a Sub-Segment](#chord-info-as-a-sub-segment)
+- [Vocabularies & Interoperability](#vocabularies--interoperability)
+- [Best Practices](#best-practices)
+- [KeyLink vs. Ableton Link](#keylink-vs-ableton-link)
+- [Extending KeyLink](#extending-keylink)
+- [Why JSON? Why Not MIDI 2.0 or Integer Indexes?](#why-json-why-not-midi-20-or-integer-indexes)
+- [MIDI Integration and Toolkit Roadmap](#midi-integration-and-toolkit-roadmap)
+- [FAQ: Why Not Just Use MIDI?](#faq-why-not-just-use-midi)
+- [License](#license)
+
+---
+
+## Open Source License & Attribution
 
 KeyLink is released as open source software and is freely available for use, modification, and distribution under the terms of its license. 
 
 **Attribution:**
 KeyLink was created and is maintained by Neal Anderson. Please credit Neal Anderson in any derivative works, publications, or presentations that use or build upon this project.
+
+---
+
+## Directory Structure
+
+- `demo/web/` — Web/React and HTML demos for browser-based testing and development.
+- `demo/max/` — Max/MSP patch and related files for Max-based integration.
+- `toolkit/` — Utilities for MIDI, transposition, and OSC mapping.
+- `docs/` — Developer and API documentation (expand as needed).
+- `examples/` — Minimal usage examples for Node.js, browser, or Max.
+- `relay.js` — Node.js relay server for LAN/WebSocket/UDP bridging.
+
+---
+
+## Quick Start
+
+### 1. Run the Relay Server
+```sh
+node relay.js
+```
+
+### 2. Web Demo (React/HTML)
+```sh
+cd demo/web
+npm install
+npm start
+# Open http://localhost:3000
+```
+Or open `keylink-demo.html` in a browser (served via local web server).
+
+### 3. Max/MSP Demo
+- Open `demo/max/KeyLinkDemo.maxpat` in Max.
+- Ensure Max is on the same LAN and can access UDP multicast.
+- The patch will send/receive JSON messages as described in the protocol.
+
+### 4. Toolkit Utilities
+- See `toolkit/README.md` for MIDI, transposition, and OSC mapping utilities.
+
+### 5. Examples
+- See `examples/` for minimal usage examples (Node.js, browser, Max, etc.).
 
 ---
 
@@ -102,54 +163,6 @@ KeyLink was created and is maintained by Neal Anderson. Please credit Neal Ander
 | SDK Language    | C++ (header-only)   | C++ (header-only), JS, etc. |
 | Dependency      | Standalone          | Standalone             |
 | Interoperable?  | Yes (side-by-side)  | Yes (side-by-side)     |
-
----
-
-## Quick Start
-
-### C++ Example
-```cpp
-#include "keylink.hpp"
-KeyLink kl;
-kl.onMessage([](const KeyLinkMessage& msg) {
-    // handle incoming tonal state
-});
-kl.send({"root": "C", "mode": "Dorian", "keylinkEnabled": true});
-// To send chord info as well:
-// kl.send({"root": "C", "mode": "Dorian", "chord": "maj7", "confidence": 0.98, "keylinkEnabled": true});
-```
-
-### JavaScript Example (Node.js)
-```js
-const { KeyLink } = require('keylink');
-const kl = new KeyLink();
-kl.on('message', msg => {
-  // handle incoming tonal state
-});
-kl.send({ root: 'C', mode: 'Dorian', keylinkEnabled: true });
-// To send chord info as well:
-// kl.send({ root: 'C', mode: 'Dorian', chord: 'maj7', confidence: 0.98, keylinkEnabled: true });
-```
-
-### Max/MSP Example
-- Use the provided Max external or patch.
-- Connect to the same LAN as other KeyLink clients.
-- Messages are received as JSON lists.
-
----
-
-## Running the Demo
-
-1. Start the KeyLink relay server (for browser demo):
-   ```sh
-   node relay.js
-   ```
-2. Open the React demo in your browser:
-   ```sh
-   npm start
-   ```
-3. All changes to tonal state are broadcast to the LAN and reflected in the UI.
-4. The demo can show and control both Ableton Link (tempo/beat) and KeyLink (tonal/harmonic) states, but keeps them separate in the UI and protocol.
 
 ---
 
