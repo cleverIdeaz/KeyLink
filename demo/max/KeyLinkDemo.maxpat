@@ -40,6 +40,150 @@
 		"assistshowspatchername" : 0,
 		"boxes" : [ 			{
 				"box" : 				{
+					"id" : "obj-45",
+					"maxclass" : "newobj",
+					"numinlets" : 1,
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"patching_rect" : [ 339.0, 198.0, 113.0, 23.0 ],
+					"text" : "prepend set chord"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-46",
+					"maxclass" : "newobj",
+					"numinlets" : 1,
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"patching_rect" : [ 356.0, 173.0, 136.0, 23.0 ],
+					"text" : "prepend set chordroot"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-44",
+					"maxclass" : "newobj",
+					"numinlets" : 1,
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"patching_rect" : [ 383.0, 148.0, 113.0, 23.0 ],
+					"text" : "prepend set mode"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-43",
+					"maxclass" : "newobj",
+					"numinlets" : 1,
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"patching_rect" : [ 400.0, 123.0, 103.0, 23.0 ],
+					"text" : "prepend set root"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"arrow" : 0,
+					"fontsize" : 13.0,
+					"id" : "obj-38",
+					"items" : [ "C", ",", "C#/Db", ",", "D", ",", "D#/Eb", ",", "E", ",", "F", ",", "F#/Gb", ",", "G", ",", "G#/Ab", ",", "A", ",", "A#/Bb", ",", "B" ],
+					"maxclass" : "umenu",
+					"numinlets" : 1,
+					"numoutlets" : 3,
+					"outlettype" : [ "int", "", "" ],
+					"parameter_enable" : 0,
+					"patching_rect" : [ 71.0, 42.0, 49.0, 23.0 ],
+					"presentation" : 1,
+					"presentation_rect" : [ 117.0, 57.0, 100.0, 23.0 ],
+					"style" : "rnbohighcontrast"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"arrow" : 0,
+					"fontsize" : 13.0,
+					"id" : "obj-39",
+					"items" : [ "C", ",", "C#/Db", ",", "D", ",", "D#/Eb", ",", "E", ",", "F", ",", "F#/Gb", ",", "G", ",", "G#/Ab", ",", "A", ",", "A#/Bb", ",", "B" ],
+					"maxclass" : "umenu",
+					"numinlets" : 1,
+					"numoutlets" : 3,
+					"outlettype" : [ "int", "", "" ],
+					"parameter_enable" : 0,
+					"patching_rect" : [ 71.0, 16.0, 49.0, 23.0 ],
+					"presentation" : 1,
+					"presentation_rect" : [ 117.0, 31.0, 100.0, 23.0 ],
+					"style" : "rnbohighcontrast"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-29",
+					"linecount" : 8,
+					"maxclass" : "message",
+					"numinlets" : 2,
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"patching_rect" : [ 635.0, 136.0, 226.0, 125.0 ],
+					"text" : "dict Keylink set root C, dict Keylink set mode Dorian, dict Keylink set chord::root C, dict Keylink set chord::type maj7, dict Keylink set keylinkEnabled 1, dict Keylink set chordLinkEnabled 1, dict Keylink set abletonLinkEnabled 1, dict Keylink set tempo 120"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-25",
+					"maxclass" : "newobj",
+					"numinlets" : 1,
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"patching_rect" : [ 452.0, 8.0, 112.0, 23.0 ],
+					"text" : "udpreceive 20800"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-24",
+					"maxclass" : "newobj",
+					"numinlets" : 1,
+					"numoutlets" : 0,
+					"patching_rect" : [ 22.0, 467.0, 185.0, 23.0 ],
+					"text" : "udpsend 239.255.60.60 20800"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-23",
+					"linecount" : 3,
+					"maxclass" : "comment",
+					"numinlets" : 1,
+					"numoutlets" : 0,
+					"patching_rect" : [ 30.0, 502.0, 508.0, 65.0 ],
+					"text" : "239.255.60.60 is a common multicast address for LAN music apps.\n20800 is the default KeyLink UDP port (adjust if your relay/server uses a different port).\n\n"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-20",
+					"linecount" : 11,
+					"maxclass" : "comment",
+					"numinlets" : 1,
+					"numoutlets" : 0,
+					"patching_rect" : [ 650.0, 392.0, 150.0, 166.0 ],
+					"text" : "regarding the maxpatch - what should i put in the udpsend and receive and how to connect to the \"dict Keylink\" what to put in the dict?  and how to connect all to the keylink toggle, umenu. chordlink toggle, umenu and link toggle, numbox?"
+				}
+
+			}
+, 			{
+				"box" : 				{
 					"id" : "obj-17",
 					"maxclass" : "newobj",
 					"numinlets" : 2,
@@ -344,7 +488,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 5,
 					"outlettype" : [ "dictionary", "", "", "", "" ],
-					"patching_rect" : [ 349.0, 148.0, 86.0, 23.0 ],
+					"patching_rect" : [ 339.0, 251.0, 86.0, 23.0 ],
 					"saved_object_attributes" : 					{
 						"embed" : 0,
 						"legacy" : 0,
@@ -359,6 +503,7 @@
 			}
 , 			{
 				"box" : 				{
+					"arrow" : 0,
 					"id" : "obj-9",
 					"items" : "<empty>",
 					"maxclass" : "umenu",
@@ -366,7 +511,7 @@
 					"numoutlets" : 3,
 					"outlettype" : [ "int", "", "" ],
 					"parameter_enable" : 0,
-					"patching_rect" : [ 102.0, 42.0, 100.0, 23.0 ],
+					"patching_rect" : [ 122.0, 42.0, 85.0, 23.0 ],
 					"presentation" : 1,
 					"presentation_rect" : [ 102.0, 42.0, 100.0, 23.0 ],
 					"style" : "rnbohighcontrast"
@@ -375,6 +520,7 @@
 			}
 , 			{
 				"box" : 				{
+					"arrow" : 0,
 					"id" : "obj-8",
 					"items" : "<empty>",
 					"maxclass" : "umenu",
@@ -382,7 +528,7 @@
 					"numoutlets" : 3,
 					"outlettype" : [ "int", "", "" ],
 					"parameter_enable" : 0,
-					"patching_rect" : [ 102.0, 16.0, 100.0, 23.0 ],
+					"patching_rect" : [ 122.0, 16.0, 85.0, 23.0 ],
 					"presentation" : 1,
 					"presentation_rect" : [ 102.0, 16.0, 100.0, 23.0 ],
 					"style" : "rnbohighcontrast"
@@ -456,7 +602,7 @@
 					"numoutlets" : 2,
 					"outlettype" : [ "", "" ],
 					"parameter_enable" : 1,
-					"patching_rect" : [ 38.0, 43.0, 62.068968772888184, 20.689656257629395 ],
+					"patching_rect" : [ 8.0, 43.0, 62.068968772888184, 20.689656257629395 ],
 					"presentation" : 1,
 					"presentation_rect" : [ 38.0, 43.0, 62.068968772888184, 20.689656257629395 ],
 					"rounded" : 8.0,
@@ -486,7 +632,7 @@
 					"numoutlets" : 2,
 					"outlettype" : [ "", "" ],
 					"parameter_enable" : 1,
-					"patching_rect" : [ 37.0, 17.0, 62.068968772888184, 20.689656257629395 ],
+					"patching_rect" : [ 7.0, 17.0, 62.068968772888184, 20.689656257629395 ],
 					"presentation" : 1,
 					"presentation_rect" : [ 37.0, 17.0, 62.068968772888184, 20.689656257629395 ],
 					"rounded" : 8.0,
@@ -554,6 +700,7 @@
 						"style" : "",
 						"subpatcher_template" : "",
 						"assistshowspatchername" : 0,
+						"visible" : 1,
 						"boxes" : [ 							{
 								"box" : 								{
 									"id" : "obj-6",
@@ -54943,20 +55090,9 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 18.0, 277.0, 577.0, 38.0 ],
+					"patching_rect" : [ 18.0, 387.0, 577.0, 38.0 ],
 					"style" : "rnbohighcontrast",
 					"text" : "send {root:C, mode:Dorian, chord:Cmin7, confidence:0.98, keylinkEnabled:true, source:max-demo}"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"id" : "udpsend1",
-					"maxclass" : "udpsend",
-					"numinlets" : 1,
-					"numoutlets" : 0,
-					"patching_rect" : [ 18.0, 317.0, 120.0, 22.0 ],
-					"text" : "239.255.60.60 20800"
 				}
 
 			}
@@ -54967,7 +55103,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 18.0, 247.0, 441.0, 36.0 ],
+					"patching_rect" : [ 18.0, 357.0, 441.0, 36.0 ],
 					"style" : "rnbohighcontrast",
 					"text" : "KeyLink Max Example: Send/Receive JSON via UDP multicast (port 20800)"
 				}
@@ -54976,8 +55112,7 @@
  ],
 		"lines" : [ 			{
 				"patchline" : 				{
-					"destination" : [ "udpsend1", 0 ],
-					"midpoints" : [ 27.5, 318.0, 27.5, 318.0 ],
+					"destination" : [ "obj-24", 0 ],
 					"source" : [ "msg1", 0 ]
 				}
 
@@ -55000,6 +55135,48 @@
 			}
 , 			{
 				"patchline" : 				{
+					"destination" : [ "obj-46", 0 ],
+					"source" : [ "obj-38", 1 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-43", 0 ],
+					"source" : [ "obj-39", 1 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-15", 0 ],
+					"source" : [ "obj-43", 0 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-15", 0 ],
+					"source" : [ "obj-44", 0 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-15", 0 ],
+					"source" : [ "obj-45", 0 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-15", 0 ],
+					"source" : [ "obj-46", 0 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
 					"destination" : [ "obj-17", 0 ],
 					"midpoints" : [ 252.5, 39.0, 240.5, 39.0 ],
 					"source" : [ "obj-5", 0 ]
@@ -55011,6 +55188,20 @@
 					"destination" : [ "obj-17", 1 ],
 					"midpoints" : [ 316.5, 39.0, 308.5, 39.0 ],
 					"source" : [ "obj-7", 0 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-44", 0 ],
+					"source" : [ "obj-8", 1 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-45", 0 ],
+					"source" : [ "obj-9", 1 ]
 				}
 
 			}
