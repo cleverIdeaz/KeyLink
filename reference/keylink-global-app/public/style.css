@@ -1,0 +1,58 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+body {
+  font-family: 'Poppins', sans-serif; /* Stylish font */
+  background-color: #161616; /* Dark background color */
+  color: #ffffff; /* White text color */
+}
+
+.container {
+  max-width: 400px;
+  margin: auto;
+  padding: 20px;
+  text-align: center;
+}
+
+h1 {
+  font-size: 36px;
+  font-weight: 600; /* Bold font weight */
+  color: #ffbb00; /* Vibrant yellow color for heading */
+}
+
+select {
+  padding: 12px;
+  font-size: 18px;
+  background-color: #333333; /* Dark dropdown background color */
+  color: #ffffff; /* White dropdown text color */
+  border: none;
+  border-radius: 5px;
+}
+
+select:hover {
+  background-color: #444444; /* Dark hover color for dropdown */
+}
+
+#playerCount {
+  font-size: 20px;
+  color: #ffbb00; /* Vibrant yellow color for player count text */
+}
+
+#onlineCounter {
+  font-weight: bold;
+  color: #33cc33; /* Green color for player count */
+}
+
+/* Button style */
+button {
+  padding: 10px 20px;
+  font-size: 18px;
+  background-color: #ffbb00; /* Vibrant yellow color for button */
+  color: #161616; /* Dark text color for button */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #ffd500; /* Lighter yellow color on hover */
+}

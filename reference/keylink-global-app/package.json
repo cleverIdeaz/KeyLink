@@ -1,0 +1,20 @@
+{
+  "name": "multiplayer-websockets-example",
+  "version": "1.0.0",
+  "description": "A very simple game with multiplayer functionality implemented with websockets.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "ws": "^7.3.0"
+  },
+  "engines": {
+    "node": "12.x"
+  },
+  "repository": {
+    "url": "https://glitch.com/edit/#!/multiplayer-websockets-example"
+  },
+  "license": "MIT"
+}
