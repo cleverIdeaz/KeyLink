@@ -33,27 +33,6 @@ export default function App() {
   // Log helper
   const addLog = (msg: string) => setLog(l => [{ time: now(), msg }, ...l.slice(0, 99)]);
 
-  // Send state to server
-  function sendState() {
-    if (ws.current && ws.current.readyState === 1) {
-      const msg: any = {
-        root,
-        mode,
-        keylinkEnabled: keylinkOn,
-        abletonLinkEnabled: linkOn,
-        tempo,
-        source: source.current,
-        timestamp: Date.now()
-      };
-      if (chordLinkOn && chordType !== 'none') {
-        msg.chord = { root: chordRoot, type: chordType };
-      }
-      if (keylinkOn || linkOn) {
-        ws.current.send(JSON.stringify(msg));
-      }
-    }
-  }
-
   // WebSocket connection
   useEffect(() => {
     function connect() {
@@ -62,7 +41,24 @@ export default function App() {
         setConnected(true);
         setStatus('Connected');
         addLog('WebSocket connected');
-        sendState();
+        // Send initial state
+        if (ws.current && ws.current.readyState === 1) {
+          const msg: any = {
+            root,
+            mode,
+            keylinkEnabled: keylinkOn,
+            abletonLinkEnabled: linkOn,
+            tempo,
+            source: source.current,
+            timestamp: Date.now()
+          };
+          if (chordLinkOn && chordType !== 'none') {
+            msg.chord = { root: chordRoot, type: chordType };
+          }
+          if (keylinkOn || linkOn) {
+            ws.current.send(JSON.stringify(msg));
+          }
+        }
       };
       ws.current.onclose = () => {
         setConnected(false);
@@ -97,17 +93,35 @@ export default function App() {
   }, []);
 
   // UI event handlers
-  const handleKeylinkToggle = () => { setKeylinkOn(on => { setTimeout(sendState, 0); return !on; }); };
-  const handleLinkToggle = () => { setLinkOn(on => { setTimeout(sendState, 0); return !on; }); };
-  const handleChordLinkToggle = () => { setChordLinkOn(on => { setTimeout(sendState, 0); return !on; }); };
-  const handleRoot = (e: React.ChangeEvent<HTMLSelectElement>) => { setRoot(e.target.value); setTimeout(sendState, 0); };
-  const handleMode = (e: React.ChangeEvent<HTMLSelectElement>) => { setMode(e.target.value); setTimeout(sendState, 0); };
-  const handleTempo = (e: React.ChangeEvent<HTMLInputElement>) => { setTempo(Number(e.target.value) || 120); setTimeout(sendState, 0); };
-  const handleChordRoot = (e: React.ChangeEvent<HTMLSelectElement>) => { setChordRoot(e.target.value); setTimeout(sendState, 0); };
-  const handleChordType = (e: React.ChangeEvent<HTMLSelectElement>) => { setChordType(e.target.value); setTimeout(sendState, 0); };
+  const handleKeylinkToggle = () => { setKeylinkOn(on => { setTimeout(() => {}, 0); return !on; }); };
+  const handleLinkToggle = () => { setLinkOn(on => { setTimeout(() => {}, 0); return !on; }); };
+  const handleChordLinkToggle = () => { setChordLinkOn(on => { setTimeout(() => {}, 0); return !on; }); };
+  const handleRoot = (e: React.ChangeEvent<HTMLSelectElement>) => { setRoot(e.target.value); setTimeout(() => {}, 0); };
+  const handleMode = (e: React.ChangeEvent<HTMLSelectElement>) => { setMode(e.target.value); setTimeout(() => {}, 0); };
+  const handleTempo = (e: React.ChangeEvent<HTMLInputElement>) => { setTempo(Number(e.target.value) || 120); setTimeout(() => {}, 0); };
+  const handleChordRoot = (e: React.ChangeEvent<HTMLSelectElement>) => { setChordRoot(e.target.value); setTimeout(() => {}, 0); };
+  const handleChordType = (e: React.ChangeEvent<HTMLSelectElement>) => { setChordType(e.target.value); setTimeout(() => {}, 0); };
 
   // Send state on relevant changes
-  useEffect(() => { sendState(); /* eslint-disable-next-line */ }, [root, mode, keylinkOn, linkOn, tempo, chordLinkOn, chordRoot, chordType]);
+  useEffect(() => {
+    if (ws.current && ws.current.readyState === 1) {
+      const msg: any = {
+        root,
+        mode,
+        keylinkEnabled: keylinkOn,
+        abletonLinkEnabled: linkOn,
+        tempo,
+        source: source.current,
+        timestamp: Date.now()
+      };
+      if (chordLinkOn && chordType !== 'none') {
+        msg.chord = { root: chordRoot, type: chordType };
+      }
+      if (keylinkOn || linkOn) {
+        ws.current.send(JSON.stringify(msg));
+      }
+    }
+  }, [root, mode, keylinkOn, linkOn, tempo, chordLinkOn, chordRoot, chordType]);
 
   // UI
   return (
