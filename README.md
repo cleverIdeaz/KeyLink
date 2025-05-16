@@ -222,3 +222,11 @@ KeyLink is designed to encourage musicians and musical machines to collaborate a
 
 ## License
 MIT 
+
+## Web Demo: LAN-First, WAN-Fallback, and Cross-Platform Sync
+
+- The web demo is designed to connect to a KeyLink relay server running on your local network (LAN) by default. This enables true, low-latency, cross-platform sync between browsers, Max, Node, and other clients on the same network.
+- On page load, the web demo will attempt to auto-connect to common LAN relay IPs. If no LAN relay is found, you can manually enter the LAN relay address, or choose to connect to a WAN relay (cloud server) as a fallback for remote or demo use.
+- For best results and true recursive control, ensure all clients (browser, Max, Node, Python, etc.) are connected to the same relay server on your LAN.
+- The WAN relay is provided as a workaround for browser/web demo or remote collaboration, but is not recommended for final builds or local sessions.
+- If you are running the relay server on your LAN, make sure it is accessible from all devices and that firewalls are not blocking the required port (default: 20801). 

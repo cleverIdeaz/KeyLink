@@ -63,7 +63,7 @@ export default function App() {
   // On mount, try to connect to LAN relay
   useEffect(() => {
     (async () => {
-      setStatus('Connecting to LAN relay');
+      setStatus('Connecting to LAN relay...');
       const url = await tryConnect(LAN_WS_URLS);
       if (url) {
         setRelayUrl(url);
@@ -82,6 +82,7 @@ export default function App() {
       ws.current = new window.WebSocket(relayUrl as string);
       ws.current.onopen = () => {
         setStatus(relayUrl === WAN_WS_URL ? 'Connected to WAN relay' : 'Connected to LAN relay');
+        addLog('WebSocket connected');
         // Send initial state
         if (ws.current && ws.current.readyState === 1) {
           const msg: any = {
@@ -104,6 +105,7 @@ export default function App() {
       };
       ws.current.onclose = () => {
         setStatus('Disconnected');
+        addLog('WebSocket disconnected');
         setTimeout(connect, 2000);
       };
       ws.current.onerror = () => {
@@ -138,14 +140,14 @@ export default function App() {
   }, [relayUrl, room]);
 
   // UI event handlers
-  const handleKeylinkToggle = () => { setKeylinkOn(on => { setTimeout(() => {}, 0); return !on; }); };
-  const handleLinkToggle = () => { setLinkOn(on => { setTimeout(() => {}, 0); return !on; }); };
-  const handleChordLinkToggle = () => { setChordLinkOn(on => { setTimeout(() => {}, 0); return !on; }); };
-  const handleRoot = (e: React.ChangeEvent<HTMLSelectElement>) => { setRoot(e.target.value); setTimeout(() => {}, 0); };
-  const handleMode = (e: React.ChangeEvent<HTMLSelectElement>) => { setMode(e.target.value); setTimeout(() => {}, 0); };
-  const handleTempo = (e: React.ChangeEvent<HTMLInputElement>) => { setTempo(Number(e.target.value) || 120); setTimeout(() => {}, 0); };
-  const handleChordRoot = (e: React.ChangeEvent<HTMLSelectElement>) => { setChordRoot(e.target.value); setTimeout(() => {}, 0); };
-  const handleChordType = (e: React.ChangeEvent<HTMLSelectElement>) => { setChordType(e.target.value); setTimeout(() => {}, 0); };
+  const handleKeylinkToggle = () => { setKeylinkOn(on => !on); };
+  const handleLinkToggle = () => { setLinkOn(on => !on); };
+  const handleChordLinkToggle = () => { setChordLinkOn(on => !on); };
+  const handleRoot = (e: React.ChangeEvent<HTMLSelectElement>) => { setRoot(e.target.value); };
+  const handleMode = (e: React.ChangeEvent<HTMLSelectElement>) => { setMode(e.target.value); };
+  const handleTempo = (e: React.ChangeEvent<HTMLInputElement>) => { setTempo(Number(e.target.value) || 120); };
+  const handleChordRoot = (e: React.ChangeEvent<HTMLSelectElement>) => { setChordRoot(e.target.value); };
+  const handleChordType = (e: React.ChangeEvent<HTMLSelectElement>) => { setChordType(e.target.value); };
 
   // Send state on relevant changes
   useEffect(() => {
@@ -169,95 +171,107 @@ export default function App() {
     }
   }, [root, mode, keylinkOn, linkOn, tempo, chordLinkOn, chordRoot, chordType, room]);
 
-  // Responsive styles (typed for TS)
-  const styles = {
+  // Styles
+  const styles: { [key: string]: React.CSSProperties } = {
     container: {
       background: '#222', color: '#fff', minHeight: '100vh', fontFamily: 'sans-serif',
       display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-start',
-      padding: 0, width: '100vw', boxSizing: 'border-box' as 'border-box',
-    } as React.CSSProperties,
-    roomBar: {
-      width: '100%', maxWidth: 600, display: 'flex', flexDirection: 'row' as 'row', alignItems: 'center', justifyContent: 'center',
-      gap: 12, margin: '32px 0 16px 0', padding: '0 8px',
-    } as React.CSSProperties,
-    mainPanel: {
-      display: 'flex', flexDirection: 'column' as 'column', alignItems: 'center', gap: 16, width: '100%', maxWidth: 600,
-    } as React.CSSProperties,
-    row: {
-      display: 'flex', flexWrap: 'wrap' as 'wrap', alignItems: 'center', gap: 16, marginBottom: 24, width: '100%', justifyContent: 'center',
-    } as React.CSSProperties,
-    log: {
-      background: '#111', borderRadius: 10, padding: 16, width: '100%', minHeight: 100, marginTop: 8, fontSize: 16, overflowY: 'auto' as 'auto', maxHeight: 200,
-    } as React.CSSProperties,
-    status: {
-      marginLeft: 16, fontSize: 18, color: '#0f0',
-    } as React.CSSProperties,
-    bigbtn: (active: boolean) => ({
-      borderRadius: 10, padding: '12px 24px', fontSize: 28, fontWeight: 600, border: 'none', cursor: 'pointer', background: active ? '#F5C242' : '#888', transition: 'background 0.2s',
-      minWidth: 120,
-    } as React.CSSProperties),
-    select: { fontSize: 24, borderRadius: 8, padding: '8px 16px', background: '#333', color: '#fff', border: 'none' } as React.CSSProperties,
-    input: { fontSize: 24, borderRadius: 8, padding: '8px 16px', background: '#333', color: '#fff', border: 'none', width: 120 } as React.CSSProperties,
-    divider: { width: 2, height: 40, background: '#888', margin: '0 12px' } as React.CSSProperties,
-    '@media (maxWidth: 700px)': {
-      container: { padding: 0 } as React.CSSProperties,
-      mainPanel: { maxWidth: '100vw', padding: 0 } as React.CSSProperties,
-      row: { flexDirection: 'column' as 'column', gap: 10, marginBottom: 16 } as React.CSSProperties,
-      log: { width: '98vw', maxWidth: '98vw', fontSize: 14 } as React.CSSProperties,
-      roomBar: { flexDirection: 'column' as 'column', gap: 8, maxWidth: '98vw' } as React.CSSProperties,
+      padding: 0, width: '100vw', boxSizing: 'border-box',
     },
+    topBar: {
+      width: '100%', maxWidth: 480, margin: '32px 0 16px 0', display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8,
+    },
+    section: {
+      width: '100%', maxWidth: 480, display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, marginBottom: 16,
+    },
+    chordSection: {
+      width: '100%', maxWidth: 480, display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, marginBottom: 24,
+    },
+    status: {
+      margin: '8px 0', fontSize: 16, fontWeight: 500, color: status.includes('Connected') ? '#7CFC00' : status.includes('error') ? '#f55' : '#F5C242',
+      textAlign: 'center',
+    },
+    roomBar: {
+      width: '100%', maxWidth: 480, display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, margin: '32px 0 8px 0',
+    },
+    input: { fontSize: 20, borderRadius: 8, padding: '8px 12px', background: '#333', color: '#fff', border: 'none', width: 220 },
+    joinBtn: { fontSize: 20, borderRadius: 8, padding: '8px 24px', background: '#F5C242', color: '#222', fontWeight: 700, border: 'none', cursor: 'pointer' },
+    mainBtn: (active: boolean) => ({ fontSize: 28, borderRadius: 10, padding: '12px 32px', background: active ? '#F5C242' : '#888', color: '#222', fontWeight: 700, border: 'none', cursor: 'pointer', minWidth: 120 }),
+    select: { fontSize: 22, borderRadius: 8, padding: '8px 16px', background: '#333', color: '#fff', border: 'none' },
+    tempo: { fontSize: 22, borderRadius: 8, padding: '8px 16px', background: '#333', color: '#fff', border: 'none', width: 80 },
+    advancedBox: { background: '#111', borderRadius: 10, padding: 16, width: 480, minHeight: 80, marginTop: 16, fontSize: 15, overflowY: 'auto', maxHeight: 180 },
+    advBtn: { margin: '16px 0 0 0', fontSize: 15, borderRadius: 8, padding: '6px 16px', background: '#333', color: '#F5C242', border: 'none', cursor: 'pointer' },
+    connectBox: { display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 8, margin: '8px 0' },
   };
 
-  // Responsive media query (simple JS approach)
-  const isMobile = window.innerWidth < 700;
-
+  // UI
   return (
-    <div style={{ ...styles.container, ...(isMobile ? styles['@media (maxWidth: 700px)'].container : {}) }}>
-      {/* Room/session input bar */}
-      <div style={{ ...styles.roomBar, ...(isMobile ? styles['@media (maxWidth: 700px)'].roomBar : {}) }}>
+    <div style={styles.container}>
+      {/* Room/session join bar */}
+      <div style={styles.roomBar}>
         <input
           type="text"
-          placeholder="Enter room/session name"
+          placeholder="Enter room/session name (optional)"
           value={roomInput}
           onChange={e => setRoomInput(e.target.value)}
-          style={{ ...styles.input, width: isMobile ? '70vw' : 220 }}
+          style={styles.input}
           disabled={!!room}
         />
         {!room ? (
           <button
-            style={{ ...styles.bigbtn(true), fontSize: 22, minWidth: 80, padding: '8px 16px' }}
+            style={styles.joinBtn}
             onClick={() => setRoom(roomInput.trim() || 'default')}
-            disabled={!roomInput.trim()}
+            disabled={!!roomInput.trim() === false}
+            title="Join a session. Leave blank for default session."
           >
             Join
           </button>
         ) : (
           <button
-            style={{ ...styles.bigbtn(false), fontSize: 22, minWidth: 80, padding: '8px 16px', background: '#888' }}
+            style={{ ...styles.joinBtn, background: '#888', color: '#fff' }}
             onClick={() => { setRoom(''); setRoomInput(''); }}
+            title="Leave session"
           >
             Leave
           </button>
         )}
-        {room && <span style={{ marginLeft: 12, fontSize: 18, color: '#F5C242' }}>Room: <b>{room}</b></span>}
       </div>
-      {/* Main control panel */}
-      <div style={{ ...styles.mainPanel, ...(isMobile ? styles['@media (maxWidth: 700px)'].mainPanel : {}) }}>
-        <div style={{ ...styles.row, ...(isMobile ? styles['@media (maxWidth: 700px)'].row : {}) }}>
-          <button onClick={handleKeylinkToggle} className="bigbtn" style={styles.bigbtn(keylinkOn)}>KeyLink</button>
-          <select value={root} onChange={handleRoot} style={styles.select}>{ROOTS.map(r => <option key={r} value={r}>{r}</option>)}</select>
-          <select value={mode} onChange={handleMode} style={styles.select}>{MODES.map(m => <option key={m} value={m}>{m}</option>)}</select>
-          <div style={styles.divider} />
-          <button onClick={handleLinkToggle} className="bigbtn" style={styles.bigbtn(linkOn)}>Link</button>
-          <input type="number" min={40} max={240} value={tempo} onChange={handleTempo} style={{ ...styles.input, width: 80, marginLeft: 8 }} />
+      {/* KeyLink and Link controls */}
+      <div style={styles.topBar}>
+        <button onClick={handleKeylinkToggle} style={styles.mainBtn(keylinkOn)} title="Toggle KeyLink">KeyLink</button>
+        <select value={root} onChange={handleRoot} style={styles.select}>{ROOTS.map(r => <option key={r} value={r}>{r}</option>)}</select>
+        <select value={mode} onChange={handleMode} style={styles.select}>{MODES.map(m => <option key={m} value={m}>{m}</option>)}</select>
+        <button onClick={handleLinkToggle} style={styles.mainBtn(linkOn)} title="Toggle Ableton Link">Link</button>
+        <input type="number" min={40} max={240} value={tempo} onChange={handleTempo} style={styles.tempo} title="Tempo (bpm)" />
+      </div>
+      {/* ChordLink controls */}
+      <div style={styles.chordSection}>
+        <button onClick={handleChordLinkToggle} style={styles.mainBtn(chordLinkOn)} title="Toggle ChordLink">ChordLink</button>
+        <select value={chordRoot} onChange={handleChordRoot} disabled={!chordLinkOn} style={styles.select}>{ROOTS.map(r => <option key={r} value={r}>{r}</option>)}</select>
+        <select value={chordType} onChange={handleChordType} disabled={!chordLinkOn} style={styles.select}>{CHORD_TYPES.map(c => <option key={c} value={c}>{c === 'none' ? '(no chord)' : c}</option>)}</select>
+      </div>
+      {/* Status and connection info */}
+      <div style={styles.status}>{status}</div>
+      {status === 'No LAN relay found' && (
+        <div style={styles.connectBox}>
+          <input
+            type="text"
+            placeholder="Enter LAN relay ws://... or leave blank for WAN"
+            value={manualUrl}
+            onChange={e => setManualUrl(e.target.value)}
+            style={styles.input}
+          />
+          <button style={styles.joinBtn} onClick={() => setRelayUrl(manualUrl || WAN_WS_URL)}>
+            {manualUrl ? 'Connect to LAN relay' : 'Connect to WAN relay'}
+          </button>
         </div>
-        <div style={{ ...styles.row, ...(isMobile ? styles['@media (maxWidth: 700px)'].row : {}) }}>
-          <button onClick={handleChordLinkToggle} className="bigbtn" style={styles.bigbtn(chordLinkOn)}>ChordLink</button>
-          <select value={chordRoot} onChange={handleChordRoot} disabled={!chordLinkOn} style={styles.select}>{ROOTS.map(r => <option key={r} value={r}>{r}</option>)}</select>
-          <select value={chordType} onChange={handleChordType} disabled={!chordLinkOn} style={styles.select}>{CHORD_TYPES.map(c => <option key={c} value={c}>{c === 'none' ? '(no chord)' : c}</option>)}</select>
-          <span style={styles.status}>{status}</span>
-        </div>
-        <div style={{ ...styles.log, ...(isMobile ? styles['@media (maxWidth: 700px)'].log : {}) }}>
+      )}
+      {/* Advanced/dev features toggle and log */}
+      <button style={styles.advBtn} onClick={() => setShowAdvanced(a => !a)}>
+        {showAdvanced ? 'Hide Advanced' : 'Show Advanced'}
+      </button>
+      {showAdvanced && (
+        <div style={styles.advancedBox}>
           <div style={{ color: '#F5C242', fontWeight: 600, marginBottom: 8 }}>Network Activity</div>
           <div>
             {log.map((entry, i) => (
@@ -267,42 +281,7 @@ export default function App() {
             ))}
           </div>
         </div>
-      </div>
-      {/* Room/session controls and status */}
-      <div>
-        <div>Status: {status}</div>
-        {status === 'No LAN relay found' && (
-          <div>
-            <input
-              type="text"
-              placeholder="Enter LAN relay ws://... or leave blank for WAN"
-              value={manualUrl}
-              onChange={e => setManualUrl(e.target.value)}
-            />
-            <button onClick={() => setRelayUrl(manualUrl || WAN_WS_URL)}>
-              {manualUrl ? 'Connect to LAN relay' : 'Connect to WAN relay'}
-            </button>
-          </div>
-        )}
-      </div>
-      {/* Advanced/dev features toggle */}
-      <div>
-        <button onClick={() => setShowAdvanced(a => !a)}>
-          {showAdvanced ? 'Hide Advanced' : 'Show Advanced'}
-        </button>
-        {showAdvanced && (
-          <div>
-            <div>Network Activity</div>
-            <div style={{ maxHeight: 200, overflowY: 'auto' }}>
-              {log.map((entry, i) => (
-                <div key={i} style={{ color: '#ccc', marginBottom: 4 }}>
-                  <span style={{ color: '#888', marginRight: 8 }}>{entry.time}</span>{entry.msg}
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-      </div>
+      )}
     </div>
   );
 }
