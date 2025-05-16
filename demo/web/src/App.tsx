@@ -129,42 +129,42 @@ export default function App() {
     }
   }, [root, mode, keylinkOn, linkOn, tempo, chordLinkOn, chordRoot, chordType, room]);
 
-  // Responsive styles
+  // Responsive styles (typed for TS)
   const styles = {
     container: {
       background: '#222', color: '#fff', minHeight: '100vh', fontFamily: 'sans-serif',
       display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-start',
-      padding: '0', width: '100vw', boxSizing: 'border-box',
-    },
+      padding: 0, width: '100vw', boxSizing: 'border-box' as 'border-box',
+    } as React.CSSProperties,
     roomBar: {
-      width: '100%', maxWidth: 600, display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
+      width: '100%', maxWidth: 600, display: 'flex', flexDirection: 'row' as 'row', alignItems: 'center', justifyContent: 'center',
       gap: 12, margin: '32px 0 16px 0', padding: '0 8px',
-    },
+    } as React.CSSProperties,
     mainPanel: {
-      display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16, width: '100%', maxWidth: 600,
-    },
+      display: 'flex', flexDirection: 'column' as 'column', alignItems: 'center', gap: 16, width: '100%', maxWidth: 600,
+    } as React.CSSProperties,
     row: {
-      display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 16, marginBottom: 24, width: '100%', justifyContent: 'center',
-    },
+      display: 'flex', flexWrap: 'wrap' as 'wrap', alignItems: 'center', gap: 16, marginBottom: 24, width: '100%', justifyContent: 'center',
+    } as React.CSSProperties,
     log: {
-      background: '#111', borderRadius: 10, padding: 16, width: '100%', minHeight: 100, marginTop: 8, fontSize: 16, overflowY: 'auto', maxHeight: 200,
-    },
+      background: '#111', borderRadius: 10, padding: 16, width: '100%', minHeight: 100, marginTop: 8, fontSize: 16, overflowY: 'auto' as 'auto', maxHeight: 200,
+    } as React.CSSProperties,
     status: {
-      marginLeft: 16, fontSize: 18, color: connected ? '#0f0' : '#f55',
-    },
+      marginLeft: 16, fontSize: 18, color: '#0f0',
+    } as React.CSSProperties,
     bigbtn: (active: boolean) => ({
       borderRadius: 10, padding: '12px 24px', fontSize: 28, fontWeight: 600, border: 'none', cursor: 'pointer', background: active ? '#F5C242' : '#888', transition: 'background 0.2s',
       minWidth: 120,
-    }),
-    select: { fontSize: 24, borderRadius: 8, padding: '8px 16px', background: '#333', color: '#fff', border: 'none' },
-    input: { fontSize: 24, borderRadius: 8, padding: '8px 16px', background: '#333', color: '#fff', border: 'none', width: 120 },
-    divider: { width: 2, height: 40, background: '#888', margin: '0 12px' },
+    } as React.CSSProperties),
+    select: { fontSize: 24, borderRadius: 8, padding: '8px 16px', background: '#333', color: '#fff', border: 'none' } as React.CSSProperties,
+    input: { fontSize: 24, borderRadius: 8, padding: '8px 16px', background: '#333', color: '#fff', border: 'none', width: 120 } as React.CSSProperties,
+    divider: { width: 2, height: 40, background: '#888', margin: '0 12px' } as React.CSSProperties,
     '@media (maxWidth: 700px)': {
-      container: { padding: 0 },
-      mainPanel: { maxWidth: '100vw', padding: 0 },
-      row: { flexDirection: 'column', gap: 10, marginBottom: 16 },
-      log: { width: '98vw', maxWidth: '98vw', fontSize: 14 },
-      roomBar: { flexDirection: 'column', gap: 8, maxWidth: '98vw' },
+      container: { padding: 0 } as React.CSSProperties,
+      mainPanel: { maxWidth: '100vw', padding: 0 } as React.CSSProperties,
+      row: { flexDirection: 'column' as 'column', gap: 10, marginBottom: 16 } as React.CSSProperties,
+      log: { width: '98vw', maxWidth: '98vw', fontSize: 14 } as React.CSSProperties,
+      roomBar: { flexDirection: 'column' as 'column', gap: 8, maxWidth: '98vw' } as React.CSSProperties,
     },
   };
 
