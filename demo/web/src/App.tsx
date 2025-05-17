@@ -196,13 +196,25 @@ export default function App() {
     },
     input: { fontSize: 20, borderRadius: 8, padding: '8px 12px', background: '#333', color: '#fff', border: 'none', width: 220 },
     joinBtn: { fontSize: 20, borderRadius: 8, padding: '8px 24px', background: '#F5C242', color: '#222', fontWeight: 700, border: 'none', cursor: 'pointer' },
-    mainBtn: (active: boolean) => ({ fontSize: 28, borderRadius: 10, padding: '12px 32px', background: active ? '#F5C242' : '#888', color: '#222', fontWeight: 700, border: 'none', cursor: 'pointer', minWidth: 120 }),
     select: { fontSize: 22, borderRadius: 8, padding: '8px 16px', background: '#333', color: '#fff', border: 'none' },
     tempo: { fontSize: 22, borderRadius: 8, padding: '8px 16px', background: '#333', color: '#fff', border: 'none', width: 80 },
     advancedBox: { background: '#111', borderRadius: 10, padding: 16, width: 480, minHeight: 80, marginTop: 16, fontSize: 15, overflowY: 'auto', maxHeight: 180 },
     advBtn: { margin: '16px 0 0 0', fontSize: 15, borderRadius: 8, padding: '6px 16px', background: '#333', color: '#F5C242', border: 'none', cursor: 'pointer' },
     connectBox: { display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 8, margin: '8px 0' },
   };
+
+  // Standalone style function for main buttons
+  const mainBtn = (active: boolean): React.CSSProperties => ({
+    fontSize: 28,
+    borderRadius: 10,
+    padding: '12px 32px',
+    background: active ? '#F5C242' : '#888',
+    color: '#222',
+    fontWeight: 700,
+    border: 'none',
+    cursor: 'pointer',
+    minWidth: 120,
+  });
 
   // UI
   return (
@@ -238,15 +250,15 @@ export default function App() {
       </div>
       {/* KeyLink and Link controls */}
       <div style={styles.topBar}>
-        <button onClick={handleKeylinkToggle} style={styles.mainBtn(keylinkOn)} title="Toggle KeyLink">KeyLink</button>
+        <button onClick={handleKeylinkToggle} style={mainBtn(keylinkOn)} title="Toggle KeyLink">KeyLink</button>
         <select value={root} onChange={handleRoot} style={styles.select}>{ROOTS.map(r => <option key={r} value={r}>{r}</option>)}</select>
         <select value={mode} onChange={handleMode} style={styles.select}>{MODES.map(m => <option key={m} value={m}>{m}</option>)}</select>
-        <button onClick={handleLinkToggle} style={styles.mainBtn(linkOn)} title="Toggle Ableton Link">Link</button>
+        <button onClick={handleLinkToggle} style={mainBtn(linkOn)} title="Toggle Ableton Link">Link</button>
         <input type="number" min={40} max={240} value={tempo} onChange={handleTempo} style={styles.tempo} title="Tempo (bpm)" />
       </div>
       {/* ChordLink controls */}
       <div style={styles.chordSection}>
-        <button onClick={handleChordLinkToggle} style={styles.mainBtn(chordLinkOn)} title="Toggle ChordLink">ChordLink</button>
+        <button onClick={handleChordLinkToggle} style={mainBtn(chordLinkOn)} title="Toggle ChordLink">ChordLink</button>
         <select value={chordRoot} onChange={handleChordRoot} disabled={!chordLinkOn} style={styles.select}>{ROOTS.map(r => <option key={r} value={r}>{r}</option>)}</select>
         <select value={chordType} onChange={handleChordType} disabled={!chordLinkOn} style={styles.select}>{CHORD_TYPES.map(c => <option key={c} value={c}>{c === 'none' ? '(no chord)' : c}</option>)}</select>
       </div>

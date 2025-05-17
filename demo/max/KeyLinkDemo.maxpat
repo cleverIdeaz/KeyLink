@@ -670,7 +670,6 @@
 , 			{
 				"box" : 				{
 					"id" : "obj-1",
-					"linecount" : 2,
 					"maxclass" : "newobj",
 					"numinlets" : 0,
 					"numoutlets" : 0,
@@ -55082,7 +55081,7 @@
  ]
 					}
 ,
-					"patching_rect" : [ 215.0, 148.0, 113.0, 38.0 ],
+					"patching_rect" : [ 215.0, 148.0, 115.0, 23.0 ],
 					"saved_object_attributes" : 					{
 						"description" : "",
 						"digest" : "",
