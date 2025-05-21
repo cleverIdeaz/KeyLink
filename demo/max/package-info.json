@@ -1,0 +1,10 @@
+{
+  "name": "KeyLink",
+  "description": "Zero-config, cross-platform music data sync for Max, browser, and more. Provides the [keylink] external for UDP multicast and WebSocket bridging.",
+  "author": "Neal Anderson",
+  "version": "0.1.0",
+  "externals": ["keylink"],
+  "help": ["keylink.maxhelp"],
+  "examples": ["keylink_example.maxpat"],
+  "docs": ["keylink_manual.pdf"]
+}
