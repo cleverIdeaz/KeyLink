@@ -53,12 +53,29 @@ export default function App() {
   const [chordRoot, setChordRoot] = useState('C');
   const [chordType, setChordType] = useState('maj');
   const [status, setStatus] = useState('Disconnected');
-  const [log, setLog] = useState<{ time: string; msg: string }[]>([]);
+  const [log, setLog] = useState<{ time: string; msg: string; type: 'sent' | 'received' | 'info' | 'error' }[]>([]);
   const ws = useRef<WebSocket | null>(null);
   const source = useRef('web-react-demo-' + Math.random().toString(36).slice(2));
+  const [connectionDropped, setConnectionDropped] = useState(false);
+  const [autoRelayUrl, setAutoRelayUrl] = useState('');
 
   // Log helper
-  const addLog = (msg: string) => setLog(l => [{ time: now(), msg }, ...l.slice(0, 99)]);
+  const addLog = (msg: string, type: 'sent' | 'received' | 'info' | 'error' = 'info') =>
+    setLog(l => [{ time: now(), msg, type }, ...l.slice(0, 9)]);
+
+  // On mount, auto-detect relay URL for Netlify or local
+  useEffect(() => {
+    let suggested = '';
+    if (window.location.hostname.endsWith('netlify.app')) {
+      suggested = 'wss://' + window.location.hostname.replace(/^www\./, '') + '/relay';
+    } else if (window.location.hostname !== 'localhost') {
+      suggested = 'ws://' + window.location.hostname + ':20801';
+    } else {
+      suggested = LAN_WS_URLS[0];
+    }
+    setAutoRelayUrl(suggested);
+    setManualUrl(suggested);
+  }, []);
 
   // On mount, try to connect to LAN relay
   useEffect(() => {
@@ -82,7 +99,8 @@ export default function App() {
       ws.current = new window.WebSocket(relayUrl as string);
       ws.current.onopen = () => {
         setStatus(relayUrl === WAN_WS_URL ? 'Connected to WAN relay' : 'Connected to LAN relay');
-        addLog('WebSocket connected');
+        setConnectionDropped(false);
+        addLog('WebSocket connected', 'info');
         // Send initial state
         if (ws.current && ws.current.readyState === 1) {
           const msg: any = {
@@ -100,24 +118,27 @@ export default function App() {
           }
           if (keylinkOn || linkOn) {
             ws.current.send(JSON.stringify(msg));
+            addLog('→ Sent: ' + JSON.stringify(msg), 'sent');
           }
         }
       };
       ws.current.onclose = () => {
         setStatus('Disconnected');
-        addLog('WebSocket disconnected');
+        setConnectionDropped(true);
+        addLog('WebSocket disconnected', 'error');
         setTimeout(connect, 2000);
       };
       ws.current.onerror = () => {
         setStatus('Connection error');
-        addLog('WebSocket connection error');
+        setConnectionDropped(true);
+        addLog('WebSocket connection error', 'error');
       };
       ws.current.onmessage = e => {
         try {
           const msg = JSON.parse(e.data);
           if (msg.room !== room) return; // Only process messages for this room
           if (msg.source !== source.current) {
-            addLog('Received: ' + JSON.stringify(msg));
+            addLog('← Received: ' + JSON.stringify(msg), 'received');
             // Update KeyLink state
             if (msg.keylinkEnabled) {
               if (msg.root && msg.root !== root) setRoot(msg.root);
@@ -167,6 +188,7 @@ export default function App() {
       }
       if (keylinkOn || linkOn) {
         ws.current.send(JSON.stringify(msg));
+        addLog('→ Sent: ' + JSON.stringify(msg), 'sent');
       }
     }
   }, [root, mode, keylinkOn, linkOn, tempo, chordLinkOn, chordRoot, chordType, room]);
@@ -216,6 +238,31 @@ export default function App() {
     minWidth: 120,
   });
 
+  // Add Test Message button handler
+  const sendTestMessage = () => {
+    if (ws.current && ws.current.readyState === 1 && room) {
+      const msg = {
+        room,
+        root: 'C',
+        mode: 'Ionian',
+        keylinkEnabled: true,
+        abletonLinkEnabled: false,
+        tempo: 120,
+        source: source.current,
+        timestamp: Date.now(),
+        test: true
+      };
+      ws.current.send(JSON.stringify(msg));
+      addLog('→ Sent: ' + JSON.stringify(msg), 'sent');
+    }
+  };
+
+  // Add Reconnect button handler
+  const handleReconnect = () => {
+    setRelayUrl(null);
+    setTimeout(() => setRelayUrl(manualUrl || autoRelayUrl), 100);
+  };
+
   // UI
   return (
     <div style={styles.container}>
@@ -263,20 +310,15 @@ export default function App() {
         <select value={chordType} onChange={handleChordType} disabled={!chordLinkOn} style={styles.select}>{CHORD_TYPES.map(c => <option key={c} value={c}>{c === 'none' ? '(no chord)' : c}</option>)}</select>
       </div>
       {/* Status and connection info */}
-      <div style={styles.status}>{status}</div>
-      {status === 'No LAN relay found' && (
-        <div style={styles.connectBox}>
-          <input
-            type="text"
-            placeholder="Enter LAN relay ws://... or leave blank for WAN"
-            value={manualUrl}
-            onChange={e => setManualUrl(e.target.value)}
-            style={styles.input}
-          />
-          <button style={styles.joinBtn} onClick={() => setRelayUrl(manualUrl || WAN_WS_URL)}>
-            {manualUrl ? 'Connect to LAN relay' : 'Connect to WAN relay'}
-          </button>
-        </div>
+      <div style={{ ...styles.status, marginBottom: 8 }}>
+        <span>Status: {status}</span>
+        <span style={{ marginLeft: 16 }}>Relay: {relayUrl || manualUrl || autoRelayUrl}</span>
+        <span style={{ marginLeft: 16 }}>Room: {room || '(none)'}</span>
+      </div>
+      {connectionDropped && (
+        <button style={{ ...styles.joinBtn, background: '#f55', color: '#fff', marginBottom: 8 }} onClick={handleReconnect}>
+          Reconnect
+        </button>
       )}
       {/* Advanced/dev features toggle and log */}
       <button style={styles.advBtn} onClick={() => setShowAdvanced(a => !a)}>
@@ -284,16 +326,22 @@ export default function App() {
       </button>
       {showAdvanced && (
         <div style={styles.advancedBox}>
-          <div style={{ color: '#F5C242', fontWeight: 600, marginBottom: 8 }}>Network Activity</div>
+          <div style={{ color: '#F5C242', fontWeight: 600, marginBottom: 8 }}>Network Log</div>
           <div>
-            {log.map((entry, i) => (
-              <div key={i} style={{ color: '#ccc', marginBottom: 4 }}>
+            {log.length === 0 ? <div style={{ color: '#888' }}>No network messages yet.</div> : log.map((entry, i) => (
+              <div key={i} style={{ color: entry.type === 'error' ? '#f55' : entry.type === 'sent' ? '#7CFC00' : entry.type === 'received' ? '#F5C242' : '#ccc', marginBottom: 4 }}>
                 <span style={{ color: '#888', marginRight: 8 }}>{entry.time}</span>{entry.msg}
               </div>
             ))}
           </div>
         </div>
       )}
+      {/* Test Message button */}
+      <div style={styles.connectBox}>
+        <button style={{ ...styles.joinBtn, background: '#7CFC00', color: '#222', marginBottom: 8 }} onClick={sendTestMessage} disabled={!room || !relayUrl || status.includes('Disconnected')}>
+          Send Test Message
+        </button>
+      </div>
     </div>
   );
 }
