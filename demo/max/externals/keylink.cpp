@@ -1,10 +1,14 @@
 // keylink.cpp - Starter for KeyLink Max external
+// All dependencies are local (thirdparty/asio, thirdparty/json.hpp) - no global install needed
 // Zero-config, cross-platform music data sync for Max, browser, and more
 // Written using the Cycling '74 Max SDK
 // (C) Neal Anderson, 2024
 
+#define ASIO_STANDALONE
 #include "ext.h"
 #include "ext_obex.h"
+#undef post
+#undef error
 #include <string>
 #include <thread>
 #include <atomic>
@@ -12,6 +16,8 @@
 #include <vector>
 #include <mutex>
 #include <condition_variable>
+#include "asio.hpp"
+#include "thirdparty/json.hpp"
 // #include <asio.hpp> // For UDP multicast (add to project)
 // #include <nlohmann/json.hpp> // For JSON parsing (add to project)
 
@@ -43,7 +49,7 @@ void keylink_stop(t_keylink *x);
 static t_class *keylink_class = NULL;
 
 // Main entry point
-extern "C" int C74_EXPORT main(void) {
+extern "C" void ext_main(void *r) {
     t_class *c = class_new("keylink", (method)keylink_new, (method)keylink_free, (long)sizeof(t_keylink), 0L, A_GIMME, 0);
     class_addmethod(c, (method)keylink_bang, "bang", 0);
     class_addmethod(c, (method)keylink_dict, "dictionary", A_SYM, 0);
@@ -53,7 +59,6 @@ extern "C" int C74_EXPORT main(void) {
     class_addmethod(c, (method)keylink_assist, "assist", A_CANT, 0);
     class_register(CLASS_BOX, c);
     keylink_class = c;
-    return 0;
 }
 
 void *keylink_new(t_symbol *s, long argc, t_atom *argv) {
