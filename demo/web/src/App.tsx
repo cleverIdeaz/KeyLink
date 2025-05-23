@@ -87,7 +87,7 @@ export default function App() {
         setStatus('Connected to LAN relay');
       } else {
         setStatus('No LAN relay found');
-      }
+    }
     })();
   }, []);
 
@@ -134,8 +134,8 @@ export default function App() {
         addLog('WebSocket connection error', 'error');
       };
       ws.current.onmessage = e => {
-        try {
-          const msg = JSON.parse(e.data);
+      try {
+        const msg = JSON.parse(e.data);
           if (msg.room !== room) return; // Only process messages for this room
           if (msg.source !== source.current) {
             addLog('← Received: ' + JSON.stringify(msg), 'received');
@@ -151,9 +151,9 @@ export default function App() {
             }
             // Update tempo if present
             if (msg.tempo && msg.tempo !== tempo) setTempo(msg.tempo);
-          }
-        } catch {}
-      };
+        }
+      } catch {}
+    };
     }
     connect();
     return () => { ws.current?.close(); };

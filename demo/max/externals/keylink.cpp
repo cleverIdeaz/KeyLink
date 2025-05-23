@@ -18,6 +18,7 @@
 #include <condition_variable>
 #include "asio.hpp"
 #include "thirdparty/json.hpp"
+#include <memory>
 // #include <asio.hpp> // For UDP multicast (add to project)
 // #include <nlohmann/json.hpp> // For JSON parsing (add to project)
 
@@ -32,6 +33,11 @@ typedef struct _keylink {
     void *outlet;
     std::thread net_thread;
     std::atomic<bool> running;
+    // Networking
+    std::unique_ptr<asio::io_context> io_ctx;
+    std::unique_ptr<asio::ip::udp::socket> udp_socket;
+    asio::ip::udp::endpoint multicast_endpoint;
+    char recv_buffer[2048];
     // Add UDP socket, WebSocket server, etc. here
 } t_keylink;
 
@@ -44,6 +50,7 @@ void keylink_dict(t_keylink *x, t_symbol *s);
 void keylink_symbol(t_keylink *x, t_symbol *s);
 void keylink_start(t_keylink *x);
 void keylink_stop(t_keylink *x);
+void udp_do_receive(t_keylink *x);
 
 // Class pointer
 static t_class *keylink_class = NULL;
@@ -74,6 +81,14 @@ void *keylink_new(t_symbol *s, long argc, t_atom *argv) {
 void keylink_free(t_keylink *x) {
     x->running = false;
     if (x->net_thread.joinable()) x->net_thread.join();
+    if (x->udp_socket) {
+        x->udp_socket->close();
+        x->udp_socket.reset();
+    }
+    if (x->io_ctx) {
+        x->io_ctx->stop();
+        x->io_ctx.reset();
+    }
     // TODO: Clean up sockets, etc.
 }
 
@@ -91,29 +106,63 @@ void keylink_bang(t_keylink *x) {
 }
 
 void keylink_dict(t_keylink *x, t_symbol *s) {
-    // TODO: Convert Max dict to JSON and send over UDP multicast
-    // Example: outlet_anything(x->outlet, gensym("dict_received"), 0, NULL);
+    // Notify user that direct dict support is not available in this SDK
+    object_post((t_object *)x, "Dictionary input not supported in this version of the Max SDK. Use [tosymbol] to send JSON as a symbol.");
 }
 
 void keylink_symbol(t_keylink *x, t_symbol *s) {
-    // TODO: Parse JSON string and send over UDP multicast
-    // Example: outlet_anything(x->outlet, gensym("symbol_received"), 0, NULL);
+    // Pass the symbol (JSON string) through locally
+    t_atom a;
+    atom_setsym(&a, s);
+    outlet_anything(x->outlet, gensym("json"), 1, &a);
+    // Send over UDP multicast
+    if (x->udp_socket && x->udp_socket->is_open()) {
+        std::string msg = s->s_name;
+        x->udp_socket->async_send_to(
+            asio::buffer(msg),
+            x->multicast_endpoint,
+            [](std::error_code, std::size_t){}
+        );
+    }
 }
 
 void keylink_start(t_keylink *x) {
     if (x->running) return;
     x->running = true;
-    // Start network thread for UDP multicast and WebSocket bridging
+    x->io_ctx.reset(new asio::io_context());
+    x->udp_socket.reset(new asio::ip::udp::socket(*x->io_ctx));
+    asio::ip::udp::endpoint listen_ep(asio::ip::udp::v4(), KEYLINK_UDP_PORT);
+    x->udp_socket->open(listen_ep.protocol());
+    x->udp_socket->set_option(asio::ip::udp::socket::reuse_address(true));
+    x->udp_socket->bind(listen_ep);
+    // Join multicast group
+    asio::ip::address multicast_addr = asio::ip::make_address(KEYLINK_MULTICAST_ADDR);
+    x->udp_socket->set_option(asio::ip::multicast::join_group(multicast_addr));
+    x->multicast_endpoint = asio::ip::udp::endpoint(multicast_addr, KEYLINK_UDP_PORT);
+    // Start network thread
     x->net_thread = std::thread([x]() {
-        // TODO: Set up UDP multicast socket (asio or raw sockets)
-        // TODO: Set up WebSocket server (optional)
-        // TODO: Loop: receive messages, parse JSON, output to Max, forward as needed
+        udp_do_receive(x);
         while (x->running) {
-            // Placeholder: sleep
-            std::this_thread::sleep_for(std::chrono::milliseconds(100));
+            x->io_ctx->run_for(std::chrono::milliseconds(100));
         }
-        // TODO: Clean up sockets
     });
+}
+
+void udp_do_receive(t_keylink *x) {
+    if (!x->udp_socket || !x->udp_socket->is_open()) return;
+    x->udp_socket->async_receive_from(
+        asio::buffer(x->recv_buffer, sizeof(x->recv_buffer)),
+        x->multicast_endpoint,
+        [x](std::error_code ec, std::size_t bytes_recvd) {
+            if (!ec && bytes_recvd > 0 && x->running) {
+                std::string msg(x->recv_buffer, bytes_recvd);
+                t_atom a;
+                atom_setsym(&a, gensym(msg.c_str()));
+                outlet_anything(x->outlet, gensym("json"), 1, &a);
+            }
+            if (x->running) udp_do_receive(x);
+        }
+    );
 }
 
 void keylink_stop(t_keylink *x) {
