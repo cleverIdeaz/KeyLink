@@ -58,6 +58,7 @@ export default function App() {
   const source = useRef('web-react-demo-' + Math.random().toString(36).slice(2));
   const [connectionDropped, setConnectionDropped] = useState(false);
   const [autoRelayUrl, setAutoRelayUrl] = useState('');
+  const [keylinkText, setKeylinkText] = useState('');
 
   // Log helper
   const addLog = (msg: string, type: 'sent' | 'received' | 'info' | 'error' = 'info') =>
@@ -151,6 +152,7 @@ export default function App() {
             }
             // Update tempo if present
             if (msg.tempo && msg.tempo !== tempo) setTempo(msg.tempo);
+            setKeylinkText(JSON.stringify(msg, null, 2));
         }
       } catch {}
     };
@@ -190,6 +192,7 @@ export default function App() {
         ws.current.send(JSON.stringify(msg));
         addLog('→ Sent: ' + JSON.stringify(msg), 'sent');
       }
+      setKeylinkText(JSON.stringify(msg, null, 2));
     }
   }, [root, mode, keylinkOn, linkOn, tempo, chordLinkOn, chordRoot, chordType, room]);
 
@@ -342,6 +345,11 @@ export default function App() {
           Send Test Message
         </button>
       </div>
+      <textarea
+        value={keylinkText}
+        readOnly
+        style={{ width: 400, height: 120, fontSize: 16, background: '#111', color: '#fff', borderRadius: 8, marginTop: 16 }}
+      />
     </div>
   );
 }
