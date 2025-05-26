@@ -37,6 +37,10 @@ async function tryConnect(urls: string[]): Promise<string | null> {
   return null;
 }
 
+// Helper to determine if running on HTTPS/Netlify
+const isHttps = window.location.protocol === 'https:';
+const isNetlify = window.location.hostname.endsWith('netlify.app');
+
 export default function App() {
   // UI state
   const [relayUrl, setRelayUrl] = useState<string | null>(null);
@@ -67,8 +71,8 @@ export default function App() {
   // On mount, auto-detect relay URL for Netlify or local
   useEffect(() => {
     let suggested = '';
-    if (window.location.hostname.endsWith('netlify.app')) {
-      suggested = 'wss://' + window.location.hostname.replace(/^www\./, '') + '/relay';
+    if (isNetlify || isHttps) {
+      suggested = 'wss://key-link.netlify.app/relay'; // Change to your deployed relay WSS URL
     } else if (window.location.hostname !== 'localhost') {
       suggested = 'ws://' + window.location.hostname + ':20801';
     } else {
@@ -99,11 +103,11 @@ export default function App() {
     function connect() {
       ws.current = new window.WebSocket(relayUrl as string);
       ws.current.onopen = () => {
-        setStatus(relayUrl === WAN_WS_URL ? 'Connected to WAN relay' : 'Connected to LAN relay');
+        setStatus(relayUrl.startsWith('wss://') ? 'Connected to WSS relay' : 'Connected to LAN relay');
         setConnectionDropped(false);
         addLog('WebSocket connected', 'info');
-        // Send initial state
-        if (ws.current && ws.current.readyState === 1) {
+        // Send initial state if KeyLink is ON
+        if (ws.current && ws.current.readyState === 1 && keylinkOn) {
           const msg: any = {
             room,
             root,
@@ -117,10 +121,9 @@ export default function App() {
           if (chordLinkOn && chordType !== 'none') {
             msg.chord = { root: chordRoot, type: chordType };
           }
-          if (keylinkOn || linkOn) {
-            ws.current.send(JSON.stringify(msg));
-            addLog('→ Sent: ' + JSON.stringify(msg), 'sent');
-          }
+          ws.current.send(JSON.stringify(msg));
+          addLog('→ Sent: ' + JSON.stringify(msg), 'sent');
+          setKeylinkText(JSON.stringify(msg, null, 2));
         }
       };
       ws.current.onclose = () => {
@@ -135,32 +138,28 @@ export default function App() {
         addLog('WebSocket connection error', 'error');
       };
       ws.current.onmessage = e => {
-      try {
-        const msg = JSON.parse(e.data);
+        try {
+          const msg = JSON.parse(e.data);
           if (msg.room !== room) return; // Only process messages for this room
-          if (msg.source !== source.current) {
-            addLog('← Received: ' + JSON.stringify(msg), 'received');
-            // Update KeyLink state
-            if (msg.keylinkEnabled) {
-              if (msg.root && msg.root !== root) setRoot(msg.root);
-              if (msg.mode && msg.mode !== mode) setMode(msg.mode);
-            }
-            // Update ChordLink state
+          addLog('← Received: ' + JSON.stringify(msg), 'received');
+          // Only update UI if KeyLink is ON
+          if (keylinkOn && msg.keylinkEnabled) {
+            if (msg.root && msg.root !== root) setRoot(msg.root);
+            if (msg.mode && msg.mode !== mode) setMode(msg.mode);
             if (msg.chord && chordLinkOn) {
               if (msg.chord.root && msg.chord.root !== chordRoot) setChordRoot(msg.chord.root);
               if (msg.chord.type && msg.chord.type !== chordType) setChordType(msg.chord.type);
             }
-            // Update tempo if present
             if (msg.tempo && msg.tempo !== tempo) setTempo(msg.tempo);
             setKeylinkText(JSON.stringify(msg, null, 2));
-        }
-      } catch {}
-    };
+          }
+        } catch {}
+      };
     }
     connect();
     return () => { ws.current?.close(); };
     // eslint-disable-next-line
-  }, [relayUrl, room]);
+  }, [relayUrl, room, keylinkOn, chordLinkOn]);
 
   // UI event handlers
   const handleKeylinkToggle = () => { setKeylinkOn(on => !on); };
@@ -172,9 +171,9 @@ export default function App() {
   const handleChordRoot = (e: React.ChangeEvent<HTMLSelectElement>) => { setChordRoot(e.target.value); };
   const handleChordType = (e: React.ChangeEvent<HTMLSelectElement>) => { setChordType(e.target.value); };
 
-  // Send state on relevant changes
+  // Send state on relevant changes (only if KeyLink is ON)
   useEffect(() => {
-    if (ws.current && ws.current.readyState === 1 && room) {
+    if (ws.current && ws.current.readyState === 1 && room && keylinkOn) {
       const msg: any = {
         room,
         root,
@@ -188,10 +187,8 @@ export default function App() {
       if (chordLinkOn && chordType !== 'none') {
         msg.chord = { root: chordRoot, type: chordType };
       }
-      if (keylinkOn || linkOn) {
-        ws.current.send(JSON.stringify(msg));
-        addLog('→ Sent: ' + JSON.stringify(msg), 'sent');
-      }
+      ws.current.send(JSON.stringify(msg));
+      addLog('→ Sent: ' + JSON.stringify(msg), 'sent');
       setKeylinkText(JSON.stringify(msg, null, 2));
     }
   }, [root, mode, keylinkOn, linkOn, tempo, chordLinkOn, chordRoot, chordType, room]);
