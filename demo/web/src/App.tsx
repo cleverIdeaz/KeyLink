@@ -300,8 +300,8 @@ export default function App() {
       </div>
       {/* KeyLink and Link controls */}
       <div style={styles.topBar}>
-        <button onClick={handleKeylinkToggle} style={mainBtn(keylinkOn)} title="Toggle KeyLink">
-          {keylinkOn ? 'KeyLink ON' : 'KeyLink OFF'}
+        <button onClick={handleKeylinkToggle} style={{ ...mainBtn(keylinkOn), display: 'flex', alignItems: 'center', justifyContent: 'center', minWidth: 160, height: 60, fontSize: 32, letterSpacing: 1 }} title="Toggle KeyLink">
+          KeyLink
         </button>
         <select value={root} onChange={handleRoot} style={styles.select}>{ROOTS.map(r => <option key={r} value={r}>{r}</option>)}</select>
         <select value={mode} onChange={handleMode} style={styles.select}>{MODES.map(m => <option key={m} value={m}>{m}</option>)}</select>
