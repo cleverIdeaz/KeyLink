@@ -4,6 +4,8 @@
 
 const dgram = require('dgram');
 const WebSocket = require('ws');
+const fs = require('fs');
+const https = require('https');
 
 // Configurable settings
 const UDP_PORT = 20800; // KeyLink UDP port
@@ -13,8 +15,15 @@ const WS_PORT = 20801; // WebSocket port
 // UDP socket for multicast
 const udpSocket = dgram.createSocket({ type: 'udp4', reuseAddr: true });
 
-// WebSocket server
-const wss = new WebSocket.Server({ port: WS_PORT });
+// HTTPS server for WSS
+const server = https.createServer({
+  key: fs.readFileSync(process.env.SSL_KEY_PATH || './privkey.pem'),
+  cert: fs.readFileSync(process.env.SSL_CERT_PATH || './fullchain.pem')
+});
+const wss = new WebSocket.Server({ server });
+server.listen(WS_PORT, () => {
+  console.log(`KeyLink WSS relay listening on wss://localhost:${WS_PORT}`);
+});
 
 // Store connected WebSocket clients
 let wsClients = new Set();
@@ -65,8 +74,6 @@ wss.on('connection', (ws) => {
   });
   ws.on('close', () => wsClients.delete(ws));
 });
-
-console.log(`KeyLink WebSocket relay listening on ws://localhost:${WS_PORT}`);
 
 // Forwards all KeyLink JSON messages between UDP multicast and WebSocket clients.
 // Works with Max/MSP (udpsend/udpreceive), Node.js, browser, and more. 
