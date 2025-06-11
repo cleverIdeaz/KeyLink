@@ -78,3 +78,44 @@ This is a browser-based demo of KeyLink, showcasing real-time LAN synchronizatio
 
 ## More Info
 - For protocol details and toolkit usage, see the main project `README.md`.
+
+## KeyLink SDK (Universal JavaScript/TypeScript)
+
+A minimal SDK for integrating KeyLink into any web, Node.js, or Electron app.
+
+### Installation
+
+Copy `src/keylink-sdk.ts` into your project, or install from npm (coming soon).
+
+### Usage
+
+```ts
+import { KeyLinkClient } from './keylink-sdk';
+
+const kl = new KeyLinkClient({ relayUrl: 'ws://localhost:2080' });
+kl.connect();
+
+kl.on((state) => {
+  // { enabled, key, mode, chordEnabled, chord: { root, type } }
+  console.log('KeyLink state:', state);
+});
+
+kl.setState({ key: 'G', mode: 'minor' });
+kl.setChord({ root: 'D', type: '7' });
+kl.toggleChordLink(true);
+kl.toggleKeyLink(true);
+```
+
+### API
+
+- `new KeyLinkClient({ relayUrl })` — Create a client for the relay server.
+- `.connect()` — Connect to the relay (WebSocket).
+- `.on(fn)` — Subscribe to state changes.
+- `.setState({ key, mode, ... })` — Set key/mode/etc.
+- `.setChord({ root, type })` — Set chord.
+- `.toggleChordLink(bool)` — Enable/disable ChordLink.
+- `.toggleKeyLink(bool)` — Enable/disable KeyLink.
+
+### Protocol
+
+The SDK handles all protocol/networking. For other languages, see the protocol docs in the main README.

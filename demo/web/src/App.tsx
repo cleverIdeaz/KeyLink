@@ -5,12 +5,13 @@ import React, { useEffect, useRef, useState } from 'react';
 // Uses the KeyLink protocol (see README.md)
 
 const LAN_WS_URLS = [
+  'wss://keylink-relay.fly.dev/',
   'ws://localhost:20801',
   'ws://192.168.1.1:20801',
   'ws://192.168.0.1:20801',
   'ws://10.0.0.1:20801',
 ];
-const WAN_WS_URL = 'wss://your-wan-relay.example.com'; // Set your WAN relay URL here
+const WAN_WS_URL = 'wss://keylink-relay.fly.dev/'; // Set your WAN relay URL here
 
 const ROOTS = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
 const MODES = ['Ionian', 'Dorian', 'Phrygian', 'Lydian', 'Mixolydian', 'Aeolian', 'Locrian'];
@@ -103,7 +104,7 @@ export default function App() {
     function connect() {
       ws.current = new window.WebSocket(relayUrl as string);
       ws.current.onopen = () => {
-        setStatus(relayUrl.startsWith('wss://') ? 'Connected to WSS relay' : 'Connected to LAN relay');
+        setStatus(relayUrl && relayUrl.startsWith('wss://') ? 'Connected to WSS relay' : 'Connected to LAN relay');
         setConnectionDropped(false);
         addLog('WebSocket connected', 'info');
         // Send initial state if KeyLink is ON
@@ -138,8 +139,8 @@ export default function App() {
         addLog('WebSocket connection error', 'error');
       };
       ws.current.onmessage = e => {
-        try {
-          const msg = JSON.parse(e.data);
+      try {
+        const msg = JSON.parse(e.data);
           if (msg.room !== room) return; // Only process messages for this room
           addLog('← Received: ' + JSON.stringify(msg), 'received');
           // Only update UI if KeyLink is ON
@@ -152,9 +153,9 @@ export default function App() {
             }
             if (msg.tempo && msg.tempo !== tempo) setTempo(msg.tempo);
             setKeylinkText(JSON.stringify(msg, null, 2));
-          }
-        } catch {}
-      };
+        }
+      } catch {}
+    };
     }
     connect();
     return () => { ws.current?.close(); };
