@@ -11,7 +11,6 @@ const LAN_WS_URLS = [
   'ws://192.168.0.1:20801',
   'ws://10.0.0.1:20801',
 ];
-const WAN_WS_URL = 'wss://keylink-relay.fly.dev/'; // Set your WAN relay URL here
 
 const ROOTS = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
 const MODES = ['Ionian', 'Dorian', 'Phrygian', 'Lydian', 'Mixolydian', 'Aeolian', 'Locrian'];
