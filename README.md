@@ -10,6 +10,18 @@
 
 Imagine a modern music collaboration: a composer is writing in Sibelius, a producer is building tracks in Ableton Live, someone else is live-sequencing on an OP-1, and another participant is generating music with an AI tool like Lemonaide, Udio, or Suno. They all want to work together, ensuring that every part—human or machine—stays in the same key and mode. Tempo sync is easy with Ableton Link, but there's no universal way to share key signature and harmonic context across all these platforms. KeyLink fills this gap, providing a simple, open protocol for sharing tonal information in real time, so every participant and every app can stay harmonically connected. This is the missing link for truly collaborative, cross-platform, and AI-integrated music creation.
 
+## Universal KeyLink SDK (Recommended Integration)
+
+A minimal, dependency-free JavaScript/TypeScript SDK is provided for easy integration of KeyLink into any web, Node.js, or Electron app. This SDK handles all protocol and networking details, exposing a simple event-driven API for state sync and control.
+
+- **Location:** `demo/web/src/keylink-sdk.ts`
+- **Install:** Copy the file or (coming soon) install from npm.
+- **API:** Create a client, connect, listen for state, and send updates with a few lines of code.
+
+See [demo/web/README.md](demo/web/README.md#keylink-sdk-universal-javascripttypescript) for full usage and API reference.
+
+For Max/MSP and other environments, see the protocol documentation and reference adapters.
+
 ---
 
 ## Table of Contents
