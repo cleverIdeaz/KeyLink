@@ -52,7 +52,6 @@ function generateRoomName() {
 export default function App() {
   // UI state
   const [relayUrl, setRelayUrl] = useState<string>('wss://keylink-relay.fly.dev/');
-  const [manualUrl, setManualUrl] = useState('');
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [room, setRoom] = useState(devMode ? '' : generateRoomName());
   const [roomInput, setRoomInput] = useState('');
@@ -67,7 +66,6 @@ export default function App() {
   const [log, setLog] = useState<{ time: string; msg: string; type: 'sent' | 'received' | 'info' | 'error' }[]>([]);
   const ws = useRef<WebSocket | null>(null);
   const source = useRef('web-react-demo-' + Math.random().toString(36).slice(2));
-  const [autoRelayUrl, setAutoRelayUrl] = useState('');
   const kl = useRef<KeyLinkClient | null>(null);
 
   // Log helper
@@ -84,8 +82,6 @@ export default function App() {
     } else {
       suggested = LAN_WS_URLS[0];
     }
-    setAutoRelayUrl(suggested);
-    setManualUrl(suggested);
     setRelayUrl(suggested);
   }, []);
 
