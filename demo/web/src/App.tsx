@@ -59,7 +59,6 @@ export default function App() {
   const [root, setRoot] = useState('C');
   const [mode, setMode] = useState('Ionian');
   const [keylinkOn, setKeylinkOn] = useState(true);
-  const [linkOn, setLinkOn] = useState(false);
   const [tempo, setTempo] = useState(120);
   const [chordLinkOn, setChordLinkOn] = useState(true);
   const [chordRoot, setChordRoot] = useState('C');
@@ -68,9 +67,7 @@ export default function App() {
   const [log, setLog] = useState<{ time: string; msg: string; type: 'sent' | 'received' | 'info' | 'error' }[]>([]);
   const ws = useRef<WebSocket | null>(null);
   const source = useRef('web-react-demo-' + Math.random().toString(36).slice(2));
-  const [connectionDropped, setConnectionDropped] = useState(false);
   const [autoRelayUrl, setAutoRelayUrl] = useState('');
-  const [keylinkText, setKeylinkText] = useState('');
   const kl = useRef<KeyLinkClient | null>(null);
 
   // Log helper
@@ -139,13 +136,12 @@ export default function App() {
 
   // UI event handlers
   const handleKeylinkToggle = () => { setKeylinkOn(on => !on); };
-  const handleLinkToggle = () => { setLinkOn(on => !on); };
-  const handleChordLinkToggle = () => { setChordLinkOn(on => !on); };
   const handleRoot = (e: React.ChangeEvent<HTMLSelectElement>) => { setRoot(e.target.value); };
   const handleMode = (e: React.ChangeEvent<HTMLSelectElement>) => { setMode(e.target.value); };
   const handleTempo = (e: React.ChangeEvent<HTMLInputElement>) => { setTempo(Number(e.target.value) || 120); };
   const handleChordRoot = (e: React.ChangeEvent<HTMLSelectElement>) => { setChordRoot(e.target.value); };
   const handleChordType = (e: React.ChangeEvent<HTMLSelectElement>) => { setChordType(e.target.value); };
+  const handleChordLinkToggle = () => { setChordLinkOn(on => !on); };
 
   // Styles
   const styles: { [key: string]: React.CSSProperties } = {
@@ -209,12 +205,6 @@ export default function App() {
       ws.current.send(JSON.stringify(msg));
       addLog('→ Sent: ' + JSON.stringify(msg), 'sent');
     }
-  };
-
-  // Add Reconnect button handler
-  const handleReconnect = () => {
-    setRelayUrl('');
-    setTimeout(() => setRelayUrl(manualUrl || autoRelayUrl), 100);
   };
 
   // UI
@@ -302,11 +292,6 @@ export default function App() {
           </button>
         </div>
       )}
-      <textarea
-        value={keylinkText}
-        readOnly
-        style={{ width: 400, height: 120, fontSize: 16, background: '#111', color: '#fff', borderRadius: 8, marginTop: 16 }}
-      />
     </div>
   );
 }
