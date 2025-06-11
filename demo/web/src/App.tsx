@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { KeyLinkClient } from './keylink-sdk';
 
 // Minimal, modern KeyLink Demo UI
 // Connects to relay server via WebSocket and syncs with LAN/Max/MSP/Node
@@ -15,6 +16,8 @@ const LAN_WS_URLS = [
 const ROOTS = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
 const MODES = ['Ionian', 'Dorian', 'Phrygian', 'Lydian', 'Mixolydian', 'Aeolian', 'Locrian'];
 const CHORD_TYPES = ['maj', 'min', '7', 'maj7', 'min7', 'dim', 'aug', 'sus2', 'sus4', 'none'];
+
+const devMode = process.env.NODE_ENV !== 'production';
 
 function now() {
   return new Date().toLocaleTimeString();
@@ -41,12 +44,17 @@ async function tryConnect(urls: string[]): Promise<string | null> {
 const isHttps = window.location.protocol === 'https:';
 const isNetlify = window.location.hostname.endsWith('netlify.app');
 
+function generateRoomName() {
+  const d = new Date();
+  return `room-${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}-${d.getHours()}`;
+}
+
 export default function App() {
   // UI state
-  const [relayUrl, setRelayUrl] = useState<string | null>(null);
+  const [relayUrl, setRelayUrl] = useState<string>('wss://keylink-relay.fly.dev/');
   const [manualUrl, setManualUrl] = useState('');
   const [showAdvanced, setShowAdvanced] = useState(false);
-  const [room, setRoom] = useState('');
+  const [room, setRoom] = useState(devMode ? '' : generateRoomName());
   const [roomInput, setRoomInput] = useState('');
   const [root, setRoot] = useState('C');
   const [mode, setMode] = useState('Ionian');
@@ -63,6 +71,7 @@ export default function App() {
   const [connectionDropped, setConnectionDropped] = useState(false);
   const [autoRelayUrl, setAutoRelayUrl] = useState('');
   const [keylinkText, setKeylinkText] = useState('');
+  const kl = useRef<KeyLinkClient | null>(null);
 
   // Log helper
   const addLog = (msg: string, type: 'sent' | 'received' | 'info' | 'error' = 'info') =>
@@ -72,7 +81,7 @@ export default function App() {
   useEffect(() => {
     let suggested = '';
     if (isNetlify || isHttps) {
-      suggested = 'wss://key-link.netlify.app/relay'; // Change to your deployed relay WSS URL
+      suggested = 'wss://key-link-relay.fly.dev/'; // Always use the Fly.io relay in prod
     } else if (window.location.hostname !== 'localhost') {
       suggested = 'ws://' + window.location.hostname + ':20801';
     } else {
@@ -80,6 +89,7 @@ export default function App() {
     }
     setAutoRelayUrl(suggested);
     setManualUrl(suggested);
+    setRelayUrl(suggested);
   }, []);
 
   // On mount, try to connect to LAN relay
@@ -96,70 +106,36 @@ export default function App() {
     })();
   }, []);
 
-  // WebSocket connection
+  // On mount, connect SDK
   useEffect(() => {
-    if (!relayUrl || !room) return;
-    if (typeof relayUrl !== 'string') return; // Type guard
-    function connect() {
-      ws.current = new window.WebSocket(relayUrl as string);
-      ws.current.onopen = () => {
-        setStatus(relayUrl && relayUrl.startsWith('wss://') ? 'Connected to WSS relay' : 'Connected to LAN relay');
-        setConnectionDropped(false);
-        addLog('WebSocket connected', 'info');
-        // Send initial state if KeyLink is ON
-        if (ws.current && ws.current.readyState === 1 && keylinkOn) {
-          const msg: any = {
-            room,
-            root,
-            mode,
-            keylinkEnabled: keylinkOn,
-            abletonLinkEnabled: linkOn,
-            tempo,
-            source: source.current,
-            timestamp: Date.now()
-          };
-          if (chordLinkOn && chordType !== 'none') {
-            msg.chord = { root: chordRoot, type: chordType };
-          }
-          ws.current.send(JSON.stringify(msg));
-          addLog('→ Sent: ' + JSON.stringify(msg), 'sent');
-          setKeylinkText(JSON.stringify(msg, null, 2));
-        }
-      };
-      ws.current.onclose = () => {
-        setStatus('Disconnected');
-        setConnectionDropped(true);
-        addLog('WebSocket disconnected', 'error');
-        setTimeout(connect, 2000);
-      };
-      ws.current.onerror = () => {
-        setStatus('Connection error');
-        setConnectionDropped(true);
-        addLog('WebSocket connection error', 'error');
-      };
-      ws.current.onmessage = e => {
-      try {
-        const msg = JSON.parse(e.data);
-          if (msg.room !== room) return; // Only process messages for this room
-          addLog('← Received: ' + JSON.stringify(msg), 'received');
-          // Only update UI if KeyLink is ON
-          if (keylinkOn && msg.keylinkEnabled) {
-            if (msg.root && msg.root !== root) setRoot(msg.root);
-            if (msg.mode && msg.mode !== mode) setMode(msg.mode);
-            if (msg.chord && chordLinkOn) {
-              if (msg.chord.root && msg.chord.root !== chordRoot) setChordRoot(msg.chord.root);
-              if (msg.chord.type && msg.chord.type !== chordType) setChordType(msg.chord.type);
-            }
-            if (msg.tempo && msg.tempo !== tempo) setTempo(msg.tempo);
-            setKeylinkText(JSON.stringify(msg, null, 2));
-        }
-      } catch {}
-    };
-    }
-    connect();
-    return () => { ws.current?.close(); };
+    if (!room) return;
+    kl.current = new KeyLinkClient({ relayUrl });
+    kl.current.connect();
+    kl.current.on((state) => {
+      // Update UI on received state
+      setRoot(state.key);
+      setMode(state.mode);
+      setKeylinkOn(state.enabled);
+      setChordLinkOn(state.chordEnabled);
+      setChordRoot(state.chord.root);
+      setChordType(state.chord.type);
+      addLog('← Received: ' + JSON.stringify(state), 'received');
+    });
+    setStatus('Connected to WSS relay');
+    addLog('KeyLink SDK connected', 'info');
     // eslint-disable-next-line
-  }, [relayUrl, room, keylinkOn, chordLinkOn]);
+  }, [room, relayUrl]);
+
+  // Send state on relevant changes
+  useEffect(() => {
+    if (!kl.current) return;
+    kl.current.setState({ key: root, mode, enabled: keylinkOn });
+    kl.current.setChord({ root: chordRoot, type: chordType });
+    kl.current.toggleChordLink(chordLinkOn);
+    kl.current.toggleKeyLink(keylinkOn);
+    addLog('→ Sent: ' + JSON.stringify({ key: root, mode, enabled: keylinkOn, chord: { root: chordRoot, type: chordType }, chordEnabled: chordLinkOn }), 'sent');
+    // eslint-disable-next-line
+  }, [root, mode, keylinkOn, chordLinkOn, chordRoot, chordType]);
 
   // UI event handlers
   const handleKeylinkToggle = () => { setKeylinkOn(on => !on); };
@@ -170,28 +146,6 @@ export default function App() {
   const handleTempo = (e: React.ChangeEvent<HTMLInputElement>) => { setTempo(Number(e.target.value) || 120); };
   const handleChordRoot = (e: React.ChangeEvent<HTMLSelectElement>) => { setChordRoot(e.target.value); };
   const handleChordType = (e: React.ChangeEvent<HTMLSelectElement>) => { setChordType(e.target.value); };
-
-  // Send state on relevant changes (only if KeyLink is ON)
-  useEffect(() => {
-    if (ws.current && ws.current.readyState === 1 && room && keylinkOn) {
-      const msg: any = {
-        room,
-        root,
-        mode,
-        keylinkEnabled: keylinkOn,
-        abletonLinkEnabled: linkOn,
-        tempo,
-        source: source.current,
-        timestamp: Date.now()
-      };
-      if (chordLinkOn && chordType !== 'none') {
-        msg.chord = { root: chordRoot, type: chordType };
-      }
-      ws.current.send(JSON.stringify(msg));
-      addLog('→ Sent: ' + JSON.stringify(msg), 'sent');
-      setKeylinkText(JSON.stringify(msg, null, 2));
-    }
-  }, [root, mode, keylinkOn, linkOn, tempo, chordLinkOn, chordRoot, chordType, room]);
 
   // Styles
   const styles: { [key: string]: React.CSSProperties } = {
@@ -259,42 +213,44 @@ export default function App() {
 
   // Add Reconnect button handler
   const handleReconnect = () => {
-    setRelayUrl(null);
+    setRelayUrl('');
     setTimeout(() => setRelayUrl(manualUrl || autoRelayUrl), 100);
   };
 
   // UI
   return (
     <div style={styles.container}>
-      {/* Room/session join bar */}
-      <div style={styles.roomBar}>
-        <input
-          type="text"
-          placeholder="Enter room/session name (optional)"
-          value={roomInput}
-          onChange={e => setRoomInput(e.target.value)}
-          style={styles.input}
-          disabled={!!room}
-        />
-        {!room ? (
-          <button
-            style={styles.joinBtn}
-            onClick={() => setRoom(roomInput.trim() || 'default')}
-            disabled={!!roomInput.trim() === false}
-            title="Join a session. Leave blank for default session."
-          >
-            Join
-          </button>
-        ) : (
-          <button
-            style={{ ...styles.joinBtn, background: '#888', color: '#fff' }}
-            onClick={() => { setRoom(''); setRoomInput(''); }}
-            title="Leave session"
-          >
-            Leave
-          </button>
-        )}
-      </div>
+      {/* Room/session join bar (dev only) */}
+      {devMode && (
+        <div style={styles.roomBar}>
+          <input
+            type="text"
+            placeholder="Enter room/session name (optional)"
+            value={roomInput}
+            onChange={e => setRoomInput(e.target.value)}
+            style={styles.input}
+            disabled={!!room}
+          />
+          {!room ? (
+            <button
+              style={styles.joinBtn}
+              onClick={() => setRoom(roomInput.trim() || generateRoomName())}
+              disabled={!!roomInput.trim() === false}
+              title="Join a session. Leave blank for default session."
+            >
+              Join
+            </button>
+          ) : (
+            <button
+              style={{ ...styles.joinBtn, background: '#888', color: '#fff' }}
+              onClick={() => { setRoom(''); setRoomInput(''); }}
+              title="Leave session"
+            >
+              Leave
+            </button>
+          )}
+        </div>
+      )}
       {/* KeyLink and Link controls */}
       <div style={styles.topBar}>
         <button onClick={handleKeylinkToggle} style={{ ...mainBtn(keylinkOn), display: 'flex', alignItems: 'center', justifyContent: 'center', minWidth: 160, height: 60, fontSize: 32, letterSpacing: 1 }} title="Toggle KeyLink">
@@ -302,48 +258,50 @@ export default function App() {
         </button>
         <select value={root} onChange={handleRoot} style={styles.select}>{ROOTS.map(r => <option key={r} value={r}>{r}</option>)}</select>
         <select value={mode} onChange={handleMode} style={styles.select}>{MODES.map(m => <option key={m} value={m}>{m}</option>)}</select>
-        <button onClick={handleLinkToggle} style={mainBtn(linkOn)} title="Toggle Ableton Link">Link</button>
         <input type="number" min={40} max={240} value={tempo} onChange={handleTempo} style={styles.tempo} title="Tempo (bpm)" />
       </div>
-      {/* ChordLink controls */}
-      <div style={styles.chordSection}>
-        <button onClick={handleChordLinkToggle} style={mainBtn(chordLinkOn)} title="Toggle ChordLink">ChordLink</button>
-        <select value={chordRoot} onChange={handleChordRoot} disabled={!chordLinkOn} style={styles.select}>{ROOTS.map(r => <option key={r} value={r}>{r}</option>)}</select>
-        <select value={chordType} onChange={handleChordType} disabled={!chordLinkOn} style={styles.select}>{CHORD_TYPES.map(c => <option key={c} value={c}>{c === 'none' ? '(no chord)' : c}</option>)}</select>
-      </div>
+      {/* ChordLink controls (dev only) */}
+      {devMode && (
+        <div style={styles.chordSection}>
+          <button onClick={handleChordLinkToggle} style={mainBtn(chordLinkOn)} title="Toggle ChordLink">ChordLink</button>
+          <select value={chordRoot} onChange={handleChordRoot} disabled={!chordLinkOn} style={styles.select}>{ROOTS.map(r => <option key={r} value={r}>{r}</option>)}</select>
+          <select value={chordType} onChange={handleChordType} disabled={!chordLinkOn} style={styles.select}>{CHORD_TYPES.map(c => <option key={c} value={c}>{c === 'none' ? '(no chord)' : c}</option>)}</select>
+        </div>
+      )}
       {/* Status and connection info */}
       <div style={{ ...styles.status, marginBottom: 8 }}>
         <span>Status: {status}</span>
-        <span style={{ marginLeft: 16 }}>Relay: {relayUrl || manualUrl || autoRelayUrl}</span>
+        <span style={{ marginLeft: 16 }}>Relay: {relayUrl}</span>
         <span style={{ marginLeft: 16 }}>Room: {room || '(none)'}</span>
       </div>
-      {connectionDropped && (
-        <button style={{ ...styles.joinBtn, background: '#f55', color: '#fff', marginBottom: 8 }} onClick={handleReconnect}>
-          Reconnect
-        </button>
-      )}
-      {/* Advanced/dev features toggle and log */}
-      <button style={styles.advBtn} onClick={() => setShowAdvanced(a => !a)}>
-        {showAdvanced ? 'Hide Advanced' : 'Show Advanced'}
-      </button>
-      {showAdvanced && (
-        <div style={styles.advancedBox}>
-          <div style={{ color: '#F5C242', fontWeight: 600, marginBottom: 8 }}>Network Log</div>
-          <div>
-            {log.length === 0 ? <div style={{ color: '#888' }}>No network messages yet.</div> : log.map((entry, i) => (
-              <div key={i} style={{ color: entry.type === 'error' ? '#f55' : entry.type === 'sent' ? '#7CFC00' : entry.type === 'received' ? '#F5C242' : '#ccc', marginBottom: 4 }}>
-                <span style={{ color: '#888', marginRight: 8 }}>{entry.time}</span>{entry.msg}
+      {/* Advanced/dev features toggle and log (dev only) */}
+      {devMode && (
+        <>
+          <button style={styles.advBtn} onClick={() => setShowAdvanced(a => !a)}>
+            {showAdvanced ? 'Hide Advanced' : 'Show Advanced'}
+          </button>
+          {showAdvanced && (
+            <div style={styles.advancedBox}>
+              <div style={{ color: '#F5C242', fontWeight: 600, marginBottom: 8 }}>Network Log</div>
+              <div>
+                {log.length === 0 ? <div style={{ color: '#888' }}>No network messages yet.</div> : log.map((entry, i) => (
+                  <div key={i} style={{ color: entry.type === 'error' ? '#f55' : entry.type === 'sent' ? '#7CFC00' : entry.type === 'received' ? '#F5C242' : '#ccc', marginBottom: 4 }}>
+                    <span style={{ color: '#888', marginRight: 8 }}>{entry.time}</span>{entry.msg}
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
+            </div>
+          )}
+        </>
+      )}
+      {/* Test Message button (dev only) */}
+      {devMode && (
+        <div style={styles.connectBox}>
+          <button style={{ ...styles.joinBtn, background: '#7CFC00', color: '#222', marginBottom: 8 }} onClick={sendTestMessage} disabled={!room || !relayUrl || status.includes('Disconnected')}>
+            Send Test Message
+          </button>
         </div>
       )}
-      {/* Test Message button */}
-      <div style={styles.connectBox}>
-        <button style={{ ...styles.joinBtn, background: '#7CFC00', color: '#222', marginBottom: 8 }} onClick={sendTestMessage} disabled={!room || !relayUrl || status.includes('Disconnected')}>
-          Send Test Message
-        </button>
-      </div>
       <textarea
         value={keylinkText}
         readOnly
