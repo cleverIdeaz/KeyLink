@@ -237,7 +237,7 @@ export default function App() {
           )}
         </div>
       )}
-      {/* KeyLink and Link controls */}
+      {/* Main KeyLink controls */}
       <div style={styles.topBar}>
         <button onClick={handleKeylinkToggle} style={{ ...mainBtn(keylinkOn), display: 'flex', alignItems: 'center', justifyContent: 'center', minWidth: 160, height: 60, fontSize: 32, letterSpacing: 1 }} title="Toggle KeyLink">
           KeyLink
@@ -246,40 +246,33 @@ export default function App() {
         <select value={mode} onChange={handleMode} style={styles.select}>{MODES.map(m => <option key={m} value={m}>{m}</option>)}</select>
         <input type="number" min={40} max={240} value={tempo} onChange={handleTempo} style={styles.tempo} title="Tempo (bpm)" />
       </div>
-      {/* ChordLink controls (dev only) */}
-      {devMode && (
-        <div style={styles.chordSection}>
-          <button onClick={handleChordLinkToggle} style={mainBtn(chordLinkOn)} title="Toggle ChordLink">ChordLink</button>
-          <select value={chordRoot} onChange={handleChordRoot} disabled={!chordLinkOn} style={styles.select}>{ROOTS.map(r => <option key={r} value={r}>{r}</option>)}</select>
-          <select value={chordType} onChange={handleChordType} disabled={!chordLinkOn} style={styles.select}>{CHORD_TYPES.map(c => <option key={c} value={c}>{c === 'none' ? '(no chord)' : c}</option>)}</select>
-        </div>
-      )}
+      {/* Advanced controls dropdown */}
+      <div style={{ marginTop: 16 }}>
+        <button style={styles.advBtn} onClick={() => setShowAdvanced(a => !a)}>
+          {showAdvanced ? 'Hide Advanced' : 'Show Advanced'}
+        </button>
+        {showAdvanced && (
+          <div style={{ marginTop: 16 }}>
+            {/* ChordLink controls */}
+            <div style={styles.chordSection}>
+              <button onClick={handleChordLinkToggle} style={mainBtn(chordLinkOn)} title="Toggle ChordLink">ChordLink</button>
+              <select value={chordRoot} onChange={handleChordRoot} disabled={!chordLinkOn} style={styles.select}>{ROOTS.map(r => <option key={r} value={r}>{r}</option>)}</select>
+              <select value={chordType} onChange={handleChordType} disabled={!chordLinkOn} style={styles.select}>{CHORD_TYPES.map(c => <option key={c} value={c}>{c === 'none' ? '(no chord)' : c}</option>)}</select>
+            </div>
+            {/* Link/tempo controls */}
+            <div style={{ ...styles.section, marginTop: 8 }}>
+              <span style={{ fontWeight: 600, color: '#F5C242', marginRight: 8 }}>Link (tempo):</span>
+              <input type="number" min={40} max={240} value={tempo} onChange={handleTempo} style={styles.tempo} title="Tempo (bpm)" />
+            </div>
+          </div>
+        )}
+      </div>
       {/* Status and connection info */}
       <div style={{ ...styles.status, marginBottom: 8 }}>
         <span>Status: {status}</span>
         <span style={{ marginLeft: 16 }}>Relay: {relayUrl}</span>
         <span style={{ marginLeft: 16 }}>Room: {room || '(none)'}</span>
       </div>
-      {/* Advanced/dev features toggle and log (dev only) */}
-      {devMode && (
-        <>
-          <button style={styles.advBtn} onClick={() => setShowAdvanced(a => !a)}>
-            {showAdvanced ? 'Hide Advanced' : 'Show Advanced'}
-          </button>
-          {showAdvanced && (
-            <div style={styles.advancedBox}>
-              <div style={{ color: '#F5C242', fontWeight: 600, marginBottom: 8 }}>Network Log</div>
-              <div>
-                {log.length === 0 ? <div style={{ color: '#888' }}>No network messages yet.</div> : log.map((entry, i) => (
-                  <div key={i} style={{ color: entry.type === 'error' ? '#f55' : entry.type === 'sent' ? '#7CFC00' : entry.type === 'received' ? '#F5C242' : '#ccc', marginBottom: 4 }}>
-                    <span style={{ color: '#888', marginRight: 8 }}>{entry.time}</span>{entry.msg}
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-        </>
-      )}
       {/* Test Message button (dev only) */}
       {devMode && (
         <div style={styles.connectBox}>
