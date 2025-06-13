@@ -67,6 +67,7 @@ export default function App() {
   const ws = useRef<WebSocket | null>(null);
   const source = useRef('web-react-demo-' + Math.random().toString(36).slice(2));
   const kl = useRef<KeyLinkClient | null>(null);
+  const keylinkOnRef = useRef(keylinkOn);
 
   // Log helper
   const addLog = (msg: string, type: 'sent' | 'received' | 'info' | 'error' = 'info') =>
@@ -105,8 +106,8 @@ export default function App() {
     kl.current = new KeyLinkClient({ relayUrl });
     kl.current.connect();
     kl.current.on((state) => {
-      // Only process incoming state if keylinkOn is true
-      if (!keylinkOn) return;
+      // Only process incoming state if keylinkOn is true (using ref for latest value)
+      if (!keylinkOnRef.current) return;
       setRoot(state.key);
       setMode(state.mode);
       setChordLinkOn(state.chordEnabled);
@@ -117,7 +118,7 @@ export default function App() {
     setStatus('Connected to WSS relay');
     addLog('KeyLink SDK connected', 'info');
     // eslint-disable-next-line
-  }, [room, relayUrl, keylinkOn]);
+  }, [room, relayUrl]);
 
   // Send state on relevant changes
   useEffect(() => {
@@ -202,6 +203,9 @@ export default function App() {
       addLog('→ Sent: ' + JSON.stringify(msg), 'sent');
     }
   };
+
+  // On mount, update keylinkOnRef
+  useEffect(() => { keylinkOnRef.current = keylinkOn; }, [keylinkOn]);
 
   // UI
   return (
