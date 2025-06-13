@@ -76,7 +76,7 @@ export default function App() {
   useEffect(() => {
     let suggested = '';
     if (isNetlify || isHttps) {
-      suggested = 'wss://key-link-relay.fly.dev/'; // Always use the Fly.io relay in prod
+      suggested = 'wss://keylink-relay.fly.dev/'; // Always use the Fly.io relay in prod
     } else if (window.location.hostname !== 'localhost') {
       suggested = 'ws://' + window.location.hostname + ':20801';
     } else {
