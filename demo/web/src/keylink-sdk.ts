@@ -28,6 +28,7 @@ export class KeyLinkClient {
     this.ws = new WebSocket(this.opts.relayUrl);
     this.ws.onmessage = (e) => {
       try {
+        console.log('[KeyLink SDK] Received raw message:', e.data); // Debug log
         const msg = JSON.parse(e.data);
         if (msg.type === 'keylink-state') {
           this.state = msg.state;
