@@ -28,13 +28,34 @@ export class KeyLinkClient {
     this.ws = new WebSocket(this.opts.relayUrl);
     this.ws.onmessage = (e) => {
       try {
-        console.log('[KeyLink SDK] Received raw message:', e.data); // Debug log
-        const msg = JSON.parse(e.data);
-        if (msg.type === 'keylink-state') {
-          this.state = msg.state;
-          this.listeners.forEach((fn) => fn(this.state));
+        if (e.data instanceof Blob) {
+          // Read the Blob as text, then parse JSON
+          const reader = new FileReader();
+          reader.onload = () => {
+            try {
+              console.log('[KeyLink SDK] Received raw message:', reader.result);
+              const msg = JSON.parse(reader.result as string);
+              if (msg.type === 'keylink-state') {
+                this.state = msg.state;
+                this.listeners.forEach((fn) => fn(this.state));
+              }
+            } catch (err) {
+              console.error('[KeyLink SDK] Failed to parse Blob message:', err);
+            }
+          };
+          reader.readAsText(e.data);
+        } else {
+          // Fallback for string messages
+          console.log('[KeyLink SDK] Received raw message:', e.data);
+          const msg = JSON.parse(e.data);
+          if (msg.type === 'keylink-state') {
+            this.state = msg.state;
+            this.listeners.forEach((fn) => fn(this.state));
+          }
         }
-      } catch {}
+      } catch (err) {
+        console.error('[KeyLink SDK] General onmessage error:', err);
+      }
     };
     this.ws.onopen = () => {
       this.send({ type: 'get-state' });
