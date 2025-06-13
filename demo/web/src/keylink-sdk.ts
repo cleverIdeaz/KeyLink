@@ -35,7 +35,7 @@ export class KeyLinkClient {
             try {
               console.log('[KeyLink SDK] Received raw message:', reader.result);
               const msg = JSON.parse(reader.result as string);
-              if (msg.type === 'keylink-state') {
+              if (msg.type === 'keylink-state' || msg.type === 'set-state') {
                 this.state = msg.state;
                 this.listeners.forEach((fn) => fn(this.state));
               }
@@ -48,7 +48,7 @@ export class KeyLinkClient {
           // Fallback for string messages
           console.log('[KeyLink SDK] Received raw message:', e.data);
           const msg = JSON.parse(e.data);
-          if (msg.type === 'keylink-state') {
+          if (msg.type === 'keylink-state' || msg.type === 'set-state') {
             this.state = msg.state;
             this.listeners.forEach((fn) => fn(this.state));
           }
