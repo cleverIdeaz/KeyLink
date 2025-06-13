@@ -273,6 +273,20 @@ export default function App() {
         <span style={{ marginLeft: 16 }}>Relay: {relayUrl}</span>
         <span style={{ marginLeft: 16 }}>Room: {room || '(none)'}</span>
       </div>
+      {/* Log display for debug/info */}
+      <div style={{ width: '100%', maxWidth: 480, margin: '16px 0', background: '#181818', borderRadius: 10, padding: 12, minHeight: 60, fontSize: 14, color: '#ccc', fontFamily: 'monospace', maxHeight: 180, overflowY: 'auto' }}>
+        <div style={{ fontWeight: 600, color: '#F5C242', marginBottom: 4 }}>Log:</div>
+        {log.length === 0 ? (
+          <div style={{ color: '#555' }}>No messages yet.</div>
+        ) : (
+          log.map((entry, i) => (
+            <div key={i} style={{ color: entry.type === 'error' ? '#f55' : entry.type === 'sent' ? '#7CFC00' : entry.type === 'received' ? '#61dafb' : '#ccc' }}>
+              <span style={{ marginRight: 8 }}>{entry.time}</span>
+              <span>{entry.msg}</span>
+            </div>
+          ))
+        )}
+      </div>
       {/* Test Message button (dev only) */}
       {devMode && (
         <div style={styles.connectBox}>
