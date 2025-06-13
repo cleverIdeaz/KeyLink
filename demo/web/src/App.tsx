@@ -105,10 +105,10 @@ export default function App() {
     kl.current = new KeyLinkClient({ relayUrl });
     kl.current.connect();
     kl.current.on((state) => {
-      // Update UI on received state
+      // Only process incoming state if keylinkOn is true
+      if (!keylinkOn) return;
       setRoot(state.key);
       setMode(state.mode);
-      setKeylinkOn(state.enabled);
       setChordLinkOn(state.chordEnabled);
       setChordRoot(state.chord.root);
       setChordType(state.chord.type);
@@ -117,18 +117,18 @@ export default function App() {
     setStatus('Connected to WSS relay');
     addLog('KeyLink SDK connected', 'info');
     // eslint-disable-next-line
-  }, [room, relayUrl]);
+  }, [room, relayUrl, keylinkOn]);
 
   // Send state on relevant changes
   useEffect(() => {
     if (!kl.current) return;
-    kl.current.setState({ key: root, mode, enabled: keylinkOn });
+    if (!keylinkOn) return; // Only send if enabled
+    kl.current.setState({ key: root, mode });
     kl.current.setChord({ root: chordRoot, type: chordType });
     kl.current.toggleChordLink(chordLinkOn);
-    kl.current.toggleKeyLink(keylinkOn);
-    addLog('→ Sent: ' + JSON.stringify({ key: root, mode, enabled: keylinkOn, chord: { root: chordRoot, type: chordType }, chordEnabled: chordLinkOn }), 'sent');
+    addLog('→ Sent: ' + JSON.stringify({ key: root, mode, chord: { root: chordRoot, type: chordType }, chordEnabled: chordLinkOn }), 'sent');
     // eslint-disable-next-line
-  }, [root, mode, keylinkOn, chordLinkOn, chordRoot, chordType]);
+  }, [root, mode, chordLinkOn, chordRoot, chordType, keylinkOn]);
 
   // UI event handlers
   const handleKeylinkToggle = () => { setKeylinkOn(on => !on); };
