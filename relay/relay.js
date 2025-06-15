@@ -23,16 +23,16 @@ if (process.env.SSL_KEY_PATH && process.env.SSL_CERT_PATH) {
     cert: fs.readFileSync(process.env.SSL_CERT_PATH)
   });
   wss = new WebSocket.Server({ server });
-  server.listen(WS_PORT, () => {
-    console.log(`KeyLink WSS relay listening on wss://localhost:${WS_PORT}`);
+  server.listen(WS_PORT, '0.0.0.0', () => {
+    console.log(`KeyLink WSS relay listening on wss://0.0.0.0:${WS_PORT}`);
   });
 } else {
   // Fallback to plain WS (for local/Fly.io, which terminates SSL at the edge)
   const http = require('http');
   server = http.createServer();
   wss = new WebSocket.Server({ server });
-  server.listen(WS_PORT, () => {
-    console.log(`KeyLink WS relay listening on ws://localhost:${WS_PORT}`);
+  server.listen(WS_PORT, '0.0.0.0', () => {
+    console.log(`KeyLink WS relay listening on ws://0.0.0.0:${WS_PORT}`);
   });
 }
 
