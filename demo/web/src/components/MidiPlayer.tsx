@@ -43,6 +43,7 @@ export default function MidiPlayer() {
           {/* midi-player & visualizer web components */}
           {React.createElement('midi-player', {
             src: fileUrl,
+            controls: true,
             'sound-font': 'https://storage.googleapis.com/magentadata/js/soundfonts/sgm_plus',
             style: { width: '100%', marginTop: 8 }
           })}
