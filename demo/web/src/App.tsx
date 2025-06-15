@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { KeyLinkClient } from './keylink-sdk';
+import MidiPlayer from './components/MidiPlayer';
 
 // Minimal, modern KeyLink Demo UI
 // Connects to relay server via WebSocket and syncs with LAN/Max/MSP/Node
@@ -267,6 +268,10 @@ export default function App() {
             <div style={{ ...styles.section, marginTop: 8 }}>
               <span style={{ fontWeight: 600, color: '#F5C242', marginRight: 8 }}>Link (tempo):</span>
               <input type="number" min={40} max={240} value={tempo} onChange={handleTempo} style={styles.tempo} title="Tempo (bpm)" />
+            </div>
+            {/* MIDI Player / Uploader */}
+            <div style={{ marginTop: 16 }}>
+              <MidiPlayer />
             </div>
           </div>
         )}
