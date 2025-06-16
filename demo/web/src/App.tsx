@@ -54,8 +54,8 @@ export default function App() {
   // UI state
   const [relayUrl, setRelayUrl] = useState<string>('wss://keylink-relay.fly.dev/');
   const [showAdvanced, setShowAdvanced] = useState(false);
-  const [room, setRoom] = useState(devMode ? '' : generateRoomName());
-  const [roomInput, setRoomInput] = useState('');
+  const [room, ] = useState(devMode ? '' : generateRoomName());
+  // const [roomInput, setRoomInput] = useState('');
   const [root, setRoot] = useState('C');
   const [mode, setMode] = useState('Ionian');
   const [keylinkOn, setKeylinkOn] = useState(true);
@@ -65,8 +65,8 @@ export default function App() {
   const [chordType, setChordType] = useState('maj');
   const [status, setStatus] = useState('Disconnected');
   const [log, setLog] = useState<{ time: string; msg: string; type: 'sent' | 'received' | 'info' | 'error' }[]>([]);
-  const ws = useRef<WebSocket | null>(null);
-  const source = useRef('web-react-demo-' + Math.random().toString(36).slice(2));
+  // const ws = useRef<WebSocket | null>(null);
+  // const source = useRef('web-react-demo-' + Math.random().toString(36).slice(2));
   const kl = useRef<KeyLinkClient | null>(null);
   const keylinkOnRef = useRef(keylinkOn);
 
@@ -160,169 +160,75 @@ export default function App() {
     }
   };
 
-  // Styles
-  const styles: { [key: string]: React.CSSProperties } = {
-    container: {
-      background: '#222', color: '#fff', minHeight: '100vh', fontFamily: 'sans-serif',
-      display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-start',
-      padding: 0, width: '100vw', boxSizing: 'border-box',
-    },
-    topBar: {
-      width: '100%', maxWidth: 480, margin: '32px 0 16px 0', display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8,
-    },
-    section: {
-      width: '100%', maxWidth: 480, display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, marginBottom: 16,
-    },
-    chordSection: {
-      width: '100%', maxWidth: 480, display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, marginBottom: 24,
-    },
-    status: {
-      margin: '8px 0', fontSize: 16, fontWeight: 500, color: status.includes('Connected') ? '#7CFC00' : status.includes('error') ? '#f55' : '#F5C242',
-      textAlign: 'center',
-    },
-    roomBar: {
-      width: '100%', maxWidth: 480, display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, margin: '32px 0 8px 0',
-    },
-    input: { fontSize: 20, borderRadius: 8, padding: '8px 12px', background: '#333', color: '#fff', border: 'none', width: 220 },
-    joinBtn: { fontSize: 20, borderRadius: 8, padding: '8px 24px', background: '#F5C242', color: '#222', fontWeight: 700, border: 'none', cursor: 'pointer' },
-    select: { fontSize: 22, borderRadius: 8, padding: '8px 16px', background: '#333', color: '#fff', border: 'none' },
-    tempo: { fontSize: 22, borderRadius: 8, padding: '8px 16px', background: '#333', color: '#fff', border: 'none', width: 80 },
-    advancedBox: { background: '#111', borderRadius: 10, padding: 16, width: 480, minHeight: 80, marginTop: 16, fontSize: 15, overflowY: 'auto', maxHeight: 180 },
-    advBtn: { margin: '16px 0 0 0', fontSize: 15, borderRadius: 8, padding: '6px 16px', background: '#333', color: '#F5C242', border: 'none', cursor: 'pointer' },
-    connectBox: { display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 8, margin: '8px 0' },
-  };
-
-  // Standalone style function for main buttons
-  const mainBtn = (active: boolean): React.CSSProperties => ({
-    fontSize: 28,
-    borderRadius: 10,
-    padding: '12px 32px',
-    background: active ? '#F5C242' : '#888',
-    color: '#222',
-    fontWeight: 700,
-    border: 'none',
-    cursor: 'pointer',
-    minWidth: 120,
-  });
-
-  // Add Test Message button handler
-  const sendTestMessage = () => {
-    if (ws.current && ws.current.readyState === 1 && room) {
-      const msg = {
-        room,
-        root: 'C',
-        mode: 'Ionian',
-        keylinkEnabled: true,
-        abletonLinkEnabled: false,
-        tempo: 120,
-        source: source.current,
-        timestamp: Date.now(),
-        test: true
-      };
-      ws.current.send(JSON.stringify(msg));
-      addLog('→ Sent: ' + JSON.stringify(msg), 'sent');
-    }
-  };
-
-  // On mount, update keylinkOnRef
-  useEffect(() => { keylinkOnRef.current = keylinkOn; }, [keylinkOn]);
-
-  // UI
+  // Use a more responsive layout with Flexbox
   return (
-    <div style={styles.container}>
-      {/* Room/session join bar (dev only) */}
-      {devMode && (
-        <div style={styles.roomBar}>
-          <input
-            type="text"
-            placeholder="Enter room/session name (optional)"
-            value={roomInput}
-            onChange={e => setRoomInput(e.target.value)}
-            style={styles.input}
-            disabled={!!room}
-          />
-          {!room ? (
-            <button
-              style={styles.joinBtn}
-              onClick={() => setRoom(roomInput.trim() || generateRoomName())}
-              disabled={!!roomInput.trim() === false}
-              title="Join a session. Leave blank for default session."
-            >
-              Join
-            </button>
-          ) : (
-            <button
-              style={{ ...styles.joinBtn, background: '#888', color: '#fff' }}
-              onClick={() => { setRoom(''); setRoomInput(''); }}
-              title="Leave session"
-            >
-              Leave
-            </button>
-          )}
-        </div>
-      )}
-      {/* Main KeyLink controls */}
-      <div style={styles.topBar}>
-        <button onClick={handleKeylinkToggle} style={{ ...mainBtn(keylinkOn), display: 'flex', alignItems: 'center', justifyContent: 'center', minWidth: 160, height: 60, fontSize: 32, letterSpacing: 1 }} title="Toggle KeyLink">
+    <div style={{
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      background: '#222',
+      color: '#fff',
+      minHeight: '100vh',
+      padding: '16px',
+      boxSizing: 'border-box',
+      width: '100%'
+    }}>
+
+      {/* Main Controls Wrapper */}
+      <div style={{
+        display: 'flex',
+        flexWrap: 'wrap', // Allows items to wrap on smaller screens
+        justifyContent: 'center',
+        gap: '16px',
+        width: '100%',
+        maxWidth: '600px', // Set a max-width for larger screens
+        marginBottom: '24px'
+      }}>
+        <button onClick={handleKeylinkToggle} style={{ flexGrow: 1, padding: '12px 24px', fontSize: '24px', background: keylinkOn ? '#F5C242' : '#888', color: '#222', border: 'none', borderRadius: '10px', cursor: 'pointer' }}>
           KeyLink
         </button>
-        <select value={root} onChange={handleRoot} style={styles.select}>{ROOTS.map(r => <option key={r} value={r}>{r}</option>)}</select>
-        <select value={mode} onChange={handleMode} style={styles.select}>{MODES.map(m => <option key={m} value={m}>{m}</option>)}</select>
-        <input type="number" min={40} max={240} value={tempo} onChange={handleTempo} style={styles.tempo} title="Tempo (bpm)" />
+        <select value={root} onChange={handleRoot} style={{ padding: '12px', background: '#333', color: '#fff', border: 'none', borderRadius: '10px' }}>{ROOTS.map(r => <option key={r} value={r}>{r}</option>)}</select>
+        <select value={mode} onChange={handleMode} style={{ padding: '12px', background: '#333', color: '#fff', border: 'none', borderRadius: '10px' }}>{MODES.map(m => <option key={m} value={m}>{m}</option>)}</select>
+        <input type="number" min={40} max={240} value={tempo} onChange={handleTempo} style={{ padding: '12px', width: '80px', background: '#333', color: '#fff', border: 'none', borderRadius: '10px' }} title="Tempo (bpm)" />
       </div>
-      {/* Advanced controls dropdown */}
-      <div style={{ marginTop: 16 }}>
-        <button style={styles.advBtn} onClick={() => setShowAdvanced(a => !a)}>
-          {showAdvanced ? 'Hide Advanced' : 'Show Advanced'}
-        </button>
-        {showAdvanced && (
-          <div style={{ marginTop: 16, width: '100%', maxWidth: 480, padding: '0 16px', boxSizing: 'border-box' }}>
-            {/* ChordLink controls */}
-            <div style={styles.chordSection}>
-              <button onClick={handleChordLinkToggle} style={mainBtn(chordLinkOn)} title="Toggle ChordLink">ChordLink</button>
-              <select value={chordRoot} onChange={handleChordRoot} disabled={!chordLinkOn} style={styles.select}>{ROOTS.map(r => <option key={r} value={r}>{r}</option>)}</select>
-              <select value={chordType} onChange={handleChordType} disabled={!chordLinkOn} style={styles.select}>{CHORD_TYPES.map(c => <option key={c} value={c}>{c === 'none' ? '(no chord)' : c}</option>)}</select>
-            </div>
-            {/* Link/tempo controls */}
-            <div style={{ ...styles.section, marginTop: 8 }}>
-              <span style={{ fontWeight: 600, color: '#F5C242', marginRight: 8 }}>Link (tempo):</span>
-              <input type="number" min={40} max={240} value={tempo} onChange={handleTempo} style={styles.tempo} title="Tempo (bpm)" />
-            </div>
-            {/* MIDI Player / Uploader */}
-            <div style={{ marginTop: 16 }}>
-              <MidiPlayer onMidiData={handleMidiData} />
-            </div>
+
+      <button onClick={() => setShowAdvanced(a => !a)} style={{ marginBottom: '16px', background: '#333', color: '#F5C242', border: 'none', padding: '10px 20px', borderRadius: '8px', cursor: 'pointer' }}>
+        {showAdvanced ? 'Hide Advanced' : 'Show Advanced'}
+      </button>
+
+      {/* Advanced Section */}
+      {showAdvanced && (
+        <div style={{
+          width: '100%',
+          maxWidth: '600px',
+          background: '#1a1a1a',
+          padding: '16px',
+          borderRadius: '10px'
+        }}>
+          {/* ChordLink controls */}
+          <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '16px', marginBottom: '24px' }}>
+            <button onClick={handleChordLinkToggle} style={{ flexGrow: 1, padding: '12px 24px', background: chordLinkOn ? '#F5C242' : '#888', color: '#222', border: 'none', borderRadius: '10px', cursor: 'pointer' }}>ChordLink</button>
+            <select value={chordRoot} onChange={handleChordRoot} disabled={!chordLinkOn} style={{ padding: '12px', background: '#333', color: '#fff', border: 'none', borderRadius: '10px' }}>{ROOTS.map(r => <option key={r} value={r}>{r}</option>)}</select>
+            <select value={chordType} onChange={handleChordType} disabled={!chordLinkOn} style={{ padding: '12px', background: '#333', color: '#fff', border: 'none', borderRadius: '10px' }}>{CHORD_TYPES.map(c => <option key={c} value={c}>{c}</option>)}</select>
           </div>
-        )}
-      </div>
-      {/* Status and connection info */}
-      <div style={{ ...styles.status, marginBottom: 8 }}>
-        <span>Status: {status}</span>
-        <span style={{ marginLeft: 16 }}>Relay: {relayUrl}</span>
-        <span style={{ marginLeft: 16 }}>Room: {room || '(none)'}</span>
-      </div>
-      {/* Log display for debug/info */}
-      <div style={{ width: '100%', maxWidth: 480, margin: '16px 0', background: '#181818', borderRadius: 10, padding: 12, minHeight: 60, fontSize: 14, color: '#ccc', fontFamily: 'monospace', maxHeight: 180, overflowY: 'auto' }}>
-        <div style={{ fontWeight: 600, color: '#F5C242', marginBottom: 4 }}>Log:</div>
-        {log.length === 0 ? (
-          <div style={{ color: '#555' }}>No messages yet.</div>
-        ) : (
-          log.map((entry, i) => (
-            <div key={i} style={{ color: entry.type === 'error' ? '#f55' : entry.type === 'sent' ? '#7CFC00' : entry.type === 'received' ? '#61dafb' : '#ccc' }}>
-              <span style={{ marginRight: 8 }}>{entry.time}</span>
-              <span>{entry.msg}</span>
-            </div>
-          ))
-        )}
-      </div>
-      {/* Test Message button (dev only) */}
-      {devMode && (
-        <div style={styles.connectBox}>
-          <button style={{ ...styles.joinBtn, background: '#7CFC00', color: '#222', marginBottom: 8 }} onClick={sendTestMessage} disabled={!room || !relayUrl || status.includes('Disconnected')}>
-            Send Test Message
-          </button>
+          
+          {/* MIDI Player */}
+          <MidiPlayer onMidiData={handleMidiData} />
         </div>
       )}
+
+      {/* Status and Log */}
+      <div style={{ width: '100%', maxWidth: '600px', marginTop: '24px', textAlign: 'center', fontSize: '14px', color: '#aaa' }}>
+        Status: {status} | Relay: {relayUrl} | Room: {room || '(none)'}
+      </div>
+
+      <div style={{ width: '100%', maxWidth: '600px', marginTop: '16px', background: '#181818', borderRadius: '10px', padding: '12px', height: '180px', overflowY: 'auto', fontFamily: 'monospace' }}>
+        {log.length > 0 ? log.map((entry, i) => (
+          <div key={i} style={{ color: entry.type === 'error' ? '#f55' : entry.type === 'sent' ? '#7CFC00' : '#61dafb' }}>
+            <span style={{ marginRight: '8px' }}>{entry.time}</span>{entry.msg}
+          </div>
+        )) : <div>Log is empty.</div>}
+      </div>
     </div>
   );
 }

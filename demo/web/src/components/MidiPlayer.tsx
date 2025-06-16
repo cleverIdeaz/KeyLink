@@ -99,7 +99,7 @@ export default function MidiPlayer({ onMidiData }: MidiPlayerProps) {
             src: fileUrl,
             controls: true,
             'sound-font': 'https://storage.googleapis.com/magentadata/js/soundfonts/sgm_plus',
-            style: { width: '100%', borderRadius: '5px' }
+            style: { width: '100%', borderRadius: '5px', minHeight: '40px' }
           })}
           {tracks.length > 0 && (
             <div style={{ marginTop: '16px' }}>
