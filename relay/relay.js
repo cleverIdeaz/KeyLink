@@ -11,6 +11,7 @@ const https = require('https');
 const UDP_PORT = 20800; // KeyLink UDP port
 const UDP_MULTICAST_ADDR = '239.255.60.60'; // Arbitrary multicast address
 const WS_PORT = process.env.PORT || 20801; // WebSocket port for Fly.io
+const DEFAULT_CHANNEL = '__LAN__'; // Special channel name for LAN/UDP bridge
 
 // UDP socket for multicast
 const udpSocket = dgram.createSocket({ type: 'udp4', reuseAddr: true });
@@ -36,15 +37,28 @@ if (process.env.SSL_KEY_PATH && process.env.SSL_CERT_PATH) {
   });
 }
 
-// Store connected WebSocket clients
-let wsClients = new Set();
-let wsIdCounter = 1;
-const wsIds = new Map();
+// Store connected WebSocket clients by channel
+const channels = new Map();
 
-// Broadcast a message to all WebSocket clients
-function broadcastWS(msg) {
-  for (const ws of wsClients) {
+// Broadcast a message to all WebSocket clients in a specific channel
+function broadcastWSToChannel(msg, channel) {
+  const clients = channels.get(channel);
+  if (!clients) return;
+
+  for (const ws of clients) {
     if (ws.readyState === WebSocket.OPEN) {
+      ws.send(msg);
+    }
+  }
+}
+
+// Broadcast a message to all WebSocket clients except the sender in a specific channel
+function broadcastWSToChannelExceptSender(msg, channel, senderWs) {
+  const clients = channels.get(channel);
+  if (!clients) return;
+
+  for (const ws of clients) {
+    if (ws !== senderWs && ws.readyState === WebSocket.OPEN) {
       ws.send(msg);
     }
   }
@@ -59,8 +73,8 @@ function broadcastUDP(msg) {
 // Handle incoming UDP messages
 udpSocket.on('message', (msg, rinfo) => {
   try {
-    // Forward to all WebSocket clients
-    broadcastWS(msg);
+    // Forward to all WebSocket clients in the default LAN channel
+    broadcastWSToChannel(msg, DEFAULT_CHANNEL);
   } catch (e) {
     console.error('UDP->WS error:', e);
   }
@@ -75,33 +89,43 @@ udpSocket.bind(UDP_PORT, () => {
 });
 
 // Handle WebSocket connections
-wss.on('connection', (ws) => {
-  wsClients.add(ws);
-  const wsId = wsIdCounter++;
-  wsIds.set(ws, wsId);
-  console.log(`[Relay] New client connected. Total clients: ${wsClients.size}`);
+wss.on('connection', (ws, req) => {
+  // Use the URL path as the channel name. Default to LAN channel.
+  const channel = req.url.slice(1) || DEFAULT_CHANNEL;
+
+  // Add client to the channel
+  if (!channels.has(channel)) {
+    channels.set(channel, new Set());
+  }
+  channels.get(channel).add(ws);
+
+  console.log(`[Relay] New client connected to channel "${channel}". Total clients in channel: ${channels.get(channel).size}`);
+
   ws.on('message', (msg) => {
     try {
-      // Forward to UDP multicast
-      broadcastUDP(msg);
-      // Log number of clients
-      console.log(`[Relay] Broadcasting message from client ${wsId}. Total clients: ${wsClients.size}`);
-      // Forward to all other WebSocket clients (except sender)
-      for (const client of wsClients) {
-        if (client !== ws && client.readyState === WebSocket.OPEN) {
-          const clientId = wsIds.get(client);
-          console.log(`[Relay] Forwarding message from client ${wsId} to client ${clientId}`);
-          client.send(msg);
-        }
+      // If client is in the LAN channel, also broadcast to UDP
+      if (channel === DEFAULT_CHANNEL) {
+        broadcastUDP(msg);
       }
+      
+      // Forward to all other WebSocket clients in the same channel
+      broadcastWSToChannelExceptSender(msg, channel, ws);
+
     } catch (e) {
-      console.error('WS->UDP error:', e);
+      console.error('WS->UDP/WS error:', e);
     }
   });
+
   ws.on('close', () => {
-    wsClients.delete(ws);
-    wsIds.delete(ws);
-    console.log(`[Relay] Client ${wsId} disconnected. Total clients: ${wsClients.size}`);
+    const clients = channels.get(channel);
+    if (clients) {
+      clients.delete(ws);
+      console.log(`[Relay] Client disconnected from channel "${channel}". Total clients in channel: ${clients.size}`);
+      if (clients.size === 0) {
+        channels.delete(channel);
+        console.log(`[Relay] Channel "${channel}" is now empty and has been removed.`);
+      }
+    }
   });
 });
 

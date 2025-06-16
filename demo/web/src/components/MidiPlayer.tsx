@@ -93,7 +93,7 @@ export default function MidiPlayer({ onMidiData }: MidiPlayerProps) {
         style={{ color: '#fff' }}
       />
       {fileUrl && (
-        <div style={{ width: '100%', marginTop: '16px' }}>
+        <div key={fileUrl} style={{ width: '100%', marginTop: '16px' }}>
           {React.createElement('midi-player', {
             ref: playerRef,
             src: fileUrl,

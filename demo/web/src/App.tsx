@@ -6,13 +6,8 @@ import MidiPlayer, { MidiData } from './components/MidiPlayer';
 // Connects to relay server via WebSocket and syncs with LAN/Max/MSP/Node
 // Uses the KeyLink protocol (see README.md)
 
-const LAN_WS_URLS = [
-  'wss://keylink-relay.fly.dev/',
-  'ws://localhost:20801',
-  'ws://192.168.1.1:20801',
-  'ws://192.168.0.1:20801',
-  'ws://10.0.0.1:20801',
-];
+const WAN_WS_URL = 'wss://keylink-relay.fly.dev/';
+const LAN_WS_URL = 'ws://localhost:20801';
 
 const ROOTS = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
 const MODES = ['Ionian', 'Dorian', 'Phrygian', 'Lydian', 'Mixolydian', 'Aeolian', 'Locrian'];
@@ -52,10 +47,10 @@ function generateRoomName() {
 
 export default function App() {
   // UI state
-  const [relayUrl, setRelayUrl] = useState<string>('wss://keylink-relay.fly.dev/');
+  const [networkMode, setNetworkMode] = useState<'LAN' | 'WAN'>('LAN');
+  const [wanChannel, setWanChannel] = useState<string>('public-lobby');
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [room, ] = useState(devMode ? '' : generateRoomName());
-  // const [roomInput, setRoomInput] = useState('');
   const [root, setRoot] = useState('C');
   const [mode, setMode] = useState('Ionian');
   const [keylinkOn, setKeylinkOn] = useState(true);
@@ -65,8 +60,6 @@ export default function App() {
   const [chordType, setChordType] = useState('maj');
   const [status, setStatus] = useState('Disconnected');
   const [log, setLog] = useState<{ time: string; msg: string; type: 'sent' | 'received' | 'info' | 'error' }[]>([]);
-  // const ws = useRef<WebSocket | null>(null);
-  // const source = useRef('web-react-demo-' + Math.random().toString(36).slice(2));
   const kl = useRef<KeyLinkClient | null>(null);
   const keylinkOnRef = useRef(keylinkOn);
 
@@ -74,63 +67,67 @@ export default function App() {
   const addLog = (msg: string, type: 'sent' | 'received' | 'info' | 'error' = 'info') =>
     setLog(l => [{ time: now(), msg, type }, ...l.slice(0, 9)]);
 
-  // On mount, auto-detect relay URL for Netlify or local
+  // Connect SDK based on network mode and channel
   useEffect(() => {
-    let suggested = '';
-    if (isNetlify || isHttps) {
-      suggested = 'wss://keylink-relay.fly.dev/'; // Always use the Fly.io relay in prod
-    } else if (window.location.hostname !== 'localhost') {
-      suggested = 'ws://' + window.location.hostname + ':20801';
-    } else {
-      suggested = LAN_WS_URLS[0];
-    }
-    setRelayUrl(suggested);
-  }, []);
+    const url = networkMode === 'LAN' ? LAN_WS_URL : `${WAN_WS_URL}${wanChannel}`;
+    addLog(`Connecting to ${url}...`, 'info');
+    setStatus(`Connecting to ${networkMode}...`);
 
-  // On mount, try to connect to LAN relay
-  useEffect(() => {
-    (async () => {
-      setStatus('Connecting to LAN relay...');
-      const url = await tryConnect(LAN_WS_URLS);
-      if (url) {
-        setRelayUrl(url);
-        setStatus('Connected to LAN relay');
-      } else {
-        setStatus('No LAN relay found');
+    // Disconnect previous client if it exists
+    if (kl.current) {
+      kl.current.disconnect();
     }
-    })();
-  }, []);
 
-  // On mount, connect SDK
-  useEffect(() => {
-    if (!room) return;
-    kl.current = new KeyLinkClient({ relayUrl });
+    kl.current = new KeyLinkClient({ relayUrl: url });
     kl.current.connect();
-    kl.current.on((state) => {
-      // Only process incoming state if keylinkOn is true (using ref for latest value)
+
+    kl.current.on('status', (s: string) => setStatus(s));
+    kl.current.on('open', () => {
+       addLog(`Connected to ${url}`, 'info');
+       setStatus(`Connected to ${networkMode} @ ${networkMode === 'WAN' ? wanChannel : 'localhost'}`);
+       // On successful connection, send the current state
+       if (!keylinkOnRef.current) return;
+       kl.current?.setState({ key: root, mode, tempo });
+       kl.current?.setChord({ root: chordRoot, type: chordType });
+       kl.current?.toggleChordLink(chordLinkOn);
+    });
+
+    kl.current.on('close', () => {
+      addLog(`Disconnected from ${url}`, 'info');
+      setStatus('Disconnected');
+    });
+
+    kl.current.on('error', () => {
+        addLog(`Connection error on ${url}`, 'error');
+        setStatus(`Error connecting to ${networkMode}`);
+    });
+
+    kl.current.on('state', (state) => {
       if (!keylinkOnRef.current) return;
       setRoot(state.key);
       setMode(state.mode);
+      setTempo(state.tempo || 120);
       setChordLinkOn(state.chordEnabled);
       setChordRoot(state.chord.root);
       setChordType(state.chord.type);
       addLog('← Received: ' + JSON.stringify(state), 'received');
     });
-    setStatus('Connected to WSS relay');
-    addLog('KeyLink SDK connected', 'info');
+
+    return () => {
+      kl.current?.disconnect();
+    };
     // eslint-disable-next-line
-  }, [room, relayUrl]);
+  }, [networkMode, wanChannel]);
 
   // Send state on relevant changes
   useEffect(() => {
-    if (!kl.current) return;
+    if (!kl.current || !kl.current.isConnected()) return;
     if (!keylinkOn) return; // Only send if enabled
-    kl.current.setState({ key: root, mode });
-    kl.current.setChord({ root: chordRoot, type: chordType });
-    kl.current.toggleChordLink(chordLinkOn);
-    addLog('→ Sent: ' + JSON.stringify({ key: root, mode, chord: { root: chordRoot, type: chordType }, chordEnabled: chordLinkOn }), 'sent');
+    const state = { key: root, mode, tempo, chordEnabled: chordLinkOn, chord: { root: chordRoot, type: chordType }};
+    kl.current.setState(state);
+    addLog('→ Sent: ' + JSON.stringify(state), 'sent');
     // eslint-disable-next-line
-  }, [root, mode, chordLinkOn, chordRoot, chordType, keylinkOn]);
+  }, [root, mode, tempo, chordLinkOn, chordRoot, chordType, keylinkOn]);
 
   // UI event handlers
   const handleKeylinkToggle = () => { setKeylinkOn(on => !on); };
@@ -205,6 +202,24 @@ export default function App() {
           padding: '16px',
           borderRadius: '10px'
         }}>
+          {/* Network Controls */}
+          <div style={{ marginBottom: '24px', background: '#2a2a2a', padding: '16px', borderRadius: '10px' }}>
+            <h4 style={{ margin: '0 0 12px 0', color: '#F5C242', fontSize: '16px' }}>Network</h4>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '12px' }}>
+              <label style={{ cursor: 'pointer' }}><input type="radio" value="LAN" checked={networkMode === 'LAN'} onChange={() => setNetworkMode('LAN')} /> LAN</label>
+              <label style={{ cursor: 'pointer' }}><input type="radio" value="WAN" checked={networkMode === 'WAN'} onChange={() => setNetworkMode('WAN')} /> WAN</label>
+            </div>
+            {networkMode === 'WAN' && (
+              <input
+                type="text"
+                value={wanChannel}
+                onChange={(e) => setWanChannel(e.target.value)}
+                placeholder="Channel Name"
+                style={{ width: 'calc(100% - 24px)', padding: '12px', background: '#333', color: '#fff', border: '1px solid #444', borderRadius: '8px' }}
+              />
+            )}
+          </div>
+
           {/* ChordLink controls */}
           <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '16px', marginBottom: '24px' }}>
             <button onClick={handleChordLinkToggle} style={{ flexGrow: 1, padding: '12px 24px', background: chordLinkOn ? '#F5C242' : '#888', color: '#222', border: 'none', borderRadius: '10px', cursor: 'pointer' }}>ChordLink</button>
@@ -219,7 +234,7 @@ export default function App() {
 
       {/* Status and Log */}
       <div style={{ width: '100%', maxWidth: '600px', marginTop: '24px', textAlign: 'center', fontSize: '14px', color: '#aaa' }}>
-        Status: {status} | Relay: {relayUrl} | Room: {room || '(none)'}
+        Status: {status}
       </div>
 
       <div style={{ width: '100%', maxWidth: '600px', marginTop: '16px', background: '#181818', borderRadius: '10px', padding: '12px', height: '180px', overflowY: 'auto', fontFamily: 'monospace' }}>
