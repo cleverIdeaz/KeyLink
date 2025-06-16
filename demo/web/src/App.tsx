@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { KeyLinkClient } from './keylink-sdk';
-import MidiPlayer from './components/MidiPlayer';
+import MidiPlayer, { MidiData } from './components/MidiPlayer';
 
 // Minimal, modern KeyLink Demo UI
 // Connects to relay server via WebSocket and syncs with LAN/Max/MSP/Node
@@ -141,6 +141,25 @@ export default function App() {
   const handleChordType = (e: React.ChangeEvent<HTMLSelectElement>) => { setChordType(e.target.value); };
   const handleChordLinkToggle = () => { setChordLinkOn(on => !on); };
 
+  const handleMidiData = (data: MidiData) => {
+    if (data.tempo) {
+      setTempo(Math.round(data.tempo));
+    }
+    if (data.key) {
+      const rootNote = data.key.charAt(0).toUpperCase() + data.key.slice(1).toLowerCase();
+      if (ROOTS.includes(rootNote.replace('b', '#'))) { // Basic flat to sharp conversion
+          setRoot(rootNote.replace('b', '#'));
+      }
+    }
+    if (data.mode) {
+      const modeName = data.mode.charAt(0).toUpperCase() + data.mode.slice(1).toLowerCase();
+      const matchedMode = MODES.find(m => m.toLowerCase() === modeName);
+      if (matchedMode) {
+        setMode(matchedMode);
+      }
+    }
+  };
+
   // Styles
   const styles: { [key: string]: React.CSSProperties } = {
     container: {
@@ -257,7 +276,7 @@ export default function App() {
           {showAdvanced ? 'Hide Advanced' : 'Show Advanced'}
         </button>
         {showAdvanced && (
-          <div style={{ marginTop: 16 }}>
+          <div style={{ marginTop: 16, width: '100%', maxWidth: 480, padding: '0 16px', boxSizing: 'border-box' }}>
             {/* ChordLink controls */}
             <div style={styles.chordSection}>
               <button onClick={handleChordLinkToggle} style={mainBtn(chordLinkOn)} title="Toggle ChordLink">ChordLink</button>
@@ -271,7 +290,7 @@ export default function App() {
             </div>
             {/* MIDI Player / Uploader */}
             <div style={{ marginTop: 16 }}>
-              <MidiPlayer />
+              <MidiPlayer onMidiData={handleMidiData} />
             </div>
           </div>
         )}
