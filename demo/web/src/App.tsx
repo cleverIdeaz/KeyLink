@@ -13,36 +13,8 @@ const ROOTS = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
 const MODES = ['Ionian', 'Dorian', 'Phrygian', 'Lydian', 'Mixolydian', 'Aeolian', 'Locrian'];
 const CHORD_TYPES = ['maj', 'min', '7', 'maj7', 'min7', 'dim', 'aug', 'sus2', 'sus4', 'none'];
 
-const devMode = process.env.NODE_ENV !== 'production';
-
 function now() {
   return new Date().toLocaleTimeString();
-}
-
-async function tryConnect(urls: string[]): Promise<string | null> {
-  for (const url of urls) {
-    try {
-      const ws = new window.WebSocket(url);
-      await new Promise<void>((resolve, reject) => {
-        ws.onopen = () => { ws.close(); resolve(); };
-        ws.onerror = () => { reject(new Error('Connection failed')); };
-        setTimeout(() => reject(new Error('Timeout')), 2000);
-      });
-      return url;
-    } catch (e: any) {
-      console.debug(`Connection to ${url} failed: ${e.message}`);
-    }
-  }
-  return null;
-}
-
-// Helper to determine if running on HTTPS/Netlify
-const isHttps = window.location.protocol === 'https:';
-const isNetlify = window.location.hostname.endsWith('netlify.app');
-
-function generateRoomName() {
-  const d = new Date();
-  return `room-${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}-${d.getHours()}`;
 }
 
 export default function App() {
@@ -50,7 +22,6 @@ export default function App() {
   const [networkMode, setNetworkMode] = useState<'LAN' | 'WAN'>('LAN');
   const [wanChannel, setWanChannel] = useState<string>('public-lobby');
   const [showAdvanced, setShowAdvanced] = useState(false);
-  const [room, ] = useState(devMode ? '' : generateRoomName());
   const [root, setRoot] = useState('C');
   const [mode, setMode] = useState('Ionian');
   const [keylinkOn, setKeylinkOn] = useState(true);
@@ -102,7 +73,7 @@ export default function App() {
         setStatus(`Error connecting to ${networkMode}`);
     });
 
-    kl.current.on('state', (state) => {
+    kl.current.on('state', (state: any) => {
       if (!keylinkOnRef.current) return;
       setRoot(state.key);
       setMode(state.mode);
@@ -133,7 +104,7 @@ export default function App() {
   const handleKeylinkToggle = () => { setKeylinkOn(on => !on); };
   const handleRoot = (e: React.ChangeEvent<HTMLSelectElement>) => { setRoot(e.target.value); };
   const handleMode = (e: React.ChangeEvent<HTMLSelectElement>) => { setMode(e.target.value); };
-  const handleTempo = (e: React.ChangeEvent<HTMLInputElement>) => { setTempo(Number(e.target.value) || 120); };
+  const handleTempo = (e: React.ChangeEvent<HOLDER>TMLInputElement>) => { setTempo(Number(e.target.value) || 120); };
   const handleChordRoot = (e: React.ChangeEvent<HTMLSelectElement>) => { setChordRoot(e.target.value); };
   const handleChordType = (e: React.ChangeEvent<HTMLSelectElement>) => { setChordType(e.target.value); };
   const handleChordLinkToggle = () => { setChordLinkOn(on => !on); };
@@ -246,4 +217,4 @@ export default function App() {
       </div>
     </div>
   );
-}
+} 
