@@ -104,7 +104,7 @@ export default function App() {
   const handleKeylinkToggle = () => { setKeylinkOn(on => !on); };
   const handleRoot = (e: React.ChangeEvent<HTMLSelectElement>) => { setRoot(e.target.value); };
   const handleMode = (e: React.ChangeEvent<HTMLSelectElement>) => { setMode(e.target.value); };
-  const handleTempo = (e: React.ChangeEvent<HOLDER>TMLInputElement>) => { setTempo(Number(e.target.value) || 120); };
+  const handleTempo = (e: React.ChangeEvent<HTMLInputElement>) => { setTempo(Number(e.target.value) || 120); };
   const handleChordRoot = (e: React.ChangeEvent<HTMLSelectElement>) => { setChordRoot(e.target.value); };
   const handleChordType = (e: React.ChangeEvent<HTMLSelectElement>) => { setChordType(e.target.value); };
   const handleChordLinkToggle = () => { setChordLinkOn(on => !on); };
