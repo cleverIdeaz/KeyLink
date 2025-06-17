@@ -22,18 +22,6 @@ export default function MidiPlayer({ onMidiData }: MidiPlayerProps) {
   const [tracks, setTracks] = useState<{ name: string; index: number; gain: number }[]>([]);
   const playerRef = useRef<any>(null);
 
-  // Dynamically load the html-midi-player script once.
-  useEffect(() => {
-    if (window.customElements && window.customElements.get('midi-player')) return; // already loaded
-    const script = document.createElement('script');
-    script.src = MIDI_PLAYER_JS;
-    script.async = true;
-    document.body.appendChild(script);
-    return () => {
-      document.body.removeChild(script);
-    };
-  }, []);
-
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
