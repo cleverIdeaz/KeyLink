@@ -1,11 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Midi } from '@tonejs/midi';
 
 // Simple MIDI player/uploader component using the html-midi-player web component.
 // This can be embedded anywhere (KeyLink demo, RecipeFlower, etc.).
 // Future: expose callbacks to sync playback with KeyLink.
-
-const MIDI_PLAYER_JS = 'https://cdn.jsdelivr.net/npm/html-midi-player@1.4.0/dist/html-midi-player.js';
 
 export interface MidiData {
   key?: string;
