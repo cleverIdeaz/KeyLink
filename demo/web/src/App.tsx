@@ -397,10 +397,6 @@ export default function App() {
                     target="_blank" 
                     rel="noopener noreferrer"
                     style={{ color: '#F5C242', textDecoration: 'none' }}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      window.open('https://github.com/cleverIdeaz/KeyLink/blob/main/docs/protocol.md', '_blank');
-                    }}
                   >
                     📖 Protocol Docs
                   </a>
