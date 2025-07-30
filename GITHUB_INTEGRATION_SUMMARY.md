@@ -9,10 +9,10 @@
 - **Position**: Bottom of the app, always visible
 
 ```typescript
-<a href="https://github.com/nealium/KeyLink" target="_blank">
+<a href="https://github.com/cleverIdeaz/KeyLink" target="_blank">
   🐙 GitHub Repository
 </a>
-<a href="https://github.com/nealium/KeyLink/blob/main/docs/protocol.md" target="_blank">
+<a href="https://github.com/cleverIdeaz/KeyLink/blob/main/docs/protocol.md" target="_blank">
   📖 Protocol Docs
 </a>
 ```
@@ -25,9 +25,9 @@
 - **Footer Links**: Repository, docs, contributing
 
 ```markdown
-[![GitHub](https://img.shields.io/badge/GitHub-KeyLink-blue?style=flat&logo=github)](https://github.com/nealium/KeyLink)
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/nealium/KeyLink/blob/main/LICENSE)
-[![Open Source](https://img.shields.io/badge/Open%20Source-Yes-brightgreen)](https://github.com/nealium/KeyLink)
+[![GitHub](https://img.shields.io/badge/GitHub-KeyLink-blue?style=flat&logo=github)](https://github.com/cleverIdeaz/KeyLink)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/cleverIdeaz/KeyLink/blob/main/LICENSE)
+[![Open Source](https://img.shields.io/badge/Open%20Source-Yes-brightgreen)](https://github.com/cleverIdeaz/KeyLink)
 ```
 
 ### 3. PWA Guide
@@ -55,29 +55,29 @@
 ## 🔗 All GitHub Links
 
 ### Repository Links
-- **Main Repository**: https://github.com/nealium/KeyLink
-- **Issues**: https://github.com/nealium/KeyLink/issues
-- **Discussions**: https://github.com/nealium/KeyLink/discussions
-- **Contributing**: https://github.com/nealium/KeyLink/blob/main/CONTRIBUTING.md
+- **Main Repository**: https://github.com/cleverIdeaz/KeyLink
+- **Issues**: https://github.com/cleverIdeaz/KeyLink/issues
+- **Discussions**: https://github.com/cleverIdeaz/KeyLink/discussions
+- **Contributing**: https://github.com/cleverIdeaz/KeyLink/blob/main/CONTRIBUTING.md
 
 ### Documentation Links
-- **Protocol Docs**: https://github.com/nealium/KeyLink/blob/main/docs/protocol.md
-- **Main README**: https://github.com/nealium/KeyLink/blob/main/README.md
-- **PWA Guide**: https://github.com/nealium/KeyLink/blob/main/demo/web/PWA_README.md
-- **Max/MSP Guide**: https://github.com/nealium/KeyLink/blob/main/demo/max/README.md
-- **Relay Guide**: https://github.com/nealium/KeyLink/blob/main/relay/README.md
+- **Protocol Docs**: https://github.com/cleverIdeaz/KeyLink/blob/main/docs/protocol.md
+- **Main README**: https://github.com/cleverIdeaz/KeyLink/blob/main/README.md
+- **PWA Guide**: https://github.com/cleverIdeaz/KeyLink/blob/main/demo/web/PWA_README.md
+- **Max/MSP Guide**: https://github.com/cleverIdeaz/KeyLink/blob/main/demo/max/README.md
+- **Relay Guide**: https://github.com/cleverIdeaz/KeyLink/blob/main/relay/README.md
 
 ### Badge Links
-- **GitHub Badge**: [![GitHub](https://img.shields.io/badge/GitHub-KeyLink-blue?style=flat&logo=github)](https://github.com/nealium/KeyLink)
-- **License Badge**: [![License](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/nealium/KeyLink/blob/main/LICENSE)
-- **Open Source Badge**: [![Open Source](https://img.shields.io/badge/Open%20Source-Yes-brightgreen)](https://github.com/nealium/KeyLink)
+- **GitHub Badge**: [![GitHub](https://img.shields.io/badge/GitHub-KeyLink-blue?style=flat&logo=github)](https://github.com/cleverIdeaz/KeyLink)
+- **License Badge**: [![License](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/cleverIdeaz/KeyLink/blob/main/LICENSE)
+- **Open Source Badge**: [![Open Source](https://img.shields.io/badge/Open%20Source-Yes-brightgreen)](https://github.com/cleverIdeaz/KeyLink)
 
 ## 🛠️ Developer Resources
 
 ### Quick Start Commands
 ```bash
 # Clone repository
-git clone https://github.com/nealium/KeyLink.git
+git clone https://github.com/cleverIdeaz/KeyLink.git
 cd KeyLink
 
 # Web app development
@@ -167,4 +167,4 @@ The KeyLink project now provides clear, accessible paths for developers to disco
 
 **🎵 Happy contributing!**
 
-**[🐙 GitHub Repository](https://github.com/nealium/KeyLink)** • **[📖 Protocol Docs](https://github.com/nealium/KeyLink/blob/main/docs/protocol.md)** • **[🤝 Contributing](https://github.com/nealium/KeyLink/blob/main/CONTRIBUTING.md)** 
+**[🐙 GitHub Repository](https://github.com/cleverIdeaz/KeyLink)** • **[📖 Protocol Docs](https://github.com/cleverIdeaz/KeyLink/blob/main/docs/protocol.md)** • **[🤝 Contributing](https://github.com/cleverIdeaz/KeyLink/blob/main/CONTRIBUTING.md)** 

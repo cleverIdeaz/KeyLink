@@ -4,7 +4,7 @@
 
 The KeyLink Demo is now available as a **Progressive Web App (PWA)** that can be installed on desktop and mobile devices. This eliminates the need for cloud hosting costs and provides a better user experience.
 
-**[🐙 GitHub Repository](https://github.com/nealium/KeyLink)** • **[📖 Protocol Docs](https://github.com/nealium/KeyLink/blob/main/docs/protocol.md)** • **[🤝 Contributing](https://github.com/nealium/KeyLink/blob/main/CONTRIBUTING.md)**
+**[🐙 GitHub Repository](https://github.com/cleverIdeaz/KeyLink)** • **[📖 Protocol Docs](https://github.com/cleverIdeaz/KeyLink/blob/main/docs/protocol.md)** • **[🤝 Contributing](https://github.com/cleverIdeaz/KeyLink/blob/main/CONTRIBUTING.md)**
 
 ## Benefits of PWA
 
@@ -30,7 +30,7 @@ The KeyLink Demo is now available as a **Progressive Web App (PWA)** that can be
 ### Option 3: Download and Run Locally
 ```bash
 # Clone the repository
-git clone https://github.com/nealium/KeyLink.git
+git clone https://github.com/cleverIdeaz/KeyLink.git
 cd KeyLink/demo/web
 
 # Install dependencies
@@ -167,14 +167,14 @@ npm run start:https
 ## Support
 
 For issues and questions:
-- **GitHub Issues**: [Report bugs or request features](https://github.com/nealium/KeyLink/issues)
-- **GitHub Discussions**: [Join the conversation](https://github.com/nealium/KeyLink/discussions)
-- **Documentation**: Check the main [README.md](https://github.com/nealium/KeyLink/blob/main/README.md)
-- **Protocol Spec**: Review [docs/protocol.md](https://github.com/nealium/KeyLink/blob/main/docs/protocol.md)
+- **GitHub Issues**: [Report bugs or request features](https://github.com/cleverIdeaz/KeyLink/issues)
+- **GitHub Discussions**: [Join the conversation](https://github.com/cleverIdeaz/KeyLink/discussions)
+- **Documentation**: Check the main [README.md](https://github.com/cleverIdeaz/KeyLink/blob/main/README.md)
+- **Protocol Spec**: Review [docs/protocol.md](https://github.com/cleverIdeaz/KeyLink/blob/main/docs/protocol.md)
 
 ## Contributing
 
-We welcome contributions! See [CONTRIBUTING.md](https://github.com/nealium/KeyLink/blob/main/CONTRIBUTING.md) for guidelines.
+We welcome contributions! See [CONTRIBUTING.md](https://github.com/cleverIdeaz/KeyLink/blob/main/CONTRIBUTING.md) for guidelines.
 
 ### Quick Start for Contributors
 ```bash
@@ -195,4 +195,4 @@ cd ../../relay && npm start
 
 **🎵 Happy syncing!**
 
-**[🐙 GitHub Repository](https://github.com/nealium/KeyLink)** • **[📖 Protocol Docs](https://github.com/nealium/KeyLink/blob/main/docs/protocol.md)** • **[🤝 Contributing](https://github.com/nealium/KeyLink/blob/main/CONTRIBUTING.md)** 
+**[🐙 GitHub Repository](https://github.com/cleverIdeaz/KeyLink)** • **[📖 Protocol Docs](https://github.com/cleverIdeaz/KeyLink/blob/main/docs/protocol.md)** • **[🤝 Contributing](https://github.com/cleverIdeaz/KeyLink/blob/main/CONTRIBUTING.md)** 

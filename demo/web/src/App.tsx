@@ -362,7 +362,7 @@ export default function App() {
         )}
         <div style={{ marginTop: '12px', fontSize: '11px' }}>
           <a 
-            href="https://github.com/nealium/KeyLink" 
+            href="https://github.com/cleverIdeaz/KeyLink" 
             target="_blank" 
             rel="noopener noreferrer"
             style={{ color: '#F5C242', textDecoration: 'none' }}
@@ -371,7 +371,7 @@ export default function App() {
           </a>
           <span style={{ margin: '0 8px', color: '#666' }}>•</span>
           <a 
-            href="https://github.com/nealium/KeyLink/blob/main/docs/protocol.md" 
+            href="https://github.com/cleverIdeaz/KeyLink/blob/main/docs/protocol.md" 
             target="_blank" 
             rel="noopener noreferrer"
             style={{ color: '#F5C242', textDecoration: 'none' }}

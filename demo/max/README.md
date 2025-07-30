@@ -2,7 +2,7 @@
 
 **Real-time music synchronization for Max/MSP with PWA and web integration**
 
-**[🐙 GitHub Repository](https://github.com/nealium/KeyLink)** • **[📖 Protocol Docs](https://github.com/nealium/KeyLink/blob/main/docs/protocol.md)** • **[🤝 Contributing](https://github.com/nealium/KeyLink/blob/main/CONTRIBUTING.md)**
+**[🐙 GitHub Repository](https://github.com/cleverIdeaz/KeyLink)** • **[📖 Protocol Docs](https://github.com/cleverIdeaz/KeyLink/blob/main/docs/protocol.md)** • **[🤝 Contributing](https://github.com/cleverIdeaz/KeyLink/blob/main/CONTRIBUTING.md)**
 
 ## 🚀 Quick Start
 
@@ -212,13 +212,13 @@ The main KeyLink external object for Max/MSP.
 - **[PWA Guide](../web/PWA_README.md)** - Web app setup
 - **[Protocol Spec](../../docs/protocol.md)** - Technical details
 - **[Relay Server](../../relay/README.md)** - Server setup
-- **[GitHub Repository](https://github.com/nealium/KeyLink)** - Source code
-- **[Issues](https://github.com/nealium/KeyLink/issues)** - Report bugs
-- **[Discussions](https://github.com/nealium/KeyLink/discussions)** - Get help
+- **[GitHub Repository](https://github.com/cleverIdeaz/KeyLink)** - Source code
+- **[Issues](https://github.com/cleverIdeaz/KeyLink/issues)** - Report bugs
+- **[Discussions](https://github.com/cleverIdeaz/KeyLink/discussions)** - Get help
 
 ## 🤝 Contributing
 
-We welcome contributions! See [CONTRIBUTING.md](https://github.com/nealium/KeyLink/blob/main/CONTRIBUTING.md) for guidelines.
+We welcome contributions! See [CONTRIBUTING.md](https://github.com/cleverIdeaz/KeyLink/blob/main/CONTRIBUTING.md) for guidelines.
 
 ### Development Setup
 ```bash
@@ -237,4 +237,4 @@ cd ../../relay && npm start
 
 **🎵 Happy syncing with Max/MSP!**
 
-**[🐙 GitHub Repository](https://github.com/nealium/KeyLink)** • **[📖 Protocol Docs](https://github.com/nealium/KeyLink/blob/main/docs/protocol.md)** • **[🤝 Contributing](https://github.com/nealium/KeyLink/blob/main/CONTRIBUTING.md)** 
+**[🐙 GitHub Repository](https://github.com/cleverIdeaz/KeyLink)** • **[📖 Protocol Docs](https://github.com/cleverIdeaz/KeyLink/blob/main/docs/protocol.md)** • **[🤝 Contributing](https://github.com/cleverIdeaz/KeyLink/blob/main/CONTRIBUTING.md)** 

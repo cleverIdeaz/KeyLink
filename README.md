@@ -6,9 +6,9 @@
 
 **Real-time music data synchronization for Max/MSP, browser, and more**
 
-[![GitHub](https://img.shields.io/badge/GitHub-KeyLink-blue?style=flat&logo=github)](https://github.com/nealium/KeyLink)
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/nealium/KeyLink/blob/main/LICENSE)
-[![Open Source](https://img.shields.io/badge/Open%20Source-Yes-brightgreen)](https://github.com/nealium/KeyLink)
+[![GitHub](https://img.shields.io/badge/GitHub-KeyLink-blue?style=flat&logo=github)](https://github.com/cleverIdeaz/KeyLink)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/cleverIdeaz/KeyLink/blob/main/LICENSE)
+[![Open Source](https://img.shields.io/badge/Open%20Source-Yes-brightgreen)](https://github.com/cleverIdeaz/KeyLink)
 
 KeyLink enables seamless synchronization of musical parameters (key, tempo, chord progressions) across multiple applications and devices in real-time.
 
@@ -28,7 +28,7 @@ KeyLink enables seamless synchronization of musical parameters (key, tempo, chor
 
 ### Get the Source Code
 ```bash
-git clone https://github.com/nealium/KeyLink.git
+git clone https://github.com/cleverIdeaz/KeyLink.git
 cd KeyLink
 ```
 
@@ -51,8 +51,8 @@ cd demo/max/externals && ./build_keylink.sh
 - **[PWA Guide](demo/web/PWA_README.md)** - Progressive Web App setup
 
 ### Contributing
-- **Issues**: [Report bugs or request features](https://github.com/nealium/KeyLink/issues)
-- **Discussions**: [Join the conversation](https://github.com/nealium/KeyLink/discussions)
+- **Issues**: [Report bugs or request features](https://github.com/cleverIdeaz/KeyLink/issues)
+- **Discussions**: [Join the conversation](https://github.com/cleverIdeaz/KeyLink/discussions)
 - **Contributing Guide**: [CONTRIBUTING.md](CONTRIBUTING.md)
 
 ## 🎯 Key Features
@@ -79,12 +79,12 @@ cd demo/max/externals && ./build_keylink.sh
 
 ### For Users (PWA)
 1. **Install the app** from your browser
-2. **Download relay server**: `git clone https://github.com/nealium/KeyLink.git`
+2. **Download relay server**: `git clone https://github.com/cleverIdeaz/KeyLink.git`
 3. **Start relay**: `cd relay && ./start-relay.sh`
 4. **Connect Max/MSP** using the external object
 
 ### For Developers
-1. **Clone repository**: `git clone https://github.com/nealium/KeyLink.git`
+1. **Clone repository**: `git clone https://github.com/cleverIdeaz/KeyLink.git`
 2. **Install dependencies**: `cd demo/web && npm install`
 3. **Start development**: `npm start`
 4. **Build PWA**: `npm run build`
@@ -155,8 +155,8 @@ The KeyLink external object provides:
 We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
 ### Ways to Contribute
-- 🐛 **Report bugs** via [GitHub Issues](https://github.com/nealium/KeyLink/issues)
-- 💡 **Request features** via [GitHub Discussions](https://github.com/nealium/KeyLink/discussions)
+- 🐛 **Report bugs** via [GitHub Issues](https://github.com/cleverIdeaz/KeyLink/issues)
+- 💡 **Request features** via [GitHub Discussions](https://github.com/cleverIdeaz/KeyLink/discussions)
 - 📝 **Improve documentation** via pull requests
 - 🔧 **Submit code** via pull requests
 - 🌟 **Star the repository** to show support
@@ -186,4 +186,4 @@ MIT License - see [LICENSE](LICENSE) file.
 
 **🎵 Happy syncing!**
 
-**[🐙 GitHub Repository](https://github.com/nealium/KeyLink)** • **[📖 Protocol Docs](docs/protocol.md)** • **[🤝 Contributing](CONTRIBUTING.md)** 
+**[🐙 GitHub Repository](https://github.com/cleverIdeaz/KeyLink)** • **[📖 Protocol Docs](docs/protocol.md)** • **[🤝 Contributing](CONTRIBUTING.md)** 
