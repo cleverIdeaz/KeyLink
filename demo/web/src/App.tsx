@@ -73,6 +73,7 @@ export default function App() {
   const [status, setStatus] = useState('Disconnected');
   const [log, setLog] = useState<{ time: string; msg: string; type: 'sent' | 'received' | 'info' | 'error' }[]>([]);
   const [isPWA, setIsPWA] = useState(false);
+  const [hasUserInteracted, setHasUserInteracted] = useState(false);
   const kl = useRef<KeyLinkClient | null>(null);
   const keylinkOnRef = useRef(keylinkOn);
 
@@ -147,11 +148,8 @@ export default function App() {
          addLog(`Connected to ${url}`, 'info');
          const connectionType = isDeployed ? 'Cloud' : 'Local';
          setStatus(`Connected to ${networkMode} @ ${connectionType}`);
-         // On successful connection, send the current state
-         if (!keylinkOnRef.current) return;
-         kl.current?.setState({ key: root, mode, tempo });
-         kl.current?.setChord({ root: chordRoot, type: chordType });
-         kl.current?.toggleChordLink(chordLinkOn);
+         // Don't send state on connection - only receive
+         addLog('Connected - listening for updates from other clients', 'info');
       });
 
       kl.current.on('close', () => {
@@ -188,22 +186,46 @@ export default function App() {
   useEffect(() => {
     if (!kl.current || !kl.current.isConnected()) return;
     if (!keylinkOn) return; // Only send if enabled
+    if (!hasUserInteracted) return; // Only send after user has manually changed something
+    
     const state = { key: root, mode, tempo, chordEnabled: chordLinkOn, chord: { root: chordRoot, type: chordType }};
     kl.current.setState(state);
     addLog('→ Sent: ' + JSON.stringify(state), 'sent');
     // eslint-disable-next-line
-  }, [root, mode, tempo, chordLinkOn, chordRoot, chordType, keylinkOn]);
+  }, [root, mode, tempo, chordLinkOn, chordRoot, chordType, keylinkOn, hasUserInteracted]);
 
   // UI event handlers
-  const handleKeylinkToggle = () => { setKeylinkOn(on => !on); };
-  const handleRoot = (e: React.ChangeEvent<HTMLSelectElement>) => { setRoot(e.target.value); };
-  const handleMode = (e: React.ChangeEvent<HTMLSelectElement>) => { setMode(e.target.value); };
-  const handleTempo = (e: React.ChangeEvent<HTMLInputElement>) => { setTempo(Number(e.target.value) || 120); };
-  const handleChordRoot = (e: React.ChangeEvent<HTMLSelectElement>) => { setChordRoot(e.target.value); };
-  const handleChordType = (e: React.ChangeEvent<HTMLSelectElement>) => { setChordType(e.target.value); };
-  const handleChordLinkToggle = () => { setChordLinkOn(on => !on); };
+  const handleKeylinkToggle = () => { 
+    setKeylinkOn(on => !on); 
+    setHasUserInteracted(true);
+  };
+  const handleRoot = (e: React.ChangeEvent<HTMLSelectElement>) => { 
+    setRoot(e.target.value); 
+    setHasUserInteracted(true);
+  };
+  const handleMode = (e: React.ChangeEvent<HTMLSelectElement>) => { 
+    setMode(e.target.value); 
+    setHasUserInteracted(true);
+  };
+  const handleTempo = (e: React.ChangeEvent<HTMLInputElement>) => { 
+    setTempo(Number(e.target.value) || 120); 
+    setHasUserInteracted(true);
+  };
+  const handleChordRoot = (e: React.ChangeEvent<HTMLSelectElement>) => { 
+    setChordRoot(e.target.value); 
+    setHasUserInteracted(true);
+  };
+  const handleChordType = (e: React.ChangeEvent<HTMLSelectElement>) => { 
+    setChordType(e.target.value); 
+    setHasUserInteracted(true);
+  };
+  const handleChordLinkToggle = () => { 
+    setChordLinkOn(on => !on); 
+    setHasUserInteracted(true);
+  };
 
   const handleMidiData = (data: MidiData) => {
+    setHasUserInteracted(true);
     if (data.tempo) {
       setTempo(Math.round(data.tempo));
     }
@@ -335,7 +357,7 @@ export default function App() {
               <div style={{ marginTop: '12px', padding: '8px', background: '#444', borderRadius: '6px', fontSize: '11px', color: '#aaa' }}>
                 💡 <strong>To use true LAN mode:</strong><br/>
                 1. Install this app as a PWA (see install button above)<br/>
-                2. Run a local relay server: <code>cd relay && ./start-relay.sh</code>
+                2. The PWA will automatically discover local relay servers
               </div>
             )}
           </div>

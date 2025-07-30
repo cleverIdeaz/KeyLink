@@ -79,9 +79,8 @@ cd demo/max/externals && ./build_keylink.sh
 
 ### For Users (PWA)
 1. **Install the app** from your browser
-2. **Download relay server**: `git clone https://github.com/cleverIdeaz/KeyLink.git`
-3. **Start relay**: `cd relay && ./start-relay.sh`
-4. **Connect Max/MSP** using the external object
+2. **The PWA automatically discovers local relay servers**
+3. **Connect Max/MSP** using the external object (optional)
 
 ### For Developers
 1. **Clone repository**: `git clone https://github.com/cleverIdeaz/KeyLink.git`

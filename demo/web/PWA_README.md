@@ -47,12 +47,9 @@ For LAN functionality, you need a relay server running on your local network:
 
 ### Quick Setup
 ```bash
-# Download and install relay server
-cd relay
-./install.sh
-
-# Start the relay server
-./start-relay.sh
+# Install PWA from browser
+# The PWA automatically discovers local relay servers
+# No manual relay setup required!
 ```
 
 ### Manual Setup
