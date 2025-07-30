@@ -7,14 +7,15 @@ const WebSocket = require('ws');
 const fs = require('fs');
 const https = require('https');
 
-// Configurable settings
-const UDP_PORT = 20800; // KeyLink UDP port
-const UDP_MULTICAST_ADDR = '239.255.60.60'; // Arbitrary multicast address
+// Configurable settings with environment variable support
+const UDP_PORT = process.env.UDP_PORT || 7474; // KeyLink UDP port (matches Max external)
+const UDP_MULTICAST_ADDR = process.env.UDP_MULTICAST_ADDR || '239.255.0.1'; // Multicast address (matches Max external)
 const WS_PORT = process.env.PORT || 20801; // WebSocket port for Fly.io
 const DEFAULT_CHANNEL = '__LAN__'; // Special channel name for LAN/UDP bridge
+const ENABLE_UDP = process.env.ENABLE_UDP !== 'false'; // Can disable UDP for cloud deployment
 
 // UDP socket for multicast
-const udpSocket = dgram.createSocket({ type: 'udp4', reuseAddr: true });
+const udpSocket = ENABLE_UDP ? dgram.createSocket({ type: 'udp4', reuseAddr: true }) : null;
 
 // HTTPS server for WSS
 let server, wss;
@@ -66,27 +67,34 @@ function broadcastWSToChannelExceptSender(msg, channel, senderWs) {
 
 // Broadcast a message to UDP multicast
 function broadcastUDP(msg) {
+  if (!ENABLE_UDP || !udpSocket) return;
   const buf = Buffer.from(msg);
   udpSocket.send(buf, 0, buf.length, UDP_PORT, UDP_MULTICAST_ADDR);
 }
 
 // Handle incoming UDP messages
-udpSocket.on('message', (msg, rinfo) => {
-  try {
-    // Forward to all WebSocket clients in the default LAN channel
-    broadcastWSToChannel(msg, DEFAULT_CHANNEL);
-  } catch (e) {
-    console.error('UDP->WS error:', e);
-  }
-});
+if (ENABLE_UDP && udpSocket) {
+  udpSocket.on('message', (msg, rinfo) => {
+    try {
+      // Forward to all WebSocket clients in the default LAN channel
+      broadcastWSToChannel(msg, DEFAULT_CHANNEL);
+    } catch (e) {
+      console.error('UDP->WS error:', e);
+    }
+  });
+}
 
 // Join multicast group and bind UDP socket
-udpSocket.bind(UDP_PORT, () => {
-  udpSocket.addMembership(UDP_MULTICAST_ADDR);
-  udpSocket.setBroadcast(true);
-  udpSocket.setMulticastTTL(128);
-  console.log(`KeyLink UDP relay listening on ${UDP_MULTICAST_ADDR}:${UDP_PORT}`);
-});
+if (ENABLE_UDP && udpSocket) {
+  udpSocket.bind(UDP_PORT, () => {
+    udpSocket.addMembership(UDP_MULTICAST_ADDR);
+    udpSocket.setBroadcast(true);
+    udpSocket.setMulticastTTL(128);
+    console.log(`KeyLink UDP relay listening on ${UDP_MULTICAST_ADDR}:${UDP_PORT}`);
+  });
+} else {
+  console.log('UDP multicast disabled (ENABLE_UDP=false)');
+}
 
 // Handle WebSocket connections
 wss.on('connection', (ws, req) => {

@@ -8,6 +8,12 @@ import MidiPlayer, { MidiData } from './components/MidiPlayer';
 
 const WAN_WS_URL = 'wss://keylink-relay.fly.dev/';
 const LAN_WS_URL = 'ws://localhost:20801';
+const LAN_DISCOVERY_URLS = [
+  'ws://localhost:20801',
+  'ws://192.168.1.1:20801',  // Common router IP
+  'ws://192.168.0.1:20801',  // Alternative router IP
+  'ws://10.0.0.1:20801',     // Another common range
+];
 
 const ROOTS = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
 const MODES = ['Ionian', 'Dorian', 'Phrygian', 'Lydian', 'Mixolydian', 'Aeolian', 'Locrian'];
@@ -15,6 +21,36 @@ const CHORD_TYPES = ['maj', 'min', '7', 'maj7', 'min7', 'dim', 'aug', 'sus2', 's
 
 function now() {
   return new Date().toLocaleTimeString();
+}
+
+// LAN discovery function
+async function discoverLANRelay(): Promise<string | null> {
+  for (const url of LAN_DISCOVERY_URLS) {
+    try {
+      const ws = new WebSocket(url);
+      await new Promise((resolve, reject) => {
+        const timeout = setTimeout(() => {
+          ws.close();
+          reject(new Error('Timeout'));
+        }, 2000);
+        
+        ws.onopen = () => {
+          clearTimeout(timeout);
+          ws.close();
+          resolve(url);
+        };
+        
+        ws.onerror = () => {
+          clearTimeout(timeout);
+          reject(new Error('Connection failed'));
+        };
+      });
+      return url;
+    } catch (e) {
+      console.log(`LAN discovery failed for ${url}:`, e);
+    }
+  }
+  return null;
 }
 
 export default function App() {
@@ -40,49 +76,68 @@ export default function App() {
 
   // Connect SDK based on network mode and channel
   useEffect(() => {
-    const url = networkMode === 'LAN' ? LAN_WS_URL : `${WAN_WS_URL}${wanChannel}`;
-    addLog(`Connecting to ${url}...`, 'info');
-    setStatus(`Connecting to ${networkMode}...`);
+    const connectToRelay = async () => {
+      let url: string;
+      
+      if (networkMode === 'LAN') {
+        addLog('Discovering LAN relay server...', 'info');
+        const discoveredUrl = await discoverLANRelay();
+        if (discoveredUrl) {
+          url = discoveredUrl;
+          addLog(`Found LAN relay at ${discoveredUrl}`, 'info');
+        } else {
+          addLog('No LAN relay found, falling back to localhost', 'info');
+          url = LAN_WS_URL;
+        }
+      } else {
+        url = `${WAN_WS_URL}${wanChannel}`;
+      }
+      
+      addLog(`Connecting to ${url}...`, 'info');
+      setStatus(`Connecting to ${networkMode}...`);
 
-    // Disconnect previous client if it exists
-    if (kl.current) {
-      kl.current.disconnect();
-    }
+      // Disconnect previous client if it exists
+      if (kl.current) {
+        kl.current.disconnect();
+      }
 
-    kl.current = new KeyLinkClient({ relayUrl: url });
-    kl.current.connect();
+      kl.current = new KeyLinkClient({ relayUrl: url });
+      kl.current.connect();
 
-    kl.current.on('status', (s: string) => setStatus(s));
-    kl.current.on('open', () => {
-       addLog(`Connected to ${url}`, 'info');
-       setStatus(`Connected to ${networkMode} @ ${networkMode === 'WAN' ? wanChannel : 'localhost'}`);
-       // On successful connection, send the current state
-       if (!keylinkOnRef.current) return;
-       kl.current?.setState({ key: root, mode, tempo });
-       kl.current?.setChord({ root: chordRoot, type: chordType });
-       kl.current?.toggleChordLink(chordLinkOn);
-    });
+      kl.current.on('status', (s: string) => setStatus(s));
+      kl.current.on('open', () => {
+         addLog(`Connected to ${url}`, 'info');
+         setStatus(`Connected to ${networkMode} @ ${networkMode === 'WAN' ? wanChannel : 'LAN'}`);
+         // On successful connection, send the current state
+         if (!keylinkOnRef.current) return;
+         kl.current?.setState({ key: root, mode, tempo });
+         kl.current?.setChord({ root: chordRoot, type: chordType });
+         kl.current?.toggleChordLink(chordLinkOn);
+      });
 
-    kl.current.on('close', () => {
-      addLog(`Disconnected from ${url}`, 'info');
-      setStatus('Disconnected');
-    });
+      kl.current.on('close', () => {
+        addLog(`Disconnected from ${url}`, 'info');
+        setStatus('Disconnected');
+      });
 
-    kl.current.on('error', () => {
-        addLog(`Connection error on ${url}`, 'error');
-        setStatus(`Error connecting to ${networkMode}`);
-    });
+      kl.current.on('error', () => {
+          addLog(`Connection error on ${url}`, 'error');
+          setStatus(`Error connecting to ${networkMode}`);
+      });
 
-    kl.current.on('state', (state: any) => {
-      if (!keylinkOnRef.current) return;
-      setRoot(state.key);
-      setMode(state.mode);
-      setTempo(state.tempo || 120);
-      setChordLinkOn(state.chordEnabled);
-      setChordRoot(state.chord.root);
-      setChordType(state.chord.type);
-      addLog('← Received: ' + JSON.stringify(state), 'received');
-    });
+      kl.current.on('state', (state: any) => {
+        if (!keylinkOnRef.current) return;
+        setRoot(state.key);
+        setMode(state.mode);
+        setTempo(state.tempo || 120);
+        setChordLinkOn(state.chordEnabled);
+        setChordRoot(state.chord.root);
+        setChordType(state.chord.type);
+        addLog('← Received: ' + JSON.stringify(state), 'received');
+      });
+    };
+
+    connectToRelay();
 
     return () => {
       kl.current?.disconnect();
