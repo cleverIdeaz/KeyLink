@@ -2,6 +2,8 @@
 
 **Real-time music synchronization for Max/MSP with PWA and web integration**
 
+**[🐙 GitHub Repository](https://github.com/nealium/KeyLink)** • **[📖 Protocol Docs](https://github.com/nealium/KeyLink/blob/main/docs/protocol.md)** • **[🤝 Contributing](https://github.com/nealium/KeyLink/blob/main/CONTRIBUTING.md)**
+
 ## 🚀 Quick Start
 
 ### Prerequisites
@@ -210,7 +212,29 @@ The main KeyLink external object for Max/MSP.
 - **[PWA Guide](../web/PWA_README.md)** - Web app setup
 - **[Protocol Spec](../../docs/protocol.md)** - Technical details
 - **[Relay Server](../../relay/README.md)** - Server setup
+- **[GitHub Repository](https://github.com/nealium/KeyLink)** - Source code
+- **[Issues](https://github.com/nealium/KeyLink/issues)** - Report bugs
+- **[Discussions](https://github.com/nealium/KeyLink/discussions)** - Get help
+
+## 🤝 Contributing
+
+We welcome contributions! See [CONTRIBUTING.md](https://github.com/nealium/KeyLink/blob/main/CONTRIBUTING.md) for guidelines.
+
+### Development Setup
+```bash
+# Fork and clone
+git clone https://github.com/YOUR_USERNAME/KeyLink.git
+cd KeyLink
+
+# Build Max external
+cd demo/max/externals && ./build_keylink.sh
+
+# Start relay server
+cd ../../relay && npm start
+```
 
 ---
 
-**🎵 Happy syncing with Max/MSP!** 
+**🎵 Happy syncing with Max/MSP!**
+
+**[🐙 GitHub Repository](https://github.com/nealium/KeyLink)** • **[📖 Protocol Docs](https://github.com/nealium/KeyLink/blob/main/docs/protocol.md)** • **[🤝 Contributing](https://github.com/nealium/KeyLink/blob/main/CONTRIBUTING.md)** 

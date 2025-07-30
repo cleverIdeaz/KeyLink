@@ -4,6 +4,8 @@
 
 The KeyLink Demo is now available as a **Progressive Web App (PWA)** that can be installed on desktop and mobile devices. This eliminates the need for cloud hosting costs and provides a better user experience.
 
+**[🐙 GitHub Repository](https://github.com/nealium/KeyLink)** • **[📖 Protocol Docs](https://github.com/nealium/KeyLink/blob/main/docs/protocol.md)** • **[🤝 Contributing](https://github.com/nealium/KeyLink/blob/main/CONTRIBUTING.md)**
+
 ## Benefits of PWA
 
 ✅ **No Cloud Costs** - Runs locally, no server fees  
@@ -28,7 +30,7 @@ The KeyLink Demo is now available as a **Progressive Web App (PWA)** that can be
 ### Option 3: Download and Run Locally
 ```bash
 # Clone the repository
-git clone https://github.com/your-repo/KeyLink.git
+git clone https://github.com/nealium/KeyLink.git
 cd KeyLink/demo/web
 
 # Install dependencies
@@ -165,10 +167,32 @@ npm run start:https
 ## Support
 
 For issues and questions:
-- Check the main README.md
-- Review the DEPLOYMENT.md in the relay directory
-- Open an issue on GitHub
+- **GitHub Issues**: [Report bugs or request features](https://github.com/nealium/KeyLink/issues)
+- **GitHub Discussions**: [Join the conversation](https://github.com/nealium/KeyLink/discussions)
+- **Documentation**: Check the main [README.md](https://github.com/nealium/KeyLink/blob/main/README.md)
+- **Protocol Spec**: Review [docs/protocol.md](https://github.com/nealium/KeyLink/blob/main/docs/protocol.md)
+
+## Contributing
+
+We welcome contributions! See [CONTRIBUTING.md](https://github.com/nealium/KeyLink/blob/main/CONTRIBUTING.md) for guidelines.
+
+### Quick Start for Contributors
+```bash
+# Fork and clone
+git clone https://github.com/YOUR_USERNAME/KeyLink.git
+cd KeyLink
+
+# Install dependencies
+cd demo/web && npm install
+cd ../../relay && npm install
+
+# Start development
+cd ../demo/web && npm start
+cd ../../relay && npm start
+```
 
 ---
 
-**�� Happy syncing!** 
+**🎵 Happy syncing!**
+
+**[🐙 GitHub Repository](https://github.com/nealium/KeyLink)** • **[📖 Protocol Docs](https://github.com/nealium/KeyLink/blob/main/docs/protocol.md)** • **[🤝 Contributing](https://github.com/nealium/KeyLink/blob/main/CONTRIBUTING.md)** 

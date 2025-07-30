@@ -6,6 +6,10 @@
 
 **Real-time music data synchronization for Max/MSP, browser, and more**
 
+[![GitHub](https://img.shields.io/badge/GitHub-KeyLink-blue?style=flat&logo=github)](https://github.com/nealium/KeyLink)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/nealium/KeyLink/blob/main/LICENSE)
+[![Open Source](https://img.shields.io/badge/Open%20Source-Yes-brightgreen)](https://github.com/nealium/KeyLink)
+
 KeyLink enables seamless synchronization of musical parameters (key, tempo, chord progressions) across multiple applications and devices in real-time.
 
 ## 🚀 Quick Start
@@ -20,6 +24,37 @@ KeyLink enables seamless synchronization of musical parameters (key, tempo, chor
 - **LAN Mode**: Requires local relay server or PWA installation
 - **WAN Mode**: Works from anywhere via cloud relay
 
+## 🛠️ For Developers
+
+### Get the Source Code
+```bash
+git clone https://github.com/nealium/KeyLink.git
+cd KeyLink
+```
+
+### Quick Development Setup
+```bash
+# Web app
+cd demo/web && npm install && npm start
+
+# Relay server
+cd relay && npm install && npm start
+
+# Max external (macOS)
+cd demo/max/externals && ./build_keylink.sh
+```
+
+### Documentation
+- **[Protocol Specification](docs/protocol.md)** - Technical protocol details
+- **[API Reference](demo/web/src/keylink-sdk.ts)** - JavaScript/TypeScript SDK
+- **[Max/MSP Integration](demo/max/README.md)** - C++ external object
+- **[PWA Guide](demo/web/PWA_README.md)** - Progressive Web App setup
+
+### Contributing
+- **Issues**: [Report bugs or request features](https://github.com/nealium/KeyLink/issues)
+- **Discussions**: [Join the conversation](https://github.com/nealium/KeyLink/discussions)
+- **Contributing Guide**: [CONTRIBUTING.md](CONTRIBUTING.md)
+
 ## 🎯 Key Features
 
 ✅ **Zero Latency** - Local network synchronization  
@@ -28,6 +63,7 @@ KeyLink enables seamless synchronization of musical parameters (key, tempo, chor
 ✅ **Max/MSP Integration** - Native external object  
 ✅ **Offline Capable** - Works without internet  
 ✅ **Real-time Sync** - Key, tempo, chord progressions  
+✅ **Open Source** - MIT licensed, community-driven  
 
 ## 📱 PWA vs Web App
 
@@ -43,12 +79,12 @@ KeyLink enables seamless synchronization of musical parameters (key, tempo, chor
 
 ### For Users (PWA)
 1. **Install the app** from your browser
-2. **Download relay server**: `git clone https://github.com/your-repo/KeyLink.git`
+2. **Download relay server**: `git clone https://github.com/nealium/KeyLink.git`
 3. **Start relay**: `cd relay && ./start-relay.sh`
 4. **Connect Max/MSP** using the external object
 
 ### For Developers
-1. **Clone repository**: `git clone https://github.com/your-repo/KeyLink.git`
+1. **Clone repository**: `git clone https://github.com/nealium/KeyLink.git`
 2. **Install dependencies**: `cd demo/web && npm install`
 3. **Start development**: `npm start`
 4. **Build PWA**: `npm run build`
@@ -74,6 +110,7 @@ KeyLink enables seamless synchronization of musical parameters (key, tempo, chor
 - **[Deployment Guide](relay/DEPLOYMENT.md)** - Server deployment options
 - **[Protocol Spec](docs/protocol.md)** - Technical protocol details
 - **[Max/MSP Guide](demo/max/README.md)** - Max external setup
+- **[API Reference](demo/web/src/keylink-sdk.ts)** - JavaScript/TypeScript SDK
 
 ## 🎵 Use Cases
 
@@ -111,15 +148,42 @@ The KeyLink external object provides:
 - **Network**: UDP 239.255.0.1:7474, WebSocket :20801
 - **PWA**: Service Worker + Manifest
 - **Max/MSP**: C++ external with ASIO networking
+- **License**: MIT (open source)
 
 ## 🤝 Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for development guidelines.
+We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+
+### Ways to Contribute
+- 🐛 **Report bugs** via [GitHub Issues](https://github.com/nealium/KeyLink/issues)
+- 💡 **Request features** via [GitHub Discussions](https://github.com/nealium/KeyLink/discussions)
+- 📝 **Improve documentation** via pull requests
+- 🔧 **Submit code** via pull requests
+- 🌟 **Star the repository** to show support
+
+### Development Setup
+```bash
+# Fork and clone
+git clone https://github.com/YOUR_USERNAME/KeyLink.git
+cd KeyLink
+
+# Install dependencies
+cd demo/web && npm install
+cd ../../relay && npm install
+
+# Start development
+cd ../demo/web && npm start
+cd ../../relay && npm start
+```
 
 ## 📄 License
 
 MIT License - see [LICENSE](LICENSE) file.
 
+**Copyright (c) 2024 Neal Anderson**
+
 ---
 
-**�� Happy syncing!** 
+**🎵 Happy syncing!**
+
+**[🐙 GitHub Repository](https://github.com/nealium/KeyLink)** • **[📖 Protocol Docs](docs/protocol.md)** • **[🤝 Contributing](CONTRIBUTING.md)** 

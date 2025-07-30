@@ -2,12 +2,14 @@
 
 **Bridge between UDP multicast (Max/MSP) and WebSocket (PWA/Web) for real-time music sync**
 
+**[🐙 GitHub Repository](https://github.com/nealium/KeyLink)** • **[📖 Protocol Docs](https://github.com/nealium/KeyLink/blob/main/docs/protocol.md)** • **[🤝 Contributing](https://github.com/nealium/KeyLink/blob/main/CONTRIBUTING.md)**
+
 ## 🚀 Quick Start
 
 ### For PWA Users (Recommended)
 ```bash
 # Download and install
-git clone https://github.com/your-repo/KeyLink.git
+git clone https://github.com/nealium/KeyLink.git
 cd KeyLink/relay
 
 # Quick setup
@@ -208,7 +210,29 @@ upstream keylink_relays {
 - **[PWA Guide](../web/PWA_README.md)** - Web app setup
 - **[Max/MSP Guide](../max/README.md)** - Max external setup
 - **[Deployment Guide](DEPLOYMENT.md)** - Cloud deployment options
+- **[GitHub Repository](https://github.com/nealium/KeyLink)** - Source code
+- **[Issues](https://github.com/nealium/KeyLink/issues)** - Report bugs
+- **[Discussions](https://github.com/nealium/KeyLink/discussions)** - Get help
+
+## 🤝 Contributing
+
+We welcome contributions! See [CONTRIBUTING.md](https://github.com/nealium/KeyLink/blob/main/CONTRIBUTING.md) for guidelines.
+
+### Development Setup
+```bash
+# Fork and clone
+git clone https://github.com/YOUR_USERNAME/KeyLink.git
+cd KeyLink/relay
+
+# Install dependencies
+npm install
+
+# Start development
+npm start
+```
 
 ---
 
-**🎵 Happy bridging!** 
+**🎵 Happy bridging!**
+
+**[🐙 GitHub Repository](https://github.com/nealium/KeyLink)** • **[📖 Protocol Docs](https://github.com/nealium/KeyLink/blob/main/docs/protocol.md)** • **[🤝 Contributing](https://github.com/nealium/KeyLink/blob/main/CONTRIBUTING.md)** 
