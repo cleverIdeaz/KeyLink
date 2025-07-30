@@ -392,14 +392,18 @@ export default function App() {
             🐙 GitHub Repository
           </a>
           <span style={{ margin: '0 8px', color: '#666' }}>•</span>
-          <a 
-            href="https://github.com/cleverIdeaz/KeyLink/blob/main/docs/protocol.md" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            style={{ color: '#F5C242', textDecoration: 'none' }}
-          >
-            📖 Protocol Docs
-          </a>
+                            <a 
+                    href="https://github.com/cleverIdeaz/KeyLink/blob/main/docs/protocol.md" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    style={{ color: '#F5C242', textDecoration: 'none' }}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      window.open('https://github.com/cleverIdeaz/KeyLink/blob/main/docs/protocol.md', '_blank');
+                    }}
+                  >
+                    📖 Protocol Docs
+                  </a>
         </div>
       </div>
 
