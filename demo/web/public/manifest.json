@@ -1,6 +1,7 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "KeyLink Demo",
+  "name": "KeyLink Music Sync Demo",
+  "description": "Real-time music data synchronization for Max/MSP, browser, and more",
   "icons": [
     {
       "src": "favicon.ico",
@@ -20,6 +21,19 @@
   ],
   "start_url": ".",
   "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "theme_color": "#F5C242",
+  "background_color": "#222222",
+  "orientation": "portrait",
+  "scope": "/",
+  "lang": "en",
+  "categories": ["music", "productivity", "utilities"],
+  "shortcuts": [
+    {
+      "name": "Toggle KeyLink",
+      "short_name": "KeyLink",
+      "description": "Quick toggle KeyLink on/off",
+      "url": "/?action=toggle",
+      "icons": [{ "src": "logo192.png", "sizes": "192x192" }]
+    }
+  ]
 }

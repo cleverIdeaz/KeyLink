@@ -25,31 +25,36 @@ function now() {
 
 // LAN discovery function
 async function discoverLANRelay(): Promise<string | null> {
-  for (const url of LAN_DISCOVERY_URLS) {
-    try {
-      const ws = new WebSocket(url);
-      await new Promise((resolve, reject) => {
-        const timeout = setTimeout(() => {
-          ws.close();
-          reject(new Error('Timeout'));
-        }, 2000);
-        
-        ws.onopen = () => {
-          clearTimeout(timeout);
-          ws.close();
-          resolve(url);
-        };
-        
-        ws.onerror = () => {
-          clearTimeout(timeout);
-          reject(new Error('Connection failed'));
-        };
-      });
-      return url;
-    } catch (e) {
-      console.log(`LAN discovery failed for ${url}:`, e);
+  // If we're on localhost, try local discovery
+  if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+    for (const url of LAN_DISCOVERY_URLS) {
+      try {
+        const ws = new WebSocket(url);
+        await new Promise((resolve, reject) => {
+          const timeout = setTimeout(() => {
+            ws.close();
+            reject(new Error('Timeout'));
+          }, 2000);
+          
+          ws.onopen = () => {
+            clearTimeout(timeout);
+            ws.close();
+            resolve(url);
+          };
+          
+          ws.onerror = () => {
+            clearTimeout(timeout);
+            reject(new Error('Connection failed'));
+          };
+        });
+        return url;
+      } catch (e) {
+        console.log(`LAN discovery failed for ${url}:`, e);
+      }
     }
   }
+  
+  // If deployed, don't try local discovery - use cloud relay
   return null;
 }
 
@@ -67,8 +72,22 @@ export default function App() {
   const [chordType, setChordType] = useState('maj');
   const [status, setStatus] = useState('Disconnected');
   const [log, setLog] = useState<{ time: string; msg: string; type: 'sent' | 'received' | 'info' | 'error' }[]>([]);
+  const [isPWA, setIsPWA] = useState(false);
   const kl = useRef<KeyLinkClient | null>(null);
   const keylinkOnRef = useRef(keylinkOn);
+
+  // Detect if running as PWA
+  useEffect(() => {
+    const checkPWA = () => {
+      const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+      const isInstalled = (window.navigator as any).standalone === true;
+      setIsPWA(isStandalone || isInstalled);
+    };
+    
+    checkPWA();
+    window.addEventListener('appinstalled', checkPWA);
+    return () => window.removeEventListener('appinstalled', checkPWA);
+  }, []);
 
   // Log helper
   const addLog = (msg: string, type: 'sent' | 'received' | 'info' | 'error' = 'info') =>
@@ -78,18 +97,37 @@ export default function App() {
   useEffect(() => {
     const connectToRelay = async () => {
       let url: string;
+      let isDeployed = false;
       
       if (networkMode === 'LAN') {
-        addLog('Discovering LAN relay server...', 'info');
-        const discoveredUrl = await discoverLANRelay();
-        if (discoveredUrl) {
-          url = discoveredUrl;
-          addLog(`Found LAN relay at ${discoveredUrl}`, 'info');
+        // Check if we're deployed or local
+        isDeployed = window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
+        
+        if (isDeployed && !isPWA) {
+          // Deployed web app (not PWA): Use cloud relay for LAN mode (web-to-web communication)
+          url = `${WAN_WS_URL}${wanChannel}`;
+          addLog('Deployed web app: Using cloud relay for LAN mode', 'info');
         } else {
-          addLog('No LAN relay found, falling back to localhost', 'info');
-          url = LAN_WS_URL;
+          // Local or PWA: Try to discover local relay first
+          addLog('Discovering LAN relay server...', 'info');
+          const discoveredUrl = await discoverLANRelay();
+          if (discoveredUrl) {
+            url = discoveredUrl;
+            addLog(`Found LAN relay at ${discoveredUrl}`, 'info');
+          } else {
+            if (isPWA) {
+              // PWA with no local relay: fall back to cloud
+              url = `${WAN_WS_URL}${wanChannel}`;
+              addLog('PWA: No local relay found, using cloud relay', 'info');
+            } else {
+              addLog('No LAN relay found, falling back to localhost', 'info');
+              url = LAN_WS_URL;
+            }
+          }
         }
       } else {
+        // WAN mode: Always use cloud relay
+        isDeployed = true;
         url = `${WAN_WS_URL}${wanChannel}`;
       }
       
@@ -107,7 +145,8 @@ export default function App() {
       kl.current.on('status', (s: string) => setStatus(s));
       kl.current.on('open', () => {
          addLog(`Connected to ${url}`, 'info');
-         setStatus(`Connected to ${networkMode} @ ${networkMode === 'WAN' ? wanChannel : 'LAN'}`);
+         const connectionType = isDeployed ? 'Cloud' : 'Local';
+         setStatus(`Connected to ${networkMode} @ ${connectionType}`);
          // On successful connection, send the current state
          if (!keylinkOnRef.current) return;
          kl.current?.setState({ key: root, mode, tempo });
@@ -261,6 +300,11 @@ export default function App() {
       {/* Status and Log */}
       <div style={{ width: '100%', maxWidth: '600px', marginTop: '24px', textAlign: 'center', fontSize: '14px', color: '#aaa' }}>
         Status: {status}
+        {isPWA && (
+          <div style={{ marginTop: '8px', color: '#F5C242', fontSize: '12px' }}>
+            📱 Running as installed app
+          </div>
+        )}
       </div>
 
       <div style={{ width: '100%', maxWidth: '600px', marginTop: '16px', background: '#181818', borderRadius: '10px', padding: '12px', height: '180px', overflowY: 'auto', fontFamily: 'monospace' }}>

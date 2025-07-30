@@ -1,12 +1,23 @@
 {
   "name": "keylink-relay",
   "version": "1.0.0",
+  "description": "KeyLink Relay Server - Bridges UDP multicast and WebSocket for music data sync",
   "main": "relay.js",
   "scripts": {
-    "start": "node relay.js"
+    "start": "node relay.js",
+    "dev": "nodemon relay.js",
+    "deploy": "fly deploy"
   },
+  "keywords": ["keylink", "music", "sync", "udp", "websocket", "max", "msp"],
+  "author": "Neal Anderson",
+  "license": "MIT",
   "dependencies": {
-    "express": "^4.18.2",
     "ws": "^8.13.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "engines": {
+    "node": ">=16.0.0"
   }
 } 

@@ -16,6 +16,9 @@ primary_region = 'ord'
   min_machines_running = 1
   processes = ['app']
 
+[env]
+  ENABLE_UDP = "false"
+
 [[vm]]
   memory = '1gb'
   cpu_kind = 'shared'
