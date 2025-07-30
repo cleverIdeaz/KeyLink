@@ -270,10 +270,56 @@ export default function App() {
           {/* Network Controls */}
           <div style={{ marginBottom: '24px', background: '#2a2a2a', padding: '16px', borderRadius: '10px' }}>
             <h4 style={{ margin: '0 0 12px 0', color: '#F5C242', fontSize: '16px' }}>Network</h4>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '12px' }}>
-              <label style={{ cursor: 'pointer' }}><input type="radio" value="LAN" checked={networkMode === 'LAN'} onChange={() => setNetworkMode('LAN')} /> LAN</label>
-              <label style={{ cursor: 'pointer' }}><input type="radio" value="WAN" checked={networkMode === 'WAN'} onChange={() => setNetworkMode('WAN')} /> WAN</label>
+            
+            {/* LAN Mode Info */}
+            <div style={{ marginBottom: '12px', padding: '8px', background: '#333', borderRadius: '6px', fontSize: '12px' }}>
+              <div style={{ color: '#F5C242', fontWeight: 'bold', marginBottom: '4px' }}>
+                LAN Mode: {isPWA ? '✅ Available' : '⚠️ Limited'}
+              </div>
+              <div style={{ color: '#ccc', lineHeight: '1.4' }}>
+                {isPWA ? (
+                  <>
+                    • Works with local relay server<br/>
+                    • Zero latency, no internet required<br/>
+                    • Perfect for Max/MSP integration
+                  </>
+                ) : (
+                  <>
+                    • Requires local relay server running<br/>
+                    • Or install as PWA for full LAN support<br/>
+                    • Web-only: uses cloud relay
+                  </>
+                )}
+              </div>
             </div>
+            
+            <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '12px' }}>
+              <label style={{ cursor: 'pointer' }}>
+                <input 
+                  type="radio" 
+                  value="LAN" 
+                  checked={networkMode === 'LAN'} 
+                  onChange={() => setNetworkMode('LAN')} 
+                /> 
+                LAN
+                <span style={{ marginLeft: '4px', fontSize: '12px', color: '#888' }}>
+                  {isPWA ? '(Local)' : '(Cloud)'}
+                </span>
+              </label>
+              <label style={{ cursor: 'pointer' }}>
+                <input 
+                  type="radio" 
+                  value="WAN" 
+                  checked={networkMode === 'WAN'} 
+                  onChange={() => setNetworkMode('WAN')} 
+                /> 
+                WAN
+                <span style={{ marginLeft: '4px', fontSize: '12px', color: '#888' }}>
+                  (Cloud)
+                </span>
+              </label>
+            </div>
+            
             {networkMode === 'WAN' && (
               <input
                 type="text"
@@ -282,6 +328,15 @@ export default function App() {
                 placeholder="Channel Name"
                 style={{ width: 'calc(100% - 24px)', padding: '12px', background: '#333', color: '#fff', border: '1px solid #444', borderRadius: '8px' }}
               />
+            )}
+            
+            {/* Setup Instructions */}
+            {networkMode === 'LAN' && !isPWA && (
+              <div style={{ marginTop: '12px', padding: '8px', background: '#444', borderRadius: '6px', fontSize: '11px', color: '#aaa' }}>
+                💡 <strong>To use true LAN mode:</strong><br/>
+                1. Install this app as a PWA (see install button above)<br/>
+                2. Run a local relay server: <code>cd relay && ./start-relay.sh</code>
+              </div>
             )}
           </div>
 
