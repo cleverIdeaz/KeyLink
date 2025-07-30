@@ -382,25 +382,16 @@ export default function App() {
             📱 Running as installed app
           </div>
         )}
-        <div style={{ marginTop: '12px', fontSize: '11px' }}>
-          <a 
-            href="https://github.com/cleverIdeaz/KeyLink" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            style={{ color: '#F5C242', textDecoration: 'none' }}
-          >
-            🐙 GitHub Repository
-          </a>
-          <span style={{ margin: '0 8px', color: '#666' }}>•</span>
-                            <a 
-                    href="https://github.com/cleverIdeaz/KeyLink/blob/main/docs/protocol.md" 
+                        <div style={{ marginTop: '12px', fontSize: '11px' }}>
+                  <a 
+                    href="https://github.com/cleverIdeaz/KeyLink" 
                     target="_blank" 
                     rel="noopener noreferrer"
                     style={{ color: '#F5C242', textDecoration: 'none' }}
                   >
-                    📖 Protocol Docs
+                    🐙 GitHub Repository
                   </a>
-        </div>
+                </div>
       </div>
 
       <div style={{ width: '100%', maxWidth: '600px', marginTop: '16px', background: '#181818', borderRadius: '10px', padding: '12px', height: '180px', overflowY: 'auto', fontFamily: 'monospace' }}>
