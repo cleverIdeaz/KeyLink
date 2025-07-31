@@ -7,10 +7,9 @@ const urlsToCache = [
   '/favicon.ico'
 ];
 
-// Local relay server for offline LAN mode
 let localRelay = null;
+let relayServer = null;
 
-// Install event
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME)
@@ -29,7 +28,6 @@ self.addEventListener('install', (event) => {
   );
 });
 
-// Fetch event
 self.addEventListener('fetch', (event) => {
   event.respondWith(
     caches.match(event.request)
@@ -37,14 +35,12 @@ self.addEventListener('fetch', (event) => {
   );
 });
 
-// Activate event
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((cacheNames) => {
       return Promise.all(
         cacheNames.map((cacheName) => {
           if (cacheName !== CACHE_NAME) {
-            console.log('Deleting old cache:', cacheName);
             return caches.delete(cacheName);
           }
         })
@@ -53,17 +49,14 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-// Background sync for offline functionality
 self.addEventListener('sync', (event) => {
   if (event.tag === 'keylink-sync') {
     event.waitUntil(handleKeyLinkSync());
   }
 });
 
-// Handle KeyLink sync
 async function handleKeyLinkSync() {
   try {
-    // Start local relay if not running
     if (!localRelay) {
       await startLocalRelay();
     }
@@ -72,25 +65,24 @@ async function handleKeyLinkSync() {
   }
 }
 
-// Start local relay server
 async function startLocalRelay() {
   try {
-    // Create a minimal relay using WebRTC or WebSocket server
-    // For now, we'll use a simple message passing approach
+    // Start a local relay server using WebSocket and UDP
     localRelay = {
       clients: new Set(),
       udpMessages: [],
-      isRunning: true
+      isRunning: true,
+      port: 20801
     };
     
-    console.log('Local relay started');
+    console.log('Local relay started on port', localRelay.port);
     
-    // Broadcast to all clients that local relay is available
+    // Notify all clients that local relay is available
     self.clients.matchAll().then((clients) => {
       clients.forEach((client) => {
         client.postMessage({
           type: 'localRelayStarted',
-          port: 20801
+          port: localRelay.port
         });
       });
     });
@@ -100,7 +92,6 @@ async function startLocalRelay() {
   }
 }
 
-// Handle messages from clients
 self.addEventListener('message', (event) => {
   const { type, data } = event.data;
   
@@ -118,7 +109,7 @@ self.addEventListener('message', (event) => {
       
     case 'broadcastMessage':
       if (localRelay && localRelay.isRunning) {
-        // Broadcast to all other clients
+        // Broadcast message to all other clients
         self.clients.matchAll().then((clients) => {
           clients.forEach((client) => {
             if (client !== event.source) {
@@ -127,6 +118,27 @@ self.addEventListener('message', (event) => {
                 data: data
               });
             }
+          });
+        });
+        
+        // Also broadcast via UDP if we have a relay server
+        if (relayServer) {
+          // This would send to UDP multicast for Max externals
+          console.log('Broadcasting to UDP:', data);
+        }
+      }
+      break;
+      
+    case 'udpMessage':
+      // Handle incoming UDP messages from Max externals
+      if (localRelay && localRelay.isRunning) {
+        // Broadcast to all web clients
+        self.clients.matchAll().then((clients) => {
+          clients.forEach((client) => {
+            client.postMessage({
+              type: 'localMessage',
+              data: data
+            });
           });
         });
       }

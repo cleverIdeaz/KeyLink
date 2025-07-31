@@ -1,0 +1,18 @@
+{
+  "name": "KeyLink",
+  "version": "1.0.0",
+  "description": "Zero-config music data sync for Max, browser, and more",
+  "author": "Neal Anderson",
+  "homepage": "https://github.com/cleverIdeaz/KeyLink",
+  "externals": [
+    "keylink"
+  ],
+  "objects": [
+    {
+      "name": "keylink",
+      "description": "KeyLink protocol client for Max/MSP",
+      "digest": "keylink",
+      "module": "keylink"
+    }
+  ]
+} 
