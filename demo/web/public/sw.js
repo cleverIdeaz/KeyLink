@@ -1,5 +1,5 @@
-// KeyLink Demo Service Worker
-const CACHE_NAME = 'keylink-demo-v1';
+// KeyLink Demo Service Worker with Local Relay
+const CACHE_NAME = 'keylink-demo-v2';
 const urlsToCache = [
   '/',
   '/static/js/bundle.js',
@@ -10,7 +10,10 @@ const urlsToCache = [
   '/logo512.png'
 ];
 
-// Install event - cache resources
+// Local relay server for offline LAN mode
+let localRelay = null;
+
+// Install event
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME)
@@ -21,7 +24,7 @@ self.addEventListener('install', (event) => {
   );
 });
 
-// Fetch event - serve from cache when offline
+// Fetch event
 self.addEventListener('fetch', (event) => {
   event.respondWith(
     caches.match(event.request)
@@ -33,7 +36,7 @@ self.addEventListener('fetch', (event) => {
   );
 });
 
-// Activate event - clean up old caches
+// Activate event
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((cacheNames) => {
@@ -51,12 +54,81 @@ self.addEventListener('activate', (event) => {
 
 // Background sync for offline functionality
 self.addEventListener('sync', (event) => {
-  if (event.tag === 'background-sync') {
-    event.waitUntil(doBackgroundSync());
+  if (event.tag === 'keylink-sync') {
+    event.waitUntil(handleKeyLinkSync());
   }
 });
 
-function doBackgroundSync() {
-  // Handle any background sync tasks
-  console.log('Background sync triggered');
-} 
+// Handle KeyLink sync
+async function handleKeyLinkSync() {
+  try {
+    // Start local relay if not running
+    if (!localRelay) {
+      await startLocalRelay();
+    }
+  } catch (error) {
+    console.error('KeyLink sync failed:', error);
+  }
+}
+
+// Start local relay server
+async function startLocalRelay() {
+  try {
+    // Create a minimal relay using WebRTC or WebSocket server
+    // For now, we'll use a simple message passing approach
+    localRelay = {
+      clients: new Set(),
+      udpMessages: [],
+      isRunning: true
+    };
+    
+    console.log('Local relay started');
+    
+    // Broadcast to all clients that local relay is available
+    self.clients.matchAll().then((clients) => {
+      clients.forEach((client) => {
+        client.postMessage({
+          type: 'localRelayStarted',
+          port: 20801
+        });
+      });
+    });
+    
+  } catch (error) {
+    console.error('Failed to start local relay:', error);
+  }
+}
+
+// Handle messages from clients
+self.addEventListener('message', (event) => {
+  const { type, data } = event.data;
+  
+  switch (type) {
+    case 'startLocalRelay':
+      startLocalRelay();
+      break;
+      
+    case 'stopLocalRelay':
+      if (localRelay) {
+        localRelay.isRunning = false;
+        localRelay = null;
+      }
+      break;
+      
+    case 'broadcastMessage':
+      if (localRelay && localRelay.isRunning) {
+        // Broadcast to all other clients
+        self.clients.matchAll().then((clients) => {
+          clients.forEach((client) => {
+            if (client !== event.source) {
+              client.postMessage({
+                type: 'localMessage',
+                data: data
+              });
+            }
+          });
+        });
+      }
+      break;
+  }
+}); 

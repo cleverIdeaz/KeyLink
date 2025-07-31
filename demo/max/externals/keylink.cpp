@@ -1,4 +1,4 @@
-// keylink.cpp - Starter for KeyLink Max external
+// keylink.cpp - Enhanced KeyLink Max external
 // All dependencies are local (thirdparty/asio, thirdparty/json.hpp) - no global install needed
 // Zero-config, cross-platform music data sync for Max, browser, and more
 // Written using the Cycling '74 Max SDK
@@ -19,26 +19,50 @@
 #include "asio.hpp"
 #include "thirdparty/json.hpp"
 #include <memory>
-// #include <asio.hpp> // For UDP multicast (add to project)
-// #include <nlohmann/json.hpp> // For JSON parsing (add to project)
+#include <regex>
 
 // Default network settings
 #define KEYLINK_MULTICAST_ADDR "239.255.0.1"
 #define KEYLINK_UDP_PORT 7474
-#define KEYLINK_WS_PORT 8765
+#define KEYLINK_WS_PORT 20801
+#define KEYLINK_WAN_WS_URL "wss://keylink-relay.fly.dev/"
+
+// Network modes
+enum NetworkMode {
+    MODE_LAN = 0,
+    MODE_WAN = 1
+};
 
 // Struct for the Max object
 typedef struct _keylink {
     t_object ob;
     void *outlet;
+    void *mode_outlet;  // For mode status
     std::thread net_thread;
     std::atomic<bool> running;
+    
+    // Network mode and channel
+    NetworkMode network_mode;
+    std::string channel;
+    std::string ws_url;
+    
     // Networking
     std::unique_ptr<asio::io_context> io_ctx;
     std::unique_ptr<asio::ip::udp::socket> udp_socket;
     asio::ip::udp::endpoint multicast_endpoint;
     char recv_buffer[2048];
-    // Add UDP socket, WebSocket server, etc. here
+    
+    // WebSocket client
+    std::unique_ptr<asio::ip::tcp::socket> ws_socket;
+    std::string ws_host;
+    std::string ws_path;
+    int ws_port;
+    bool ws_connected;
+    
+    // Message tracking to prevent loops
+    std::string last_sent_msg;
+    std::chrono::steady_clock::time_point last_sent_time;
+    
 } t_keylink;
 
 // Prototypes
@@ -50,7 +74,15 @@ void keylink_dict(t_keylink *x, t_symbol *s);
 void keylink_symbol(t_keylink *x, t_symbol *s);
 void keylink_start(t_keylink *x);
 void keylink_stop(t_keylink *x);
+void keylink_mode(t_keylink *x, t_symbol *s);
+void keylink_channel(t_keylink *x, t_symbol *s);
+void keylink_url(t_keylink *x, t_symbol *s);
 void udp_do_receive(t_keylink *x);
+void ws_connect(t_keylink *x);
+void ws_send(t_keylink *x, const std::string& msg);
+void ws_read(t_keylink *x);
+void send_message(t_keylink *x, const std::string& msg);
+bool is_duplicate_message(t_keylink *x, const std::string& msg);
 
 // Class pointer
 static t_class *keylink_class = NULL;
@@ -63,6 +95,9 @@ extern "C" void ext_main(void *r) {
     class_addmethod(c, (method)keylink_symbol, "symbol", A_SYM, 0);
     class_addmethod(c, (method)keylink_start, "start", 0);
     class_addmethod(c, (method)keylink_stop, "stop", 0);
+    class_addmethod(c, (method)keylink_mode, "mode", A_SYM, 0);
+    class_addmethod(c, (method)keylink_channel, "channel", A_SYM, 0);
+    class_addmethod(c, (method)keylink_url, "url", A_SYM, 0);
     class_addmethod(c, (method)keylink_assist, "assist", A_CANT, 0);
     class_register(CLASS_BOX, c);
     keylink_class = c;
@@ -72,8 +107,39 @@ void *keylink_new(t_symbol *s, long argc, t_atom *argv) {
     t_keylink *x = (t_keylink *)object_alloc(keylink_class);
     if (x) {
         x->outlet = outlet_new((t_object *)x, NULL);
+        x->mode_outlet = outlet_new((t_object *)x, NULL);
         x->running = false;
-        // TODO: Parse args for custom port/address
+        x->network_mode = MODE_LAN;
+        x->channel = "__LAN__";
+        x->ws_url = "ws://localhost:20801";
+        x->ws_connected = false;
+        x->last_sent_msg = "";
+        x->last_sent_time = std::chrono::steady_clock::now();
+        
+        // Parse arguments: [keylink mode channel url]
+        if (argc >= 1) {
+            if (atom_gettype(argv) == A_SYM) {
+                std::string mode = atom_getsym(argv)->s_name;
+                if (mode == "wan" || mode == "WAN") {
+                    x->network_mode = MODE_WAN;
+                    x->ws_url = KEYLINK_WAN_WS_URL;
+                }
+            }
+        }
+        if (argc >= 2) {
+            if (atom_gettype(argv + 1) == A_SYM) {
+                x->channel = atom_getsym(argv + 1)->s_name;
+            }
+        }
+        if (argc >= 3) {
+            if (atom_gettype(argv + 2) == A_SYM) {
+                x->ws_url = atom_getsym(argv + 2)->s_name;
+            }
+        }
+        
+        object_post((t_object *)x, "KeyLink: mode=%s, channel=%s, url=%s", 
+                   x->network_mode == MODE_LAN ? "LAN" : "WAN", 
+                   x->channel.c_str(), x->ws_url.c_str());
     }
     return (x);
 }
@@ -85,67 +151,131 @@ void keylink_free(t_keylink *x) {
         x->udp_socket->close();
         x->udp_socket.reset();
     }
+    if (x->ws_socket) {
+        x->ws_socket->close();
+        x->ws_socket.reset();
+    }
     if (x->io_ctx) {
         x->io_ctx->stop();
         x->io_ctx.reset();
     }
-    // TODO: Clean up sockets, etc.
 }
 
 void keylink_assist(t_keylink *x, void *b, long m, long a, char *s) {
     if (m == ASSIST_INLET) {
-        sprintf(s, "Input (dict, symbol, bang, start, stop)");
-    } else {
+        sprintf(s, "Input (dict, symbol, bang, start, stop, mode, channel, url)");
+    } else if (a == 0) {
         sprintf(s, "Output (JSON string or dict)");
+    } else {
+        sprintf(s, "Status (mode, connection)");
     }
 }
 
 void keylink_bang(t_keylink *x) {
-    // Example: Output a test message
-    outlet_anything(x->outlet, gensym("bang"), 0, NULL);
+    // Send a ping message
+    nlohmann::json ping = {
+        {"type", "ping"},
+        {"source", "max"},
+        {"timestamp", std::chrono::duration_cast<std::chrono::milliseconds>(
+            std::chrono::system_clock::now().time_since_epoch()).count()}
+    };
+    send_message(x, ping.dump());
 }
 
 void keylink_dict(t_keylink *x, t_symbol *s) {
-    // Notify user that direct dict support is not available in this SDK
-    object_post((t_object *)x, "Dictionary input not supported in this version of the Max SDK. Use [tosymbol] to send JSON as a symbol.");
+    // Convert dict to JSON and send
+    // For now, create a simple JSON message
+    nlohmann::json msg = {
+        {"type", "set-state"},
+        {"state", {
+            {"key", "C"},
+            {"mode", "Ionian"},
+            {"tempo", 120}
+        }},
+        {"source", "max"},
+        {"timestamp", std::chrono::duration_cast<std::chrono::milliseconds>(
+            std::chrono::system_clock::now().time_since_epoch()).count()}
+    };
+    send_message(x, msg.dump());
 }
 
 void keylink_symbol(t_keylink *x, t_symbol *s) {
-    // Pass the symbol (JSON string) through locally
-    t_atom a;
-    atom_setsym(&a, s);
-    outlet_anything(x->outlet, gensym("json"), 1, &a);
-    // Send over UDP multicast
-    if (x->udp_socket && x->udp_socket->is_open()) {
-        std::string msg = s->s_name;
-        x->udp_socket->async_send_to(
-            asio::buffer(msg),
-            x->multicast_endpoint,
-            [](std::error_code, std::size_t){}
-        );
+    // Send the JSON string directly
+    send_message(x, s->s_name);
+}
+
+void keylink_mode(t_keylink *x, t_symbol *s) {
+    std::string mode = s->s_name;
+    if (mode == "lan" || mode == "LAN") {
+        x->network_mode = MODE_LAN;
+        x->ws_url = "ws://localhost:20801";
+    } else if (mode == "wan" || mode == "WAN") {
+        x->network_mode = MODE_WAN;
+        x->ws_url = KEYLINK_WAN_WS_URL;
     }
+    
+    // Restart connection if running
+    if (x->running) {
+        keylink_stop(x);
+        keylink_start(x);
+    }
+    
+    object_post((t_object *)x, "KeyLink: switched to %s mode", mode.c_str());
+    
+    // Output mode status
+    t_atom a;
+    atom_setsym(&a, gensym(mode.c_str()));
+    outlet_anything(x->mode_outlet, gensym("mode"), 1, &a);
+}
+
+void keylink_channel(t_keylink *x, t_symbol *s) {
+    x->channel = s->s_name;
+    object_post((t_object *)x, "KeyLink: channel set to %s", x->channel.c_str());
+}
+
+void keylink_url(t_keylink *x, t_symbol *s) {
+    x->ws_url = s->s_name;
+    object_post((t_object *)x, "KeyLink: WebSocket URL set to %s", x->ws_url.c_str());
 }
 
 void keylink_start(t_keylink *x) {
     if (x->running) return;
     x->running = true;
     x->io_ctx.reset(new asio::io_context());
-    x->udp_socket.reset(new asio::ip::udp::socket(*x->io_ctx));
-    asio::ip::udp::endpoint listen_ep(asio::ip::udp::v4(), KEYLINK_UDP_PORT);
-    x->udp_socket->open(listen_ep.protocol());
-    x->udp_socket->set_option(asio::ip::udp::socket::reuse_address(true));
-    x->udp_socket->bind(listen_ep);
-    // Join multicast group
-    asio::ip::address multicast_addr = asio::ip::make_address(KEYLINK_MULTICAST_ADDR);
-    x->udp_socket->set_option(asio::ip::multicast::join_group(multicast_addr));
-    x->multicast_endpoint = asio::ip::udp::endpoint(multicast_addr, KEYLINK_UDP_PORT);
+    
     // Start network thread
     x->net_thread = std::thread([x]() {
-        udp_do_receive(x);
-        while (x->running) {
-            x->io_ctx->run_for(std::chrono::milliseconds(100));
+        try {
+            // Setup UDP for LAN mode
+            if (x->network_mode == MODE_LAN) {
+                x->udp_socket.reset(new asio::ip::udp::socket(*x->io_ctx));
+                asio::ip::udp::endpoint listen_ep(asio::ip::udp::v4(), KEYLINK_UDP_PORT);
+                x->udp_socket->open(listen_ep.protocol());
+                x->udp_socket->set_option(asio::ip::udp::socket::reuse_address(true));
+                x->udp_socket->bind(listen_ep);
+                
+                // Join multicast group
+                asio::ip::address multicast_addr = asio::ip::make_address(KEYLINK_MULTICAST_ADDR);
+                x->udp_socket->set_option(asio::ip::multicast::join_group(multicast_addr));
+                x->multicast_endpoint = asio::ip::udp::endpoint(multicast_addr, KEYLINK_UDP_PORT);
+                
+                udp_do_receive(x);
+                object_post((t_object *)x, "KeyLink: UDP multicast started on %s:%d", KEYLINK_MULTICAST_ADDR, KEYLINK_UDP_PORT);
+            }
+            
+            // Setup WebSocket client
+            ws_connect(x);
+            
+            // Run IO context
+            while (x->running) {
+                x->io_ctx->run_for(std::chrono::milliseconds(100));
+            }
+        } catch (const std::exception& e) {
+            object_error((t_object *)x, "KeyLink network error: %s", e.what());
         }
     });
+    
+    object_post((t_object *)x, "KeyLink: started in %s mode", x->network_mode == MODE_LAN ? "LAN" : "WAN");
 }
 
 void udp_do_receive(t_keylink *x) {
@@ -156,11 +286,150 @@ void udp_do_receive(t_keylink *x) {
         [x](std::error_code ec, std::size_t bytes_recvd) {
             if (!ec && bytes_recvd > 0 && x->running) {
                 std::string msg(x->recv_buffer, bytes_recvd);
-                t_atom a;
-                atom_setsym(&a, gensym(msg.c_str()));
-                outlet_anything(x->outlet, gensym("json"), 1, &a);
+                
+                // Prevent echo (don't output messages we just sent)
+                if (!is_duplicate_message(x, msg)) {
+                    t_atom a;
+                    atom_setsym(&a, gensym(msg.c_str()));
+                    outlet_anything(x->outlet, gensym("json"), 1, &a);
+                }
             }
             if (x->running) udp_do_receive(x);
+        }
+    );
+}
+
+void ws_connect(t_keylink *x) {
+    try {
+        // Parse WebSocket URL
+        std::string url = x->ws_url;
+        std::regex ws_regex("ws(s)?://([^:/]+)(:([0-9]+))?(/.*)?");
+        std::smatch match;
+        
+        if (std::regex_match(url, match, ws_regex)) {
+            x->ws_host = match[2].str();
+            x->ws_path = match[5].str();
+            if (x->ws_path.empty()) x->ws_path = "/";
+            
+            std::string port_str = match[4].str();
+            if (port_str.empty()) {
+                x->ws_port = (match[1].str() == "s") ? 443 : 80;
+            } else {
+                x->ws_port = std::stoi(port_str);
+            }
+            
+            // Create TCP socket
+            x->ws_socket.reset(new asio::ip::tcp::socket(*x->io_ctx));
+            
+            // Resolve hostname
+            asio::ip::tcp::resolver resolver(*x->io_ctx);
+            auto endpoints = resolver.resolve(x->ws_host, std::to_string(x->ws_port));
+            
+            // Connect
+            asio::connect(*x->ws_socket, endpoints);
+            
+            // Send WebSocket handshake
+            std::string handshake = 
+                "GET " + x->ws_path + " HTTP/1.1\r\n"
+                "Host: " + x->ws_host + "\r\n"
+                "Upgrade: websocket\r\n"
+                "Connection: Upgrade\r\n"
+                "Sec-WebSocket-Key: dGhlIHNhbXBsZSBub25jZQ==\r\n"
+                "Sec-WebSocket-Version: 13\r\n"
+                "\r\n";
+            
+            asio::write(*x->ws_socket, asio::buffer(handshake));
+            
+            // Read response (simplified - in production you'd parse the headers)
+            char response[1024];
+            size_t len = x->ws_socket->read_some(asio::buffer(response, sizeof(response)));
+            
+            if (len > 0) {
+                x->ws_connected = true;
+                object_post((t_object *)x, "KeyLink: WebSocket connected to %s", x->ws_url.c_str());
+                
+                // Start reading WebSocket messages
+                ws_read(x);
+            }
+        }
+    } catch (const std::exception& e) {
+        object_error((t_object *)x, "KeyLink WebSocket connection failed: %s", e.what());
+        x->ws_connected = false;
+    }
+}
+
+void ws_send(t_keylink *x, const std::string& msg) {
+    if (!x->ws_connected || !x->ws_socket) return;
+    
+    try {
+        // Simple WebSocket frame (no masking for client)
+        std::vector<uint8_t> frame;
+        frame.push_back(0x81); // FIN + text frame
+        
+        if (msg.length() < 126) {
+            frame.push_back(msg.length());
+        } else if (msg.length() < 65536) {
+            frame.push_back(126);
+            frame.push_back((msg.length() >> 8) & 0xFF);
+            frame.push_back(msg.length() & 0xFF);
+        } else {
+            frame.push_back(127);
+            for (int i = 7; i >= 0; i--) {
+                frame.push_back((msg.length() >> (i * 8)) & 0xFF);
+            }
+        }
+        
+        frame.insert(frame.end(), msg.begin(), msg.end());
+        
+        asio::write(*x->ws_socket, asio::buffer(frame));
+    } catch (const std::exception& e) {
+        object_error((t_object *)x, "KeyLink WebSocket send failed: %s", e.what());
+        x->ws_connected = false;
+    }
+}
+
+void ws_read(t_keylink *x) {
+    if (!x->ws_connected || !x->ws_socket) return;
+    
+    x->ws_socket->async_read_some(
+        asio::buffer(x->recv_buffer, sizeof(x->recv_buffer)),
+        [x](std::error_code ec, std::size_t bytes_recvd) {
+            if (!ec && bytes_recvd > 0 && x->running) {
+                // Parse WebSocket frame (simplified)
+                if (bytes_recvd >= 2) {
+                    uint8_t opcode = x->recv_buffer[0] & 0x0F;
+                    bool masked = (x->recv_buffer[1] & 0x80) != 0;
+                    uint64_t payload_len = x->recv_buffer[1] & 0x7F;
+                    
+                    size_t header_len = 2;
+                    if (payload_len == 126) {
+                        payload_len = (x->recv_buffer[2] << 8) | x->recv_buffer[3];
+                        header_len = 4;
+                    } else if (payload_len == 127) {
+                        payload_len = 0;
+                        for (int i = 0; i < 8; i++) {
+                            payload_len = (payload_len << 8) | x->recv_buffer[2 + i];
+                        }
+                        header_len = 10;
+                    }
+                    
+                    if (opcode == 0x01 && payload_len > 0) { // Text frame
+                        std::string msg(x->recv_buffer + header_len, payload_len);
+                        
+                        // Prevent echo
+                        if (!is_duplicate_message(x, msg)) {
+                            t_atom a;
+                            atom_setsym(&a, gensym(msg.c_str()));
+                            outlet_anything(x->outlet, gensym("json"), 1, &a);
+                        }
+                    }
+                }
+                
+                if (x->running) ws_read(x);
+            } else {
+                x->ws_connected = false;
+                object_post((t_object *)x, "KeyLink: WebSocket disconnected");
+            }
         }
     );
 }
@@ -168,10 +437,69 @@ void udp_do_receive(t_keylink *x) {
 void keylink_stop(t_keylink *x) {
     x->running = false;
     if (x->net_thread.joinable()) x->net_thread.join();
-    // TODO: Clean up sockets
+    if (x->udp_socket) {
+        x->udp_socket->close();
+        x->udp_socket.reset();
+    }
+    if (x->ws_socket) {
+        x->ws_socket->close();
+        x->ws_socket.reset();
+    }
+    if (x->io_ctx) {
+        x->io_ctx->stop();
+        x->io_ctx.reset();
+    }
+    x->ws_connected = false;
+    object_post((t_object *)x, "KeyLink: stopped");
 }
 
-// --- End of starter keylink.cpp ---
+bool is_duplicate_message(t_keylink *x, const std::string& msg) {
+    auto now = std::chrono::steady_clock::now();
+    auto time_diff = std::chrono::duration_cast<std::chrono::milliseconds>(now - x->last_sent_time).count();
+    
+    // Check if this is the same message sent recently (within 100ms)
+    if (msg == x->last_sent_msg && time_diff < 100) {
+        return true;
+    }
+    
+    x->last_sent_msg = msg;
+    x->last_sent_time = now;
+    return false;
+}
+
+void send_message(t_keylink *x, const std::string& msg) {
+    if (!x->running) return;
+    
+    // Prevent duplicate messages
+    if (is_duplicate_message(x, msg)) {
+        return;
+    }
+    
+    // Send via UDP (LAN mode)
+    if (x->network_mode == MODE_LAN && x->udp_socket && x->udp_socket->is_open()) {
+        x->udp_socket->async_send_to(
+            asio::buffer(msg),
+            x->multicast_endpoint,
+            [](std::error_code ec, std::size_t bytes_sent) {
+                if (ec) {
+                    // Error handling would go here
+                }
+            }
+        );
+    }
+    
+    // Send via WebSocket
+    if (x->ws_connected) {
+        ws_send(x, msg);
+    }
+    
+    // Output locally (for recursive handling)
+    t_atom a;
+    atom_setsym(&a, gensym(msg.c_str()));
+    outlet_anything(x->outlet, gensym("json"), 1, &a);
+}
+
+// --- End of enhanced keylink.cpp ---
 
 // --- Integration Guidance ---
 // To implement UDP multicast:

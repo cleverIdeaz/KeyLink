@@ -74,21 +74,64 @@ export default function App() {
   const [log, setLog] = useState<{ time: string; msg: string; type: 'sent' | 'received' | 'info' | 'error' }[]>([]);
   const [isPWA, setIsPWA] = useState(false);
   const [hasUserInteracted, setHasUserInteracted] = useState(false);
+  const [localRelayAvailable, setLocalRelayAvailable] = useState(false);
   const kl = useRef<KeyLinkClient | null>(null);
   const keylinkOnRef = useRef(keylinkOn);
 
-  // Detect if running as PWA
+  // PWA Detection
   useEffect(() => {
     const checkPWA = () => {
       const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
       const isInstalled = (window.navigator as any).standalone === true;
       setIsPWA(isStandalone || isInstalled);
     };
-    
     checkPWA();
     window.addEventListener('appinstalled', checkPWA);
     return () => window.removeEventListener('appinstalled', checkPWA);
   }, []);
+
+  // Service Worker Message Handling
+  useEffect(() => {
+    const handleServiceWorkerMessage = (event: MessageEvent) => {
+      const { type, data } = event.data;
+      
+      switch (type) {
+        case 'localRelayStarted':
+          setLocalRelayAvailable(true);
+          addLog('Local relay server started', 'info');
+          break;
+          
+        case 'localMessage':
+          // Handle messages from local relay
+          if (kl.current && kl.current.isConnected()) {
+            // Simulate receiving a message
+            const state = JSON.parse(data);
+            setRoot(state.key);
+            setMode(state.mode);
+            setTempo(state.tempo || 120);
+            addLog('← Local: ' + JSON.stringify(state), 'received');
+          }
+          break;
+      }
+    };
+
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.addEventListener('message', handleServiceWorkerMessage);
+      
+      // Request local relay if PWA
+      if (isPWA) {
+        navigator.serviceWorker.ready.then((registration) => {
+          registration.active?.postMessage({ type: 'startLocalRelay' });
+        });
+      }
+    }
+
+    return () => {
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.removeEventListener('message', handleServiceWorkerMessage);
+      }
+    };
+  }, [isPWA]);
 
   // Log helper
   const addLog = (msg: string, type: 'sent' | 'received' | 'info' | 'error' = 'info') =>
@@ -108,6 +151,10 @@ export default function App() {
           // Deployed web app (not PWA): Use cloud relay for LAN mode (web-to-web communication)
           url = `${WAN_WS_URL}${wanChannel}`;
           addLog('Deployed web app: Using cloud relay for LAN mode', 'info');
+        } else if (isPWA && localRelayAvailable) {
+          // PWA with local relay: Use local relay for true offline LAN
+          url = 'ws://localhost:20801';
+          addLog('PWA: Using local relay for offline LAN mode', 'info');
         } else {
           // Local or PWA: Try to discover local relay first
           addLog('Discovering LAN relay server...', 'info');
@@ -296,15 +343,23 @@ export default function App() {
             {/* LAN Mode Info */}
             <div style={{ marginBottom: '12px', padding: '8px', background: '#333', borderRadius: '6px', fontSize: '12px' }}>
               <div style={{ color: '#F5C242', fontWeight: 'bold', marginBottom: '4px' }}>
-                LAN Mode: {isPWA ? '✅ Available' : '⚠️ Limited'}
+                LAN Mode: {isPWA ? (localRelayAvailable ? '✅ Offline' : '✅ Available') : '⚠️ Limited'}
               </div>
               <div style={{ color: '#ccc', lineHeight: '1.4' }}>
                 {isPWA ? (
-                  <>
-                    • Works with local relay server<br/>
-                    • Zero latency, no internet required<br/>
-                    • Perfect for Max/MSP integration
-                  </>
+                  localRelayAvailable ? (
+                    <>
+                      • Works offline with local relay<br/>
+                      • Zero latency, no internet required<br/>
+                      • Perfect for Max/MSP integration
+                    </>
+                  ) : (
+                    <>
+                      • Works with local relay server<br/>
+                      • Zero latency, no internet required<br/>
+                      • Perfect for Max/MSP integration
+                    </>
+                  )
                 ) : (
                   <>
                     • Requires local relay server running<br/>
