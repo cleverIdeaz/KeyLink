@@ -1,14 +1,9 @@
 // KeyLink Demo Service Worker with Local Relay
-const CACHE_NAME = 'keylink-demo-v4';
+const CACHE_NAME = 'keylink-demo-v5';
 const urlsToCache = [
   '/',
-  '/static/js/bundle.js',
-  '/static/css/main.css',
   '/manifest.json',
   '/KeyLink.svg',
-  '/KeyLink.png',
-  '/logo192.png',
-  '/logo512.png',
   '/favicon.ico'
 ];
 
@@ -21,7 +16,15 @@ self.addEventListener('install', (event) => {
     caches.open(CACHE_NAME)
       .then((cache) => {
         console.log('Opened cache');
-        return cache.addAll(urlsToCache);
+        // Only cache files that exist, handle failures gracefully
+        return Promise.allSettled(
+          urlsToCache.map(url => 
+            cache.add(url).catch(err => {
+              console.log('Failed to cache:', url, err);
+              return null; // Don't fail the entire cache operation
+            })
+          )
+        );
       })
   );
 });
@@ -30,11 +33,7 @@ self.addEventListener('install', (event) => {
 self.addEventListener('fetch', (event) => {
   event.respondWith(
     caches.match(event.request)
-      .then((response) => {
-        // Return cached version or fetch from network
-        return response || fetch(event.request);
-      }
-    )
+      .then((response) => response || fetch(event.request))
   );
 });
 

@@ -57,53 +57,52 @@
       
       // Listen for beforeinstallprompt event
       window.addEventListener('beforeinstallprompt', (e) => {
+        console.log('beforeinstallprompt fired');
         e.preventDefault();
         deferredPrompt = e;
-        installPrompt.style.display = 'block';
-        cornerBtn.style.display = 'flex';
+        if (installPrompt) installPrompt.style.display = 'block';
+        if (cornerBtn) cornerBtn.style.display = 'flex';
       });
       
       // Handle install button click
-      installBtn.addEventListener('click', () => {
-        if (deferredPrompt) {
-          deferredPrompt.prompt();
-          deferredPrompt.userChoice.then((choiceResult) => {
-            if (choiceResult.outcome === 'accepted') {
-              console.log('User accepted the install prompt');
-              installPrompt.style.display = 'none';
-              cornerBtn.style.display = 'none';
-            } else {
-              console.log('User dismissed the install prompt');
-              installPrompt.style.display = 'none';
-              cornerBtn.style.display = 'flex';
-            }
-            deferredPrompt = null;
-          });
-        }
-      });
+      if (installBtn) {
+        installBtn.addEventListener('click', () => {
+          console.log('Install button clicked');
+          if (deferredPrompt) {
+            deferredPrompt.prompt();
+            deferredPrompt.userChoice.then((choiceResult) => {
+              console.log('Install choice:', choiceResult.outcome);
+              if (installPrompt) installPrompt.style.display = 'none';
+              if (cornerBtn) cornerBtn.style.display = 'none';
+              deferredPrompt = null;
+            });
+          }
+        });
+      }
       
       // Handle dismiss button click
-      dismissBtn.addEventListener('click', () => {
-        installPrompt.style.display = 'none';
-        cornerBtn.style.display = 'flex';
-      });
+      if (dismissBtn) {
+        dismissBtn.addEventListener('click', () => {
+          console.log('Dismiss button clicked');
+          if (installPrompt) installPrompt.style.display = 'none';
+          if (cornerBtn) cornerBtn.style.display = 'flex';
+        });
+      }
       
       // Handle corner button click
-      cornerBtn.addEventListener('click', () => {
-        if (deferredPrompt) {
-          installPrompt.style.display = 'block';
-          cornerBtn.style.display = 'none';
-        } else {
-          // If no deferred prompt, try to show install prompt again
-          installPrompt.style.display = 'block';
-          cornerBtn.style.display = 'none';
-        }
-      });
+      if (cornerBtn) {
+        cornerBtn.addEventListener('click', () => {
+          console.log('Corner button clicked');
+          if (installPrompt) installPrompt.style.display = 'block';
+          if (cornerBtn) cornerBtn.style.display = 'none';
+        });
+      }
       
       // Hide install prompt when app is already installed
       window.addEventListener('appinstalled', () => {
-        installPrompt.style.display = 'none';
-        cornerBtn.style.display = 'none';
+        console.log('App installed');
+        if (installPrompt) installPrompt.style.display = 'none';
+        if (cornerBtn) cornerBtn.style.display = 'none';
         deferredPrompt = null;
       });
     </script>
