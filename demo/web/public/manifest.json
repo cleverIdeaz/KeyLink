@@ -1,22 +1,25 @@
 {
-  "short_name": "KeyLink Demo",
-  "name": "KeyLink Music Sync Demo",
-  "description": "Real-time music data synchronization for Max/MSP, browser, and more",
+  "short_name": "KeyLink",
+  "name": "KeyLink - Music Data Sync",
+  "description": "Zero-config music data sync for Max, browser, and more",
   "icons": [
     {
-      "src": "favicon.ico",
-      "sizes": "64x64 32x32 24x24 16x16",
-      "type": "image/x-icon"
+      "src": "KeyLink.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
     },
     {
-      "src": "logo192.png",
-      "type": "image/png",
-      "sizes": "192x192"
+      "src": "KeyLink.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any"
     },
     {
-      "src": "logo512.png",
-      "type": "image/png",
-      "sizes": "512x512"
+      "src": "KeyLink.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any"
     }
   ],
   "start_url": ".",
@@ -29,11 +32,18 @@
   "categories": ["music", "productivity", "utilities"],
   "shortcuts": [
     {
-      "name": "Toggle KeyLink",
-      "short_name": "KeyLink",
-      "description": "Quick toggle KeyLink on/off",
-      "url": "/?action=toggle",
-      "icons": [{ "src": "logo192.png", "sizes": "192x192" }]
+      "name": "Start LAN Mode",
+      "short_name": "LAN",
+      "description": "Start KeyLink in LAN mode",
+      "url": "/?mode=lan",
+      "icons": [{ "src": "KeyLink.svg", "sizes": "96x96" }]
+    },
+    {
+      "name": "Start WAN Mode", 
+      "short_name": "WAN",
+      "description": "Start KeyLink in WAN mode",
+      "url": "/?mode=wan",
+      "icons": [{ "src": "KeyLink.svg", "sizes": "96x96" }]
     }
   ]
 }

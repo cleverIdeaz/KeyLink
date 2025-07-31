@@ -1,13 +1,12 @@
 // KeyLink Demo Service Worker with Local Relay
-const CACHE_NAME = 'keylink-demo-v2';
+const CACHE_NAME = 'keylink-demo-v3';
 const urlsToCache = [
   '/',
   '/static/js/bundle.js',
   '/static/css/main.css',
   '/manifest.json',
-  '/favicon.ico',
-  '/logo192.png',
-  '/logo512.png'
+  '/KeyLink.svg',
+  '/favicon.ico'
 ];
 
 // Local relay server for offline LAN mode

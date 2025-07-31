@@ -293,17 +293,18 @@ export default function App() {
 
   // Use a more responsive layout with Flexbox
   return (
-    <div style={{
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      background: '#222',
-      color: '#fff',
-      minHeight: '100vh',
-      padding: '16px',
-      boxSizing: 'border-box',
-      width: '100%'
-    }}>
+    <div className="App">
+      <header className="App-header">
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px' }}>
+          <img src="/KeyLink.svg" alt="KeyLink" style={{ width: '48px', height: '48px' }} />
+          <h1 style={{ margin: 0, color: '#F5C242', fontSize: '2.5rem', fontWeight: 'bold' }}>
+            KeyLink
+          </h1>
+        </div>
+        <p style={{ margin: '0 0 20px 0', color: '#ccc', fontSize: '1.1rem' }}>
+          Zero-config music data sync for Max, browser, and more
+        </p>
+      </header>
 
       {/* Main Controls Wrapper */}
       <div style={{

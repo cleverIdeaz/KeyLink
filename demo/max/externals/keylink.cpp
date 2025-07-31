@@ -1,4 +1,4 @@
-// keylink.cpp - Enhanced KeyLink Max external
+// keylink.cpp - Enhanced KeyLink Max external with Network Detection
 // All dependencies are local (thirdparty/asio, thirdparty/json.hpp) - no global install needed
 // Zero-config, cross-platform music data sync for Max, browser, and more
 // Written using the Cycling '74 Max SDK
@@ -20,6 +20,7 @@
 #include "thirdparty/json.hpp"
 #include <memory>
 #include <regex>
+#include <chrono>
 
 // Default network settings
 #define KEYLINK_MULTICAST_ADDR "239.255.0.1"
@@ -33,18 +34,31 @@ enum NetworkMode {
     MODE_WAN = 1
 };
 
+// Network status
+enum NetworkStatus {
+    STATUS_UNKNOWN = 0,
+    STATUS_ONLINE = 1,
+    STATUS_OFFLINE = 2,
+    STATUS_UDP_ONLY = 3
+};
+
 // Struct for the Max object
 typedef struct _keylink {
     t_object ob;
     void *outlet;
     void *mode_outlet;  // For mode status
+    void *status_outlet; // For network status
     std::thread net_thread;
+    std::thread monitor_thread;
     std::atomic<bool> running;
+    std::atomic<bool> monitoring;
     
     // Network mode and channel
     NetworkMode network_mode;
+    NetworkStatus network_status;
     std::string channel;
     std::string ws_url;
+    bool is_offline_mode;
     
     // Networking
     std::unique_ptr<asio::io_context> io_ctx;
@@ -63,6 +77,10 @@ typedef struct _keylink {
     std::string last_sent_msg;
     std::chrono::steady_clock::time_point last_sent_time;
     
+    // Network monitoring
+    std::chrono::steady_clock::time_point last_network_check;
+    bool auto_fallback_enabled;
+    
 } t_keylink;
 
 // Prototypes
@@ -77,12 +95,17 @@ void keylink_stop(t_keylink *x);
 void keylink_mode(t_keylink *x, t_symbol *s);
 void keylink_channel(t_keylink *x, t_symbol *s);
 void keylink_url(t_keylink *x, t_symbol *s);
+void keylink_autofallback(t_keylink *x, t_symbol *s);
 void udp_do_receive(t_keylink *x);
 void ws_connect(t_keylink *x);
 void ws_send(t_keylink *x, const std::string& msg);
 void ws_read(t_keylink *x);
 void send_message(t_keylink *x, const std::string& msg);
 bool is_duplicate_message(t_keylink *x, const std::string& msg);
+bool check_network_connectivity(t_keylink *x);
+void monitor_network_status(t_keylink *x);
+void update_network_status(t_keylink *x, NetworkStatus status);
+std::string network_status_to_string(NetworkStatus status);
 
 // Class pointer
 static t_class *keylink_class = NULL;
@@ -98,6 +121,7 @@ extern "C" void ext_main(void *r) {
     class_addmethod(c, (method)keylink_mode, "mode", A_SYM, 0);
     class_addmethod(c, (method)keylink_channel, "channel", A_SYM, 0);
     class_addmethod(c, (method)keylink_url, "url", A_SYM, 0);
+    class_addmethod(c, (method)keylink_autofallback, "autofallback", A_SYM, 0);
     class_addmethod(c, (method)keylink_assist, "assist", A_CANT, 0);
     class_register(CLASS_BOX, c);
     keylink_class = c;
@@ -108,13 +132,22 @@ void *keylink_new(t_symbol *s, long argc, t_atom *argv) {
     if (x) {
         x->outlet = outlet_new((t_object *)x, NULL);
         x->mode_outlet = outlet_new((t_object *)x, NULL);
+        x->status_outlet = outlet_new((t_object *)x, NULL);
         x->running = false;
+        x->monitoring = false;
         x->network_mode = MODE_LAN;
+        x->network_status = STATUS_UNKNOWN;
         x->channel = "__LAN__";
         x->ws_url = "ws://localhost:20801";
-        x->ws_connected = false;
+        x->is_offline_mode = false;
         x->last_sent_msg = "";
         x->last_sent_time = std::chrono::steady_clock::now();
+        x->last_network_check = std::chrono::steady_clock::now();
+        x->auto_fallback_enabled = true;
+        
+        #ifndef KEYLINK_OFFLINE_ONLY
+        x->ws_connected = false;
+        #endif
         
         // Parse arguments: [keylink mode channel url]
         if (argc >= 1) {
@@ -126,6 +159,10 @@ void *keylink_new(t_symbol *s, long argc, t_atom *argv) {
                 } else if (mode == "lan" || mode == "LAN") {
                     x->network_mode = MODE_LAN;
                     x->ws_url = "ws://localhost:20801";
+                } else if (mode == "offline" || mode == "OFFLINE") {
+                    x->network_mode = MODE_LAN; // Use LAN mode but skip connections
+                    x->ws_url = "offline";
+                    x->is_offline_mode = true;
                 }
             }
         }
@@ -150,6 +187,8 @@ void *keylink_new(t_symbol *s, long argc, t_atom *argv) {
 void keylink_free(t_keylink *x) {
     x->running = false;
     if (x->net_thread.joinable()) x->net_thread.join();
+    if (x->monitor_thread.joinable()) x->monitor_thread.join();
+    #ifndef KEYLINK_OFFLINE_ONLY
     if (x->udp_socket) {
         x->udp_socket->close();
         x->udp_socket.reset();
@@ -162,6 +201,7 @@ void keylink_free(t_keylink *x) {
         x->io_ctx->stop();
         x->io_ctx.reset();
     }
+    #endif
 }
 
 void keylink_assist(t_keylink *x, void *b, long m, long a, char *s) {
@@ -241,15 +281,38 @@ void keylink_url(t_keylink *x, t_symbol *s) {
     object_post((t_object *)x, "KeyLink: WebSocket URL set to %s", x->ws_url.c_str());
 }
 
+void keylink_autofallback(t_keylink *x, t_symbol *s) {
+    std::string mode = s->s_name;
+    if (mode == "on" || mode == "ON") {
+        x->auto_fallback_enabled = true;
+        object_post((t_object *)x, "KeyLink: Auto-fallback enabled");
+    } else if (mode == "off" || mode == "OFF") {
+        x->auto_fallback_enabled = false;
+        object_post((t_object *)x, "KeyLink: Auto-fallback disabled");
+    }
+}
+
 void keylink_start(t_keylink *x) {
     if (x->running) return;
     x->running = true;
+    
+    // Check if we're in offline mode first
+    if (x->is_offline_mode) {
+        object_post((t_object *)x, "KeyLink: Running in offline mode (no network connections)");
+        update_network_status(x, STATUS_OFFLINE);
+        return; // Don't start any network thread
+    }
+    
+    // Only create IO context if we're not in offline mode
     x->io_ctx.reset(new asio::io_context());
     
     // Start network thread
     x->net_thread = std::thread([x]() {
         try {
-            // Setup UDP for LAN mode
+            bool udp_ok = false;
+            bool ws_ok = false;
+            
+            // Setup UDP for LAN mode (optional - won't crash if fails)
             if (x->network_mode == MODE_LAN) {
                 try {
                     x->udp_socket.reset(new asio::ip::udp::socket(*x->io_ctx));
@@ -265,19 +328,48 @@ void keylink_start(t_keylink *x) {
                     
                     udp_do_receive(x);
                     object_post((t_object *)x, "KeyLink: UDP multicast started on %s:%d", KEYLINK_MULTICAST_ADDR, KEYLINK_UDP_PORT);
+                    udp_ok = true;
                 } catch (const std::exception& e) {
-                    object_error((t_object *)x, "KeyLink: UDP setup failed (offline?): %s", e.what());
-                    // Continue without UDP - WebSocket might still work
+                    object_post((t_object *)x, "KeyLink: UDP setup failed (offline/network issue): %s", e.what());
+                    object_post((t_object *)x, "KeyLink: Continuing with WebSocket only");
+                    // Clear the failed socket
+                    x->udp_socket.reset();
                 }
             }
             
-            // Setup WebSocket client
-            ws_connect(x);
+            // Setup WebSocket client (optional - won't crash if fails)
+            try {
+                ws_connect(x);
+                ws_ok = true;
+            } catch (const std::exception& e) {
+                object_post((t_object *)x, "KeyLink: WebSocket connection failed: %s", e.what());
+                x->ws_connected = false;
+            }
             
-            // Run IO context
+            // Report status
+            if (!udp_ok && !ws_ok) {
+                object_post((t_object *)x, "KeyLink: Running in offline mode (no network connections)");
+                update_network_status(x, STATUS_OFFLINE);
+            } else if (udp_ok && !ws_ok) {
+                update_network_status(x, STATUS_UDP_ONLY);
+            } else {
+                update_network_status(x, STATUS_ONLINE);
+            }
+            
+            // Start network monitoring
+            x->monitoring = true;
+            x->monitor_thread = std::thread([x]() {
+                while (x->monitoring && x->running) {
+                    monitor_network_status(x);
+                    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+                }
+            });
+            
+            // Run IO context (even if both UDP and WebSocket failed)
             while (x->running) {
                 try {
-                    x->io_ctx->run_for(std::chrono::milliseconds(100));
+                    // Use a shorter timeout to allow checking running state more frequently
+                    x->io_ctx->run_for(std::chrono::milliseconds(50));
                 } catch (const std::exception& e) {
                     object_error((t_object *)x, "KeyLink IO error: %s", e.what());
                     // Continue running unless explicitly stopped
@@ -285,6 +377,8 @@ void keylink_start(t_keylink *x) {
             }
         } catch (const std::exception& e) {
             object_error((t_object *)x, "KeyLink network error: %s", e.what());
+        } catch (...) {
+            object_error((t_object *)x, "KeyLink: Unknown network error");
         }
     });
     
@@ -292,27 +386,37 @@ void keylink_start(t_keylink *x) {
 }
 
 void udp_do_receive(t_keylink *x) {
+    #ifndef KEYLINK_OFFLINE_ONLY
     if (!x->udp_socket || !x->udp_socket->is_open()) return;
-    x->udp_socket->async_receive_from(
-        asio::buffer(x->recv_buffer, sizeof(x->recv_buffer)),
-        x->multicast_endpoint,
-        [x](std::error_code ec, std::size_t bytes_recvd) {
-            if (!ec && bytes_recvd > 0 && x->running) {
-                std::string msg(x->recv_buffer, bytes_recvd);
-                
-                // Prevent echo (don't output messages we just sent)
-                if (!is_duplicate_message(x, msg)) {
-                    t_atom a;
-                    atom_setsym(&a, gensym(msg.c_str()));
-                    outlet_anything(x->outlet, gensym("json"), 1, &a);
+    
+    try {
+        x->udp_socket->async_receive_from(
+            asio::buffer(x->recv_buffer, sizeof(x->recv_buffer)),
+            x->multicast_endpoint,
+            [x](std::error_code ec, std::size_t bytes_recvd) {
+                if (!ec && bytes_recvd > 0 && x->running) {
+                    std::string msg(x->recv_buffer, bytes_recvd);
+                    
+                    // Prevent echo (don't output messages we just sent)
+                    if (!is_duplicate_message(x, msg)) {
+                        t_atom a;
+                        atom_setsym(&a, gensym(msg.c_str()));
+                        outlet_anything(x->outlet, gensym("json"), 1, &a);
+                    }
+                }
+                if (x->running && x->udp_socket && x->udp_socket->is_open()) {
+                    udp_do_receive(x);
                 }
             }
-            if (x->running) udp_do_receive(x);
-        }
-    );
+        );
+    } catch (const std::exception& e) {
+        object_error((t_object *)x, "KeyLink UDP receive error: %s", e.what());
+    }
+    #endif
 }
 
 void ws_connect(t_keylink *x) {
+    #ifndef KEYLINK_OFFLINE_ONLY
     try {
         // Parse WebSocket URL
         std::string url = x->ws_url;
@@ -351,11 +455,11 @@ void ws_connect(t_keylink *x) {
         // Create TCP socket
         x->ws_socket.reset(new asio::ip::tcp::socket(*x->io_ctx));
         
-        // Resolve hostname
+        // Resolve hostname with timeout
         asio::ip::tcp::resolver resolver(*x->io_ctx);
-        auto endpoints = resolver.resolve(x->ws_host, std::to_string(x->ws_port));
+        auto endpoints = resolver.resolve(host, std::to_string(port));
         
-        // Connect
+        // Connect with timeout
         asio::connect(*x->ws_socket, endpoints);
         
         // Generate WebSocket key
@@ -386,17 +490,25 @@ void ws_connect(t_keylink *x) {
                 // Start reading WebSocket messages
                 ws_read(x);
             } else {
-                object_error((t_object *)x, "KeyLink: WebSocket handshake failed");
+                object_post((t_object *)x, "KeyLink: WebSocket handshake failed");
                 x->ws_connected = false;
             }
         }
+    } catch (const asio::system_error& e) {
+        object_post((t_object *)x, "KeyLink WebSocket connection failed (system): %s", e.what());
+        x->ws_connected = false;
     } catch (const std::exception& e) {
-        object_error((t_object *)x, "KeyLink WebSocket connection failed: %s", e.what());
+        object_post((t_object *)x, "KeyLink WebSocket connection failed: %s", e.what());
+        x->ws_connected = false;
+    } catch (...) {
+        object_post((t_object *)x, "KeyLink WebSocket connection failed (unknown error)");
         x->ws_connected = false;
     }
+    #endif
 }
 
 void ws_send(t_keylink *x, const std::string& msg) {
+    #ifndef KEYLINK_OFFLINE_ONLY
     if (!x->ws_connected || !x->ws_socket) return;
     
     try {
@@ -424,9 +536,11 @@ void ws_send(t_keylink *x, const std::string& msg) {
         object_error((t_object *)x, "KeyLink WebSocket send failed: %s", e.what());
         x->ws_connected = false;
     }
+    #endif
 }
 
 void ws_read(t_keylink *x) {
+    #ifndef KEYLINK_OFFLINE_ONLY
     if (!x->ws_connected || !x->ws_socket) return;
     
     x->ws_socket->async_read_some(
@@ -470,10 +584,19 @@ void ws_read(t_keylink *x) {
             }
         }
     );
+    #endif
 }
 
 void keylink_stop(t_keylink *x) {
     x->running = false;
+    
+    // If we're in offline mode, no network thread to join
+    if (x->is_offline_mode) {
+        object_post((t_object *)x, "KeyLink: stopped (offline mode)");
+        return;
+    }
+    
+    #ifndef KEYLINK_OFFLINE_ONLY
     if (x->net_thread.joinable()) x->net_thread.join();
     if (x->udp_socket) {
         x->udp_socket->close();
@@ -487,6 +610,7 @@ void keylink_stop(t_keylink *x) {
         x->io_ctx->stop();
         x->io_ctx.reset();
     }
+    #endif
     x->ws_connected = false;
     object_post((t_object *)x, "KeyLink: stopped");
 }
@@ -513,28 +637,116 @@ void send_message(t_keylink *x, const std::string& msg) {
         return;
     }
     
-    // Send via UDP (LAN mode)
+    // In offline mode, just output locally
+    if (x->is_offline_mode) {
+        t_atom a;
+        atom_setsym(&a, gensym(msg.c_str()));
+        outlet_anything(x->outlet, gensym("json"), 1, &a);
+        return;
+    }
+    
+    #ifndef KEYLINK_OFFLINE_ONLY
+    // Send via UDP (LAN mode) - only if socket exists
     if (x->network_mode == MODE_LAN && x->udp_socket && x->udp_socket->is_open()) {
-        x->udp_socket->async_send_to(
-            asio::buffer(msg),
-            x->multicast_endpoint,
-            [](std::error_code ec, std::size_t bytes_sent) {
-                if (ec) {
-                    // Error handling would go here
+        try {
+            x->udp_socket->async_send_to(
+                asio::buffer(msg),
+                x->multicast_endpoint,
+                [](std::error_code ec, std::size_t bytes_sent) {
+                    if (ec) {
+                        // Silent error - UDP might be offline
+                    }
                 }
-            }
-        );
+            );
+        } catch (const std::exception& e) {
+            // Silent error - UDP might be offline
+        }
     }
     
     // Send via WebSocket
     if (x->ws_connected) {
         ws_send(x, msg);
     }
+    #endif
     
     // Output locally (for recursive handling)
     t_atom a;
     atom_setsym(&a, gensym(msg.c_str()));
     outlet_anything(x->outlet, gensym("json"), 1, &a);
+}
+
+bool check_network_connectivity(t_keylink *x) {
+    #ifndef KEYLINK_OFFLINE_ONLY
+    if (!x->ws_socket || !x->ws_socket->is_open()) {
+        return false;
+    }
+    #endif
+    return true;
+}
+
+void monitor_network_status(t_keylink *x) {
+    if (!x->monitoring) return;
+
+    auto now = std::chrono::steady_clock::now();
+    auto time_diff = std::chrono::duration_cast<std::chrono::milliseconds>(now - x->last_network_check).count();
+
+    if (time_diff < 1000) { // Check every 1 second
+        return;
+    }
+
+    x->last_network_check = now;
+
+    if (x->is_offline_mode) {
+        update_network_status(x, STATUS_OFFLINE);
+        return;
+    }
+
+    if (x->network_mode == MODE_LAN) {
+        if (x->udp_socket && x->udp_socket->is_open()) {
+            update_network_status(x, STATUS_ONLINE);
+        } else {
+            update_network_status(x, STATUS_UDP_ONLY);
+        }
+    } else { // MODE_WAN
+        if (x->ws_connected) {
+            update_network_status(x, STATUS_ONLINE);
+        } else {
+            update_network_status(x, STATUS_OFFLINE);
+        }
+    }
+}
+
+void update_network_status(t_keylink *x, NetworkStatus status) {
+    if (x->network_status == status) return;
+
+    x->network_status = status;
+    t_atom a;
+    atom_setsym(&a, gensym(network_status_to_string(status).c_str()));
+    outlet_anything(x->status_outlet, gensym("status"), 1, &a);
+
+    if (status == STATUS_ONLINE) {
+        object_post((t_object *)x, "KeyLink: Network is ONLINE");
+    } else if (status == STATUS_OFFLINE) {
+        object_post((t_object *)x, "KeyLink: Network is OFFLINE");
+        if (x->auto_fallback_enabled) {
+            object_post((t_object *)x, "KeyLink: Attempting to reconnect...");
+            keylink_start(x); // Attempt to reconnect
+        }
+    } else if (status == STATUS_UDP_ONLY) {
+        object_post((t_object *)x, "KeyLink: Network is ONLINE (UDP only)");
+    } else {
+        object_post((t_object *)x, "KeyLink: Network status UNKNOWN");
+    }
+}
+
+std::string network_status_to_string(NetworkStatus status) {
+    switch (status) {
+        case STATUS_UNKNOWN: return "UNKNOWN";
+        case STATUS_ONLINE: return "ONLINE";
+        case STATUS_OFFLINE: return "OFFLINE";
+        case STATUS_UDP_ONLY: return "UDP_ONLY";
+        default: return "UNKNOWN";
+    }
 }
 
 // --- End of enhanced keylink.cpp ---
