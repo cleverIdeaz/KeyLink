@@ -37,53 +37,74 @@
     
     <!-- Service Worker Registration -->
     <script>
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/sw.js')
-            .then((registration) => {
-              console.log('SW registered: ', registration);
-            })
-            .catch((registrationError) => {
-              console.log('SW registration failed: ', registrationError);
-            });
-        });
-      }
-      
-      // PWA Install Prompt
+      // PWA Install Prompt Handling
       let deferredPrompt;
       const installPrompt = document.getElementById('pwa-install-prompt');
       const installBtn = document.getElementById('pwa-install-btn');
       const dismissBtn = document.getElementById('pwa-dismiss-btn');
       const cornerBtn = document.getElementById('pwa-corner-btn');
       
+      // Register service worker
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js')
+          .then((registration) => {
+            console.log('SW registered: ', registration);
+          })
+          .catch((registrationError) => {
+            console.log('SW registration failed: ', registrationError);
+          });
+      }
+      
+      // Listen for beforeinstallprompt event
       window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
         deferredPrompt = e;
         installPrompt.style.display = 'block';
-        cornerBtn.style.display = 'flex'; // Show corner button
+        cornerBtn.style.display = 'flex';
       });
       
+      // Handle install button click
       installBtn.addEventListener('click', () => {
-        installPrompt.style.display = 'none';
-        deferredPrompt.prompt();
-        deferredPrompt.userChoice.then((choiceResult) => {
-          if (choiceResult.outcome === 'accepted') {
-            console.log('User accepted the install prompt');
-          } else {
-            console.log('User dismissed the install prompt');
-          }
-          deferredPrompt = null;
-        });
+        if (deferredPrompt) {
+          deferredPrompt.prompt();
+          deferredPrompt.userChoice.then((choiceResult) => {
+            if (choiceResult.outcome === 'accepted') {
+              console.log('User accepted the install prompt');
+              installPrompt.style.display = 'none';
+              cornerBtn.style.display = 'none';
+            } else {
+              console.log('User dismissed the install prompt');
+              installPrompt.style.display = 'none';
+              cornerBtn.style.display = 'flex';
+            }
+            deferredPrompt = null;
+          });
+        }
       });
       
+      // Handle dismiss button click
       dismissBtn.addEventListener('click', () => {
         installPrompt.style.display = 'none';
-        cornerBtn.style.display = 'flex'; // Show corner button when dismissed
+        cornerBtn.style.display = 'flex';
       });
       
+      // Handle corner button click
       cornerBtn.addEventListener('click', () => {
-        installPrompt.style.display = 'block';
+        if (deferredPrompt) {
+          installPrompt.style.display = 'block';
+          cornerBtn.style.display = 'none';
+        } else {
+          // If no deferred prompt, try to show install prompt again
+          installPrompt.style.display = 'block';
+          cornerBtn.style.display = 'none';
+        }
+      });
+      
+      // Hide install prompt when app is already installed
+      window.addEventListener('appinstalled', () => {
+        installPrompt.style.display = 'none';
         cornerBtn.style.display = 'none';
+        deferredPrompt = null;
       });
     </script>
   </body>
