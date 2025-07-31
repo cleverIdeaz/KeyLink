@@ -293,18 +293,29 @@ export default function App() {
 
   // Use a more responsive layout with Flexbox
   return (
-    <div className="App">
-      <header className="App-header">
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px' }}>
-          <img src="/KeyLink.svg" alt="KeyLink" style={{ width: '48px', height: '48px' }} />
-          <h1 style={{ margin: 0, color: '#F5C242', fontSize: '2.5rem', fontWeight: 'bold' }}>
+    <div style={{
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      background: '#222',
+      color: '#fff',
+      minHeight: '100vh',
+      padding: '16px',
+      boxSizing: 'border-box',
+      width: '100%'
+    }}>
+      {/* Header with Logo */}
+      <div style={{ textAlign: 'center', marginBottom: '20px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '12px', marginBottom: '10px' }}>
+          <img src="/KeyLink.svg" alt="KeyLink" style={{ width: '48px', height: '48px', filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))' }} />
+          <h1 style={{ margin: 0, color: '#F5C242', fontSize: '2.5rem', fontWeight: 'bold', textShadow: '0 2px 4px rgba(0,0,0,0.5)', letterSpacing: '1px' }}>
             KeyLink
           </h1>
         </div>
         <p style={{ margin: '0 0 20px 0', color: '#ccc', fontSize: '1.1rem' }}>
           Zero-config music data sync for Max, browser, and more
         </p>
-      </header>
+      </div>
 
       {/* Main Controls Wrapper */}
       <div style={{

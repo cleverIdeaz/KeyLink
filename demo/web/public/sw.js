@@ -1,11 +1,14 @@
 // KeyLink Demo Service Worker with Local Relay
-const CACHE_NAME = 'keylink-demo-v3';
+const CACHE_NAME = 'keylink-demo-v4';
 const urlsToCache = [
   '/',
   '/static/js/bundle.js',
   '/static/css/main.css',
   '/manifest.json',
   '/KeyLink.svg',
+  '/KeyLink.png',
+  '/logo192.png',
+  '/logo512.png',
   '/favicon.ico'
 ];
 
