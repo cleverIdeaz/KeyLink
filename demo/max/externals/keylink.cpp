@@ -123,6 +123,9 @@ void *keylink_new(t_symbol *s, long argc, t_atom *argv) {
                 if (mode == "wan" || mode == "WAN") {
                     x->network_mode = MODE_WAN;
                     x->ws_url = KEYLINK_WAN_WS_URL;
+                } else if (mode == "lan" || mode == "LAN") {
+                    x->network_mode = MODE_LAN;
+                    x->ws_url = "ws://localhost:20801";
                 }
             }
         }
@@ -248,19 +251,24 @@ void keylink_start(t_keylink *x) {
         try {
             // Setup UDP for LAN mode
             if (x->network_mode == MODE_LAN) {
-                x->udp_socket.reset(new asio::ip::udp::socket(*x->io_ctx));
-                asio::ip::udp::endpoint listen_ep(asio::ip::udp::v4(), KEYLINK_UDP_PORT);
-                x->udp_socket->open(listen_ep.protocol());
-                x->udp_socket->set_option(asio::ip::udp::socket::reuse_address(true));
-                x->udp_socket->bind(listen_ep);
-                
-                // Join multicast group
-                asio::ip::address multicast_addr = asio::ip::make_address(KEYLINK_MULTICAST_ADDR);
-                x->udp_socket->set_option(asio::ip::multicast::join_group(multicast_addr));
-                x->multicast_endpoint = asio::ip::udp::endpoint(multicast_addr, KEYLINK_UDP_PORT);
-                
-                udp_do_receive(x);
-                object_post((t_object *)x, "KeyLink: UDP multicast started on %s:%d", KEYLINK_MULTICAST_ADDR, KEYLINK_UDP_PORT);
+                try {
+                    x->udp_socket.reset(new asio::ip::udp::socket(*x->io_ctx));
+                    asio::ip::udp::endpoint listen_ep(asio::ip::udp::v4(), KEYLINK_UDP_PORT);
+                    x->udp_socket->open(listen_ep.protocol());
+                    x->udp_socket->set_option(asio::ip::udp::socket::reuse_address(true));
+                    x->udp_socket->bind(listen_ep);
+                    
+                    // Join multicast group
+                    asio::ip::address multicast_addr = asio::ip::make_address(KEYLINK_MULTICAST_ADDR);
+                    x->udp_socket->set_option(asio::ip::multicast::join_group(multicast_addr));
+                    x->multicast_endpoint = asio::ip::udp::endpoint(multicast_addr, KEYLINK_UDP_PORT);
+                    
+                    udp_do_receive(x);
+                    object_post((t_object *)x, "KeyLink: UDP multicast started on %s:%d", KEYLINK_MULTICAST_ADDR, KEYLINK_UDP_PORT);
+                } catch (const std::exception& e) {
+                    object_error((t_object *)x, "KeyLink: UDP setup failed (offline?): %s", e.what());
+                    // Continue without UDP - WebSocket might still work
+                }
             }
             
             // Setup WebSocket client
@@ -268,7 +276,12 @@ void keylink_start(t_keylink *x) {
             
             // Run IO context
             while (x->running) {
-                x->io_ctx->run_for(std::chrono::milliseconds(100));
+                try {
+                    x->io_ctx->run_for(std::chrono::milliseconds(100));
+                } catch (const std::exception& e) {
+                    object_error((t_object *)x, "KeyLink IO error: %s", e.what());
+                    // Continue running unless explicitly stopped
+                }
             }
         } catch (const std::exception& e) {
             object_error((t_object *)x, "KeyLink network error: %s", e.what());
@@ -303,53 +316,78 @@ void ws_connect(t_keylink *x) {
     try {
         // Parse WebSocket URL
         std::string url = x->ws_url;
-        std::regex ws_regex("ws(s)?://([^:/]+)(:([0-9]+))?(/.*)?");
-        std::smatch match;
         
-        if (std::regex_match(url, match, ws_regex)) {
-            x->ws_host = match[2].str();
-            x->ws_path = match[5].str();
-            if (x->ws_path.empty()) x->ws_path = "/";
-            
-            std::string port_str = match[4].str();
-            if (port_str.empty()) {
-                x->ws_port = (match[1].str() == "s") ? 443 : 80;
-            } else {
-                x->ws_port = std::stoi(port_str);
-            }
-            
-            // Create TCP socket
-            x->ws_socket.reset(new asio::ip::tcp::socket(*x->io_ctx));
-            
-            // Resolve hostname
-            asio::ip::tcp::resolver resolver(*x->io_ctx);
-            auto endpoints = resolver.resolve(x->ws_host, std::to_string(x->ws_port));
-            
-            // Connect
-            asio::connect(*x->ws_socket, endpoints);
-            
-            // Send WebSocket handshake
-            std::string handshake = 
-                "GET " + x->ws_path + " HTTP/1.1\r\n"
-                "Host: " + x->ws_host + "\r\n"
-                "Upgrade: websocket\r\n"
-                "Connection: Upgrade\r\n"
-                "Sec-WebSocket-Key: dGhlIHNhbXBsZSBub25jZQ==\r\n"
-                "Sec-WebSocket-Version: 13\r\n"
-                "\r\n";
-            
-            asio::write(*x->ws_socket, asio::buffer(handshake));
-            
-            // Read response (simplified - in production you'd parse the headers)
-            char response[1024];
-            size_t len = x->ws_socket->read_some(asio::buffer(response, sizeof(response)));
-            
-            if (len > 0) {
+        // Handle different URL formats
+        std::string host, path;
+        int port;
+        
+        if (url.find("ws://") == 0) {
+            url = url.substr(5);
+        } else if (url.find("wss://") == 0) {
+            url = url.substr(6);
+        }
+        
+        size_t slash_pos = url.find('/');
+        if (slash_pos != std::string::npos) {
+            host = url.substr(0, slash_pos);
+            path = url.substr(slash_pos);
+        } else {
+            host = url;
+            path = "/";
+        }
+        
+        size_t colon_pos = host.find(':');
+        if (colon_pos != std::string::npos) {
+            port = std::stoi(host.substr(colon_pos + 1));
+            host = host.substr(0, colon_pos);
+        } else {
+            port = 80; // Default for ws://
+        }
+        
+        x->ws_host = host;
+        x->ws_path = path;
+        x->ws_port = port;
+        
+        // Create TCP socket
+        x->ws_socket.reset(new asio::ip::tcp::socket(*x->io_ctx));
+        
+        // Resolve hostname
+        asio::ip::tcp::resolver resolver(*x->io_ctx);
+        auto endpoints = resolver.resolve(x->ws_host, std::to_string(x->ws_port));
+        
+        // Connect
+        asio::connect(*x->ws_socket, endpoints);
+        
+        // Generate WebSocket key
+        std::string ws_key = "dGhlIHNhbXBsZSBub25jZQ=="; // Base64 encoded
+        
+        // Send WebSocket handshake
+        std::string handshake = 
+            "GET " + x->ws_path + x->channel + " HTTP/1.1\r\n"
+            "Host: " + x->ws_host + "\r\n"
+            "Upgrade: websocket\r\n"
+            "Connection: Upgrade\r\n"
+            "Sec-WebSocket-Key: " + ws_key + "\r\n"
+            "Sec-WebSocket-Version: 13\r\n"
+            "\r\n";
+        
+        asio::write(*x->ws_socket, asio::buffer(handshake));
+        
+        // Read response
+        char response[1024];
+        size_t len = x->ws_socket->read_some(asio::buffer(response, sizeof(response)));
+        
+        if (len > 0) {
+            std::string resp(response, len);
+            if (resp.find("101 Switching Protocols") != std::string::npos) {
                 x->ws_connected = true;
-                object_post((t_object *)x, "KeyLink: WebSocket connected to %s", x->ws_url.c_str());
+                object_post((t_object *)x, "KeyLink: WebSocket connected to %s%s", x->ws_url.c_str(), x->channel.c_str());
                 
                 // Start reading WebSocket messages
                 ws_read(x);
+            } else {
+                object_error((t_object *)x, "KeyLink: WebSocket handshake failed");
+                x->ws_connected = false;
             }
         }
     } catch (const std::exception& e) {

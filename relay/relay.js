@@ -74,24 +74,24 @@ function broadcastUDP(msg) {
 
 // Handle incoming UDP messages
 if (ENABLE_UDP && udpSocket) {
-  udpSocket.on('message', (msg, rinfo) => {
-    try {
-      // Forward to all WebSocket clients in the default LAN channel
-      broadcastWSToChannel(msg, DEFAULT_CHANNEL);
-    } catch (e) {
-      console.error('UDP->WS error:', e);
-    }
-  });
+udpSocket.on('message', (msg, rinfo) => {
+  try {
+    // Forward to all WebSocket clients in the default LAN channel
+    broadcastWSToChannel(msg, DEFAULT_CHANNEL);
+  } catch (e) {
+    console.error('UDP->WS error:', e);
+  }
+});
 }
 
 // Join multicast group and bind UDP socket
 if (ENABLE_UDP && udpSocket) {
-  udpSocket.bind(UDP_PORT, () => {
-    udpSocket.addMembership(UDP_MULTICAST_ADDR);
-    udpSocket.setBroadcast(true);
-    udpSocket.setMulticastTTL(128);
-    console.log(`KeyLink UDP relay listening on ${UDP_MULTICAST_ADDR}:${UDP_PORT}`);
-  });
+udpSocket.bind(UDP_PORT, () => {
+  udpSocket.addMembership(UDP_MULTICAST_ADDR);
+  udpSocket.setBroadcast(true);
+  udpSocket.setMulticastTTL(128);
+  console.log(`KeyLink UDP relay listening on ${UDP_MULTICAST_ADDR}:${UDP_PORT}`);
+});
 } else {
   console.log('UDP multicast disabled (ENABLE_UDP=false)');
 }
