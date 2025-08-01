@@ -78,6 +78,13 @@ export default function App() {
   const kl = useRef<KeyLinkClient | null>(null);
   const keylinkOnRef = useRef(keylinkOn);
 
+  // Add Max patch download state
+  const [showMaxDownload, setShowMaxDownload] = useState(false);
+
+  // Add mode hot-swap state
+  const [modeHotSwap, setModeHotSwap] = useState(false);
+  const [abletonLinkEnabled, setAbletonLinkEnabled] = useState(false);
+
   // PWA Detection
   useEffect(() => {
     const checkPWA = () => {
@@ -179,46 +186,46 @@ export default function App() {
         url = `${WAN_WS_URL}${wanChannel}`;
       }
       
-      addLog(`Connecting to ${url}...`, 'info');
-      setStatus(`Connecting to ${networkMode}...`);
+    addLog(`Connecting to ${url}...`, 'info');
+    setStatus(`Connecting to ${networkMode}...`);
 
-      // Disconnect previous client if it exists
-      if (kl.current) {
-        kl.current.disconnect();
-      }
+    // Disconnect previous client if it exists
+    if (kl.current) {
+      kl.current.disconnect();
+    }
 
-      kl.current = new KeyLinkClient({ relayUrl: url });
-      kl.current.connect();
+    kl.current = new KeyLinkClient({ relayUrl: url });
+    kl.current.connect();
 
-      kl.current.on('status', (s: string) => setStatus(s));
-      kl.current.on('open', () => {
-         addLog(`Connected to ${url}`, 'info');
+    kl.current.on('status', (s: string) => setStatus(s));
+    kl.current.on('open', () => {
+       addLog(`Connected to ${url}`, 'info');
          const connectionType = isDeployed ? 'Cloud' : 'Local';
          setStatus(`Connected to ${networkMode} @ ${connectionType}`);
          // Don't send state on connection - only receive
          addLog('Connected - listening for updates from other clients', 'info');
-      });
+    });
 
-      kl.current.on('close', () => {
-        addLog(`Disconnected from ${url}`, 'info');
-        setStatus('Disconnected');
-      });
+    kl.current.on('close', () => {
+      addLog(`Disconnected from ${url}`, 'info');
+      setStatus('Disconnected');
+    });
 
-      kl.current.on('error', () => {
-          addLog(`Connection error on ${url}`, 'error');
-          setStatus(`Error connecting to ${networkMode}`);
-      });
+    kl.current.on('error', () => {
+        addLog(`Connection error on ${url}`, 'error');
+        setStatus(`Error connecting to ${networkMode}`);
+    });
 
-      kl.current.on('state', (state: any) => {
-        if (!keylinkOnRef.current) return;
-        setRoot(state.key);
-        setMode(state.mode);
-        setTempo(state.tempo || 120);
-        setChordLinkOn(state.chordEnabled);
-        setChordRoot(state.chord.root);
-        setChordType(state.chord.type);
-        addLog('← Received: ' + JSON.stringify(state), 'received');
-      });
+    kl.current.on('state', (state: any) => {
+      if (!keylinkOnRef.current) return;
+      setRoot(state.key);
+      setMode(state.mode);
+      setTempo(state.tempo || 120);
+      setChordLinkOn(state.chordEnabled);
+      setChordRoot(state.chord.root);
+      setChordType(state.chord.type);
+      addLog('← Received: ' + JSON.stringify(state), 'received');
+    });
     };
 
     connectToRelay();
@@ -271,6 +278,26 @@ export default function App() {
     setHasUserInteracted(true);
   };
 
+  // Add mode hot-swap handler
+  const handleModeHotSwap = () => {
+    setModeHotSwap(!modeHotSwap);
+    if (mode === 'major') {
+      setMode('minor');
+    } else if (mode === 'minor') {
+      setMode('major');
+    } else {
+      setMode('major'); // Default to major for other modes
+    }
+    setHasUserInteracted(true);
+  };
+
+  // Add Ableton Link handler
+  const handleAbletonLink = () => {
+    setAbletonLinkEnabled(!abletonLinkEnabled);
+    // TODO: Implement Ableton Link SDK integration
+    addLog(`Ableton Link ${!abletonLinkEnabled ? 'enabled' : 'disabled'}`, 'info');
+  };
+
   const handleMidiData = (data: MidiData) => {
     setHasUserInteracted(true);
     if (data.tempo) {
@@ -289,6 +316,11 @@ export default function App() {
         setMode(matchedMode);
       }
     }
+  };
+
+  // Add Max patch download handler
+  const handleMaxDownload = () => {
+    setShowMaxDownload(true);
   };
 
   // Use a more responsive layout with Flexbox
@@ -330,9 +362,104 @@ export default function App() {
         <button onClick={handleKeylinkToggle} style={{ flexGrow: 1, padding: '12px 24px', fontSize: '24px', background: keylinkOn ? '#F5C242' : '#888', color: '#222', border: 'none', borderRadius: '10px', cursor: 'pointer' }}>
           KeyLink
         </button>
-        <select value={root} onChange={handleRoot} style={{ padding: '12px', background: '#333', color: '#fff', border: 'none', borderRadius: '10px' }}>{ROOTS.map(r => <option key={r} value={r}>{r}</option>)}</select>
-        <select value={mode} onChange={handleMode} style={{ padding: '12px', background: '#333', color: '#fff', border: 'none', borderRadius: '10px' }}>{MODES.map(m => <option key={m} value={m}>{m}</option>)}</select>
-        <input type="number" min={40} max={240} value={tempo} onChange={handleTempo} style={{ padding: '12px', width: '80px', background: '#333', color: '#fff', border: 'none', borderRadius: '10px' }} title="Tempo (bpm)" />
+        {/* Key and Mode Controls */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <label style={{ color: '#ccc', fontSize: '14px' }}>Root:</label>
+            <select
+              value={root}
+              onChange={(e) => { setRoot(e.target.value); setHasUserInteracted(true); }}
+              style={{
+                background: '#333',
+                color: '#fff',
+                border: '1px solid #555',
+                borderRadius: '4px',
+                padding: '6px 8px',
+                fontSize: '14px'
+              }}
+            >
+              {['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'].map(note => (
+                <option key={note} value={note}>{note}</option>
+              ))}
+            </select>
+          </div>
+
+          {/* Mode Hot-Swap Button */}
+          <button
+            onClick={handleModeHotSwap}
+            style={{
+              background: modeHotSwap ? '#F5C242' : '#444',
+              color: modeHotSwap ? '#222' : '#ccc',
+              border: '1px solid #555',
+              borderRadius: '4px',
+              padding: '6px 8px',
+              cursor: 'pointer',
+              fontSize: '12px',
+              fontWeight: 'bold',
+              minWidth: '40px'
+            }}
+            title="Hot-swap between Major/Minor"
+          >
+            {mode === 'major' ? 'M' : mode === 'minor' ? 'm' : 'M/m'}
+          </button>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <label style={{ color: '#ccc', fontSize: '14px' }}>Mode:</label>
+            <select
+              value={mode}
+              onChange={(e) => { setMode(e.target.value); setHasUserInteracted(true); }}
+              style={{
+                background: '#333',
+                color: '#fff',
+                border: '1px solid #555',
+                borderRadius: '4px',
+                padding: '6px 8px',
+                fontSize: '14px'
+              }}
+            >
+              {['major', 'minor', 'dorian', 'phrygian', 'lydian', 'mixolydian', 'locrian', 'chromatic'].map(m => (
+                <option key={m} value={m}>{m.charAt(0).toUpperCase() + m.slice(1)}</option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        {/* Tempo and Ableton Link Controls */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <label style={{ color: '#ccc', fontSize: '14px' }}>Tempo:</label>
+            <input
+              type="range"
+              min="60"
+              max="200"
+              value={tempo}
+              onChange={(e) => { setTempo(parseInt(e.target.value)); setHasUserInteracted(true); }}
+              style={{ width: '100px' }}
+            />
+            <span style={{ color: '#F5C242', fontSize: '14px', minWidth: '40px' }}>{tempo} BPM</span>
+          </div>
+
+          {/* Ableton Link Button */}
+          <button
+            onClick={handleAbletonLink}
+            style={{
+              background: abletonLinkEnabled ? '#F5C242' : '#444',
+              color: abletonLinkEnabled ? '#222' : '#ccc',
+              border: '1px solid #555',
+              borderRadius: '4px',
+              padding: '6px 12px',
+              cursor: 'pointer',
+              fontSize: '12px',
+              fontWeight: 'bold',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '4px'
+            }}
+            title="Enable Ableton Link tempo sync"
+          >
+            🔗 Link
+          </button>
+        </div>
       </div>
 
       <button onClick={() => setShowAdvanced(a => !a)} style={{ marginBottom: '16px', background: '#333', color: '#F5C242', border: 'none', padding: '10px 20px', borderRadius: '8px', cursor: 'pointer' }}>
@@ -438,6 +565,130 @@ export default function App() {
           
           {/* MIDI Player */}
           <MidiPlayer onMidiData={handleMidiData} />
+
+          {/* Max Integration Section */}
+          <div style={{ 
+            background: '#333', 
+            padding: '16px', 
+            borderRadius: '8px', 
+            marginTop: '20px',
+            border: '1px solid #555'
+          }}>
+            <h3 style={{ margin: '0 0 12px 0', color: '#F5C242' }}>
+              🎛️ Max/MSP Integration
+            </h3>
+            <p style={{ margin: '0 0 12px 0', color: '#ccc', fontSize: '14px' }}>
+              Download the Max patch for seamless integration with your DAW workflow.
+            </p>
+            <button
+              onClick={handleMaxDownload}
+              style={{
+                background: '#F5C242',
+                color: '#222',
+                border: 'none',
+                padding: '10px 20px',
+                borderRadius: '6px',
+                cursor: 'pointer',
+                fontWeight: 'bold',
+                fontSize: '14px'
+              }}
+            >
+              📥 Download Max Patch
+            </button>
+          </div>
+
+          {/* Max Download Modal */}
+          {showMaxDownload && (
+            <div style={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              background: 'rgba(0,0,0,0.8)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              zIndex: 1000
+            }}>
+              <div style={{
+                background: '#333',
+                padding: '24px',
+                borderRadius: '12px',
+                maxWidth: '500px',
+                textAlign: 'center',
+                border: '2px solid #F5C242'
+              }}>
+                <h3 style={{ margin: '0 0 16px 0', color: '#F5C242' }}>
+                  🎛️ Download KeyLink Max Patch
+                </h3>
+                <p style={{ margin: '0 0 20px 0', color: '#ccc', lineHeight: '1.5' }}>
+                  Get the complete Max/MSP integration for zero-config music data sync across your entire studio setup.
+                </p>
+                
+                <div style={{ margin: '20px 0', padding: '16px', background: '#222', borderRadius: '8px' }}>
+                  <h4 style={{ margin: '0 0 12px 0', color: '#F5C242' }}>What's Included:</h4>
+                  <ul style={{ margin: 0, padding: '0 0 0 20px', textAlign: 'left', color: '#ccc' }}>
+                    <li>Complete Max external with LAN/WAN modes</li>
+                    <li>Example patches for immediate use</li>
+                    <li>Auto-relay discovery for zero-config setup</li>
+                    <li>Full documentation and tutorials</li>
+                  </ul>
+                </div>
+
+                <div style={{ margin: '20px 0' }}>
+                  <a
+                    href="https://github.com/cleverIdeaz/KeyLink/releases/latest/download/keylink-max-patch.zip"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{
+                      background: '#F5C242',
+                      color: '#222',
+                      padding: '12px 24px',
+                      borderRadius: '6px',
+                      textDecoration: 'none',
+                      fontWeight: 'bold',
+                      display: 'inline-block',
+                      marginRight: '12px'
+                    }}
+                  >
+                    🎵 Download Free
+                  </a>
+                  <a
+                    href="https://www.paypal.com/donate/?hosted_button_id=YOUR_PAYPAL_ID"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{
+                      background: '#28a745',
+                      color: '#fff',
+                      padding: '12px 24px',
+                      borderRadius: '6px',
+                      textDecoration: 'none',
+                      fontWeight: 'bold',
+                      display: 'inline-block'
+                    }}
+                  >
+                    💝 Donate & Download
+                  </a>
+                </div>
+
+                <button
+                  onClick={() => setShowMaxDownload(false)}
+                  style={{
+                    background: 'transparent',
+                    color: '#666',
+                    border: '1px solid #666',
+                    padding: '8px 16px',
+                    borderRadius: '4px',
+                    cursor: 'pointer',
+                    marginTop: '16px'
+                  }}
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       )}
 

@@ -9,7 +9,7 @@
 			"modernui" : 1
 		}
 ,
-		"rect" : [ 34.0, 87.0, 1125.0, 779.0 ],
+		"rect" : [ 34.0, 87.0, 959.0, 779.0 ],
 		"bgcolor" : [ 0.2, 0.2, 0.2, 1.0 ],
 		"editing_bgcolor" : [ 0.32549, 0.345098, 0.372549, 1.0 ],
 		"bglocked" : 0,
@@ -40,376 +40,27 @@
 		"subpatcher_template" : "",
 		"boxes" : [ 			{
 				"box" : 				{
-					"id" : "obj-96",
-					"maxclass" : "newobj",
-					"numinlets" : 1,
-					"numoutlets" : 1,
-					"outlettype" : [ "" ],
-					"patching_rect" : [ 561.5, 897.0, 129.0, 23.0 ],
-					"style" : "",
-					"text" : "keylink lan __LAN__"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"id" : "obj-94",
+					"id" : "obj-74",
 					"linecount" : 3,
-					"maxclass" : "message",
-					"numinlets" : 2,
-					"numoutlets" : 1,
-					"outlettype" : [ "" ],
-					"patching_rect" : [ 509.0, 772.0, 206.0, 52.0 ],
-					"style" : "",
-					"text" : "{key:B, mode:Lydian, tempo:120, chordEnabled:true, chord:{root:C, type:maj}}"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"id" : "obj-93",
-					"maxclass" : "message",
-					"numinlets" : 2,
-					"numoutlets" : 1,
-					"outlettype" : [ "" ],
-					"patching_rect" : [ 945.0, 728.0, 71.0, 23.0 ],
-					"style" : "",
-					"text" : "{test:hello}"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"id" : "obj-92",
-					"linecount" : 2,
-					"maxclass" : "message",
-					"numinlets" : 2,
-					"numoutlets" : 1,
-					"outlettype" : [ "" ],
-					"patching_rect" : [ 362.0, 786.0, 130.0, 38.0 ],
-					"style" : "",
-					"text" : "{key:C, mode:major, tempo:120}"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"id" : "obj-88",
-					"maxclass" : "button",
+					"maxclass" : "comment",
 					"numinlets" : 1,
-					"numoutlets" : 1,
-					"outlettype" : [ "bang" ],
-					"patching_rect" : [ 16.0, 836.0, 24.0, 24.0 ],
-					"style" : ""
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"id" : "obj-82",
-					"maxclass" : "newobj",
-					"numinlets" : 1,
-					"numoutlets" : 1,
-					"outlettype" : [ "" ],
-					"patching_rect" : [ 391.5, 897.0, 151.0, 23.0 ],
+					"numoutlets" : 0,
+					"patching_rect" : [ 429.666626, 195.666641, 833.0, 65.0 ],
 					"style" : "",
-					"text" : "keylink wan public-lobby"
+					"text" : "example of complex and simple json packets sending to all available network frameworks to make this a true cross platform zero setup Zero-config music data sync for Max, browser, and more\n\n"
 				}
 
 			}
 , 			{
 				"box" : 				{
-					"id" : "obj-83",
-					"maxclass" : "newobj",
-					"numinlets" : 1,
-					"numoutlets" : 1,
-					"outlettype" : [ "" ],
-					"patching_rect" : [ 273.0, 897.0, 144.0, 23.0 ],
-					"style" : "",
-					"text" : "keylink lan public-lobby"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"id" : "obj-80",
+					"id" : "obj-72",
 					"linecount" : 2,
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 923.5, 1103.0, 150.0, 36.0 ],
+					"patching_rect" : [ 801.166687, 406.0, 180.333328, 36.0 ],
 					"style" : "",
-					"text" : "cd relay && node relay.js"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"id" : "obj-79",
-					"linecount" : 15,
-					"maxclass" : "comment",
-					"numinlets" : 1,
-					"numoutlets" : 0,
-					"patching_rect" : [ -35.0, 1079.0, 150.0, 224.0 ],
-					"style" : "",
-					"text" : "# LAN mode (UDP + WebSocket to local relay)\n[keylink lan] → [start] → [bang]\n\n# WAN mode (WebSocket to cloud relay)  \n[keylink wan] → [start] → [bang]\n\n# With custom channel\n[keylink lan mychannel] → [start] → [bang]"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"id" : "obj-78",
-					"linecount" : 7,
-					"maxclass" : "comment",
-					"numinlets" : 1,
-					"numoutlets" : 0,
-					"patching_rect" : [ 972.5, 791.0, 150.0, 108.0 ],
-					"style" : "",
-					"text" : "keylink, keylink lan, keylink lan __LAN__ , keylink wan, keylink lan public-lobby, keylink wan public-lobby, udpsend 239.255.0.1 7474"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"id" : "obj-69",
-					"maxclass" : "newobj",
-					"numinlets" : 1,
-					"numoutlets" : 1,
-					"outlettype" : [ "" ],
-					"patching_rect" : [ 185.5, 897.0, 78.0, 23.0 ],
-					"style" : "",
-					"text" : "keylink wan"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"id" : "obj-67",
-					"linecount" : 2,
-					"maxclass" : "newobj",
-					"numinlets" : 1,
-					"numoutlets" : 1,
-					"outlettype" : [ "" ],
-					"patching_rect" : [ 698.5, 852.0, 39.0, 38.0 ],
-					"style" : "",
-					"text" : "tosymbol"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"id" : "obj-65",
-					"linecount" : 2,
-					"maxclass" : "message",
-					"numinlets" : 2,
-					"numoutlets" : 1,
-					"outlettype" : [ "" ],
-					"patching_rect" : [ 849.5, 700.0, 130.0, 38.0 ],
-					"style" : "",
-					"text" : "{key:C, mode:major, tempo:120}"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"id" : "obj-62",
-					"maxclass" : "button",
-					"numinlets" : 1,
-					"numoutlets" : 1,
-					"outlettype" : [ "bang" ],
-					"patching_rect" : [ 791.5, 714.0, 24.0, 24.0 ],
-					"style" : ""
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"id" : "obj-60",
-					"maxclass" : "newobj",
-					"numinlets" : 1,
-					"numoutlets" : 0,
-					"patching_rect" : [ 427.5, 1004.0, 97.0, 23.0 ],
-					"style" : "",
-					"text" : "print receiveKL"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"id" : "obj-59",
-					"maxclass" : "newobj",
-					"numinlets" : 1,
-					"numoutlets" : 1,
-					"outlettype" : [ "" ],
-					"patching_rect" : [ 427.5, 964.0, 107.0, 23.0 ],
-					"style" : "",
-					"text" : "udpreceive 7474"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"id" : "obj-58",
-					"maxclass" : "newobj",
-					"numinlets" : 1,
-					"numoutlets" : 0,
-					"patching_rect" : [ 698.5, 901.0, 165.0, 23.0 ],
-					"style" : "",
-					"text" : "udpsend 239.255.0.1 7474"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"id" : "obj-53",
-					"maxclass" : "newobj",
-					"numinlets" : 1,
-					"numoutlets" : 1,
-					"outlettype" : [ "" ],
-					"patching_rect" : [ 106.0, 897.0, 71.0, 23.0 ],
-					"style" : "",
-					"text" : "keylink lan"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"id" : "obj-13",
-					"maxclass" : "newobj",
-					"numinlets" : 1,
-					"numoutlets" : 0,
-					"patching_rect" : [ 48.0, 938.0, 96.0, 23.0 ],
-					"style" : "",
-					"text" : "print anything?"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"id" : "obj-42",
-					"maxclass" : "message",
-					"numinlets" : 2,
-					"numoutlets" : 1,
-					"outlettype" : [ "" ],
-					"patching_rect" : [ 48.0, 836.0, 36.0, 23.0 ],
-					"style" : "",
-					"text" : "start"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"id" : "obj-48",
-					"maxclass" : "newobj",
-					"numinlets" : 1,
-					"numoutlets" : 1,
-					"outlettype" : [ "" ],
-					"patching_rect" : [ 48.0, 897.0, 50.0, 23.0 ],
-					"style" : "",
-					"text" : "keylink"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"id" : "obj-50",
-					"maxclass" : "message",
-					"numinlets" : 2,
-					"numoutlets" : 1,
-					"outlettype" : [ "" ],
-					"patching_rect" : [ 87.0, 836.0, 50.0, 23.0 ],
-					"style" : "",
-					"text" : "stop"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"id" : "obj-1",
-					"maxclass" : "newobj",
-					"numinlets" : 0,
-					"numoutlets" : 0,
-					"patching_rect" : [ 302.0, 303.0, 56.0, 23.0 ],
-					"style" : "",
-					"text" : "network"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"id" : "obj-37",
-					"maxclass" : "message",
-					"numinlets" : 2,
-					"numoutlets" : 1,
-					"outlettype" : [ "" ],
-					"patching_rect" : [ 242.0, 181.0, 36.0, 23.0 ],
-					"style" : "",
-					"text" : "start"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"id" : "obj-40",
-					"maxclass" : "message",
-					"numinlets" : 2,
-					"numoutlets" : 1,
-					"outlettype" : [ "" ],
-					"patching_rect" : [ 281.0, 181.0, 50.0, 23.0 ],
-					"style" : "",
-					"text" : "stop"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"id" : "obj-41",
-					"maxclass" : "newobj",
-					"numinlets" : 1,
-					"numoutlets" : 1,
-					"outlettype" : [ "" ],
-					"patching_rect" : [ 243.0, 225.0, 88.0, 23.0 ],
-					"style" : "",
-					"text" : "keylink offline"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"id" : "obj-35",
-					"maxclass" : "message",
-					"numinlets" : 2,
-					"numoutlets" : 1,
-					"outlettype" : [ "" ],
-					"patching_rect" : [ 342.0, 187.0, 36.0, 23.0 ],
-					"style" : "",
-					"text" : "start"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"id" : "obj-36",
-					"maxclass" : "message",
-					"numinlets" : 2,
-					"numoutlets" : 1,
-					"outlettype" : [ "" ],
-					"patching_rect" : [ 381.0, 187.0, 50.0, 23.0 ],
-					"style" : "",
-					"text" : "stop"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"id" : "obj-34",
-					"maxclass" : "newobj",
-					"numinlets" : 1,
-					"numoutlets" : 1,
-					"outlettype" : [ "" ],
-					"patching_rect" : [ 343.0, 231.0, 88.0, 23.0 ],
-					"style" : "",
-					"text" : "keylink offline"
+					"text" : "example of complex json packet"
 				}
 
 			}
@@ -420,7 +71,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 729.0, 294.0, 21.0, 23.0 ],
+					"patching_rect" : [ 31.999977, 342.666656, 21.0, 23.0 ],
 					"style" : "",
 					"text" : "t l"
 				}
@@ -433,7 +84,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 792.5, 272.0, 160.0, 50.0 ],
+					"patching_rect" : [ 843.5, 494.0, 160.0, 50.0 ],
 					"style" : "",
 					"text" : "<send selected root and key and translate back to json for keylink external"
 				}
@@ -446,7 +97,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 792.5, -31.0, 156.0, 36.0 ],
+					"patching_rect" : [ 90.166641, 15.33333, 156.0, 36.0 ],
 					"style" : "",
 					"text" : "<receive and translate json from keylink external"
 				}
@@ -459,7 +110,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 729.0, -31.0, 21.0, 23.0 ],
+					"patching_rect" : [ 26.666645, 15.33333, 21.0, 23.0 ],
 					"style" : "",
 					"text" : "t l"
 				}
@@ -472,7 +123,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 958.0, 98.0, 116.0, 50.0 ],
+					"patching_rect" : [ 255.666641, 144.333328, 116.0, 50.0 ],
 					"style" : "",
 					"text" : "< simple visual demonstration of selected root / key"
 				}
@@ -746,9 +397,8 @@
 									"bgfillcolor_proportion" : 0.39,
 									"bgfillcolor_type" : "color",
 									"fontsize" : 9.0,
-									"hidden" : 1,
 									"id" : "obj-21",
-									"items" : [ "Chromatic", ",", "Major", ",", "minor", ",", "HarmonicMinor", ",", "MajorPentatonic", ",", "WholeTone", ",", "MajorBlues", ",", "minorblues", ",", "RockNRoll" ],
+									"items" : [ "Chromatic", ",", "Major", ",", "minor", ",", "HarmonicMinor", ",", "MajorPentatonic", ",", "WholeTone", ",", "MajorBlues", ",", "minorblues", ",", "RockNRoll", ",", "Chromatic", ",", "Major", ",", "minor", ",", "HarmonicMinor", ",", "MajorPentatonic", ",", "WholeTone", ",", "MajorBlues", ",", "minorblues", ",", "RockNRoll" ],
 									"maxclass" : "umenu",
 									"numinlets" : 1,
 									"numoutlets" : 3,
@@ -777,6 +427,7 @@
 , 							{
 								"box" : 								{
 									"fontsize" : 14.0,
+									"hidden" : 1,
 									"id" : "obj-13",
 									"maxclass" : "live.tab",
 									"num_lines_patching" : 1,
@@ -1173,7 +824,7 @@
 									"maxclass" : "newobj",
 									"numinlets" : 1,
 									"numoutlets" : 1,
-									"outlettype" : [ "bang" ],
+									"outlettype" : [ "" ],
 									"patcher" : 									{
 										"fileversion" : 1,
 										"appversion" : 										{
@@ -1271,7 +922,7 @@
 													"maxclass" : "inlet",
 													"numinlets" : 0,
 													"numoutlets" : 1,
-													"outlettype" : [ "bang" ],
+													"outlettype" : [ "" ],
 													"patching_rect" : [ 50.0, 40.0, 30.0, 30.0 ],
 													"style" : ""
 												}
@@ -2310,10 +1961,10 @@
 																"name" : "GetsTheJobDone",
 																"default" : 																{
 																	"accentcolor" : [ 0.095481, 0.100396, 0.100293, 1.0 ],
-																	"bgcolor" : [ 1.0, 1.0, 1.0, 0.65 ],
-																	"textjustification" : [ 2 ],
 																	"fontsize" : [ 11.0 ],
 																	"fontname" : [ "Andale Mono" ],
+																	"bgcolor" : [ 1.0, 1.0, 1.0, 0.65 ],
+																	"textjustification" : [ 2 ],
 																	"textcolor_inverse" : [ 0.0, 0.0, 0.0, 1.0 ]
 																}
 ,
@@ -2323,6 +1974,7 @@
 , 															{
 																"name" : "SleekBlack",
 																"default" : 																{
+																	"fontname" : [ "Avenir Next Ultra Light" ],
 																	"bgfillcolor" : 																	{
 																		"angle" : 269.577728,
 																		"autogradient" : 0,
@@ -2335,8 +1987,7 @@
 																		"type" : "gradient"
 																	}
 ,
-																	"textjustification" : [ 1 ],
-																	"fontname" : [ "Avenir Next Ultra Light" ]
+																	"textjustification" : [ 1 ]
 																}
 ,
 																"parentstyle" : "velvet",
@@ -2351,8 +2002,8 @@
 																}
 ,
 																"button" : 																{
-																	"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 																	"elementcolor" : [ 0.32549, 0.345098, 0.372549, 1.0 ],
+																	"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 																	"color" : [ 1.0, 1.0, 1.0, 1.0 ]
 																}
 ,
@@ -2362,6 +2013,7 @@
 , 															{
 																"name" : "SleekBlack-1-1",
 																"default" : 																{
+																	"fontname" : [ "Avenir Next Ultra Light" ],
 																	"bgfillcolor" : 																	{
 																		"angle" : 269.577728,
 																		"autogradient" : 0,
@@ -2374,8 +2026,7 @@
 																		"type" : "gradient"
 																	}
 ,
-																	"textjustification" : [ 1 ],
-																	"fontname" : [ "Avenir Next Ultra Light" ]
+																	"textjustification" : [ 1 ]
 																}
 ,
 																"parentstyle" : "velvet",
@@ -2390,8 +2041,8 @@
 																}
 ,
 																"button" : 																{
-																	"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 																	"elementcolor" : [ 0.32549, 0.345098, 0.372549, 1.0 ],
+																	"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 																	"color" : [ 1.0, 1.0, 1.0, 1.0 ]
 																}
 ,
@@ -2401,6 +2052,7 @@
 , 															{
 																"name" : "SleekBlack-1-1-1-1",
 																"default" : 																{
+																	"fontname" : [ "Avenir Next Ultra Light" ],
 																	"bgfillcolor" : 																	{
 																		"angle" : 269.577728,
 																		"autogradient" : 0,
@@ -2413,8 +2065,7 @@
 																		"type" : "gradient"
 																	}
 ,
-																	"textjustification" : [ 1 ],
-																	"fontname" : [ "Avenir Next Ultra Light" ]
+																	"textjustification" : [ 1 ]
 																}
 ,
 																"parentstyle" : "velvet",
@@ -2429,8 +2080,8 @@
 																}
 ,
 																"button" : 																{
-																	"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 																	"elementcolor" : [ 0.32549, 0.345098, 0.372549, 1.0 ],
+																	"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 																	"color" : [ 1.0, 1.0, 1.0, 1.0 ]
 																}
 ,
@@ -2440,6 +2091,7 @@
 , 															{
 																"name" : "SleekBlack-1-1-1-1-1-1",
 																"default" : 																{
+																	"fontname" : [ "Avenir Next Ultra Light" ],
 																	"bgfillcolor" : 																	{
 																		"angle" : 269.577728,
 																		"autogradient" : 0,
@@ -2452,8 +2104,7 @@
 																		"type" : "gradient"
 																	}
 ,
-																	"textjustification" : [ 1 ],
-																	"fontname" : [ "Avenir Next Ultra Light" ]
+																	"textjustification" : [ 1 ]
 																}
 ,
 																"parentstyle" : "velvet",
@@ -2462,6 +2113,7 @@
 , 															{
 																"name" : "SleekBlack-1-1-1-2",
 																"default" : 																{
+																	"fontname" : [ "Avenir Next Ultra Light" ],
 																	"bgfillcolor" : 																	{
 																		"angle" : 269.577728,
 																		"autogradient" : 0,
@@ -2474,8 +2126,7 @@
 																		"type" : "gradient"
 																	}
 ,
-																	"textjustification" : [ 1 ],
-																	"fontname" : [ "Avenir Next Ultra Light" ]
+																	"textjustification" : [ 1 ]
 																}
 ,
 																"parentstyle" : "velvet",
@@ -2484,6 +2135,7 @@
 , 															{
 																"name" : "SleekBlack-1-1-1-3",
 																"default" : 																{
+																	"fontname" : [ "Avenir Next Ultra Light" ],
 																	"bgfillcolor" : 																	{
 																		"angle" : 269.577728,
 																		"autogradient" : 0,
@@ -2496,8 +2148,7 @@
 																		"type" : "gradient"
 																	}
 ,
-																	"textjustification" : [ 1 ],
-																	"fontname" : [ "Avenir Next Ultra Light" ]
+																	"textjustification" : [ 1 ]
 																}
 ,
 																"parentstyle" : "velvet",
@@ -2506,6 +2157,7 @@
 , 															{
 																"name" : "SleekBlack-1-1-1-4",
 																"default" : 																{
+																	"fontname" : [ "Avenir Next Ultra Light" ],
 																	"bgfillcolor" : 																	{
 																		"angle" : 269.577728,
 																		"autogradient" : 0,
@@ -2518,8 +2170,7 @@
 																		"type" : "gradient"
 																	}
 ,
-																	"textjustification" : [ 1 ],
-																	"fontname" : [ "Avenir Next Ultra Light" ]
+																	"textjustification" : [ 1 ]
 																}
 ,
 																"parentstyle" : "velvet",
@@ -2528,6 +2179,7 @@
 , 															{
 																"name" : "SleekBlack-1-1-2",
 																"default" : 																{
+																	"fontname" : [ "Avenir Next Ultra Light" ],
 																	"bgfillcolor" : 																	{
 																		"angle" : 269.577728,
 																		"autogradient" : 0,
@@ -2540,8 +2192,7 @@
 																		"type" : "gradient"
 																	}
 ,
-																	"textjustification" : [ 1 ],
-																	"fontname" : [ "Avenir Next Ultra Light" ]
+																	"textjustification" : [ 1 ]
 																}
 ,
 																"parentstyle" : "velvet",
@@ -2556,8 +2207,8 @@
 																}
 ,
 																"button" : 																{
-																	"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 																	"elementcolor" : [ 0.32549, 0.345098, 0.372549, 1.0 ],
+																	"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 																	"color" : [ 1.0, 1.0, 1.0, 1.0 ]
 																}
 ,
@@ -2573,8 +2224,8 @@
 																}
 ,
 																"button" : 																{
-																	"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 																	"elementcolor" : [ 0.32549, 0.345098, 0.372549, 1.0 ],
+																	"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 																	"color" : [ 1.0, 1.0, 1.0, 1.0 ]
 																}
 ,
@@ -2590,8 +2241,8 @@
 																}
 ,
 																"button" : 																{
-																	"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 																	"elementcolor" : [ 0.32549, 0.345098, 0.372549, 1.0 ],
+																	"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 																	"color" : [ 1.0, 1.0, 1.0, 1.0 ]
 																}
 ,
@@ -2601,6 +2252,7 @@
 , 															{
 																"name" : "SleekBlack-1-2",
 																"default" : 																{
+																	"fontname" : [ "Avenir Next Ultra Light" ],
 																	"bgfillcolor" : 																	{
 																		"angle" : 269.577728,
 																		"autogradient" : 0,
@@ -2613,8 +2265,7 @@
 																		"type" : "gradient"
 																	}
 ,
-																	"textjustification" : [ 1 ],
-																	"fontname" : [ "Avenir Next Ultra Light" ]
+																	"textjustification" : [ 1 ]
 																}
 ,
 																"parentstyle" : "velvet",
@@ -2623,6 +2274,7 @@
 , 															{
 																"name" : "SleekBlack-1-3",
 																"default" : 																{
+																	"fontname" : [ "Avenir Next Ultra Light" ],
 																	"bgfillcolor" : 																	{
 																		"angle" : 269.577728,
 																		"autogradient" : 0,
@@ -2635,8 +2287,7 @@
 																		"type" : "gradient"
 																	}
 ,
-																	"textjustification" : [ 1 ],
-																	"fontname" : [ "Avenir Next Ultra Light" ]
+																	"textjustification" : [ 1 ]
 																}
 ,
 																"parentstyle" : "velvet",
@@ -2651,8 +2302,8 @@
 																}
 ,
 																"button" : 																{
-																	"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 																	"elementcolor" : [ 0.32549, 0.345098, 0.372549, 1.0 ],
+																	"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 																	"color" : [ 1.0, 1.0, 1.0, 1.0 ]
 																}
 ,
@@ -2662,6 +2313,7 @@
 , 															{
 																"name" : "SleekBlack-1-4-1",
 																"default" : 																{
+																	"fontname" : [ "Avenir Next Ultra Light" ],
 																	"bgfillcolor" : 																	{
 																		"angle" : 269.577728,
 																		"autogradient" : 0,
@@ -2674,8 +2326,7 @@
 																		"type" : "gradient"
 																	}
 ,
-																	"textjustification" : [ 1 ],
-																	"fontname" : [ "Avenir Next Ultra Light" ]
+																	"textjustification" : [ 1 ]
 																}
 ,
 																"parentstyle" : "velvet",
@@ -2684,6 +2335,7 @@
 , 															{
 																"name" : "SleekBlack-1-5",
 																"default" : 																{
+																	"fontname" : [ "Avenir Next Ultra Light" ],
 																	"bgfillcolor" : 																	{
 																		"angle" : 269.577728,
 																		"autogradient" : 0,
@@ -2696,8 +2348,7 @@
 																		"type" : "gradient"
 																	}
 ,
-																	"textjustification" : [ 1 ],
-																	"fontname" : [ "Avenir Next Ultra Light" ]
+																	"textjustification" : [ 1 ]
 																}
 ,
 																"parentstyle" : "velvet",
@@ -2706,6 +2357,7 @@
 , 															{
 																"name" : "SleekBlack-1-6",
 																"default" : 																{
+																	"fontname" : [ "Avenir Next Ultra Light" ],
 																	"bgfillcolor" : 																	{
 																		"angle" : 269.577728,
 																		"autogradient" : 0,
@@ -2718,8 +2370,7 @@
 																		"type" : "gradient"
 																	}
 ,
-																	"textjustification" : [ 1 ],
-																	"fontname" : [ "Avenir Next Ultra Light" ]
+																	"textjustification" : [ 1 ]
 																}
 ,
 																"parentstyle" : "velvet",
@@ -2728,6 +2379,7 @@
 , 															{
 																"name" : "SleekBlack-10",
 																"default" : 																{
+																	"fontname" : [ "Avenir Next Ultra Light" ],
 																	"bgfillcolor" : 																	{
 																		"angle" : 269.577728,
 																		"autogradient" : 0,
@@ -2740,8 +2392,7 @@
 																		"type" : "gradient"
 																	}
 ,
-																	"textjustification" : [ 1 ],
-																	"fontname" : [ "Avenir Next Ultra Light" ]
+																	"textjustification" : [ 1 ]
 																}
 ,
 																"parentstyle" : "velvet",
@@ -2750,6 +2401,7 @@
 , 															{
 																"name" : "SleekBlack-11",
 																"default" : 																{
+																	"fontname" : [ "Avenir Next Ultra Light" ],
 																	"bgfillcolor" : 																	{
 																		"angle" : 269.577728,
 																		"autogradient" : 0,
@@ -2762,8 +2414,7 @@
 																		"type" : "gradient"
 																	}
 ,
-																	"textjustification" : [ 1 ],
-																	"fontname" : [ "Avenir Next Ultra Light" ]
+																	"textjustification" : [ 1 ]
 																}
 ,
 																"parentstyle" : "velvet",
@@ -2772,8 +2423,8 @@
 , 															{
 																"name" : "SleekBlack-2",
 																"default" : 																{
-																	"bgcolor" : [ 0.156863, 0.156863, 0.196078, 1.0 ],
 																	"elementcolor" : [ 0.304814, 0.254902, 0.278431, 1.0 ],
+																	"fontname" : [ "Avenir Next Ultra Light" ],
 																	"bgfillcolor" : 																	{
 																		"angle" : 269.577728,
 																		"color" : [ 0.290196, 0.309804, 0.301961, 1.0 ],
@@ -2783,9 +2434,9 @@
 																		"type" : "gradient"
 																	}
 ,
-																	"textjustification" : [ 1 ],
+																	"bgcolor" : [ 0.156863, 0.156863, 0.196078, 1.0 ],
 																	"color" : [ 0.317647, 0.787235, 0.976471, 1.0 ],
-																	"fontname" : [ "Avenir Next Ultra Light" ]
+																	"textjustification" : [ 1 ]
 																}
 ,
 																"parentstyle" : "velvet",
@@ -2800,8 +2451,8 @@
 																}
 ,
 																"button" : 																{
-																	"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 																	"elementcolor" : [ 0.32549, 0.345098, 0.372549, 1.0 ],
+																	"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 																	"color" : [ 1.0, 1.0, 1.0, 1.0 ]
 																}
 ,
@@ -2817,8 +2468,8 @@
 																}
 ,
 																"button" : 																{
-																	"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 																	"elementcolor" : [ 0.32549, 0.345098, 0.372549, 1.0 ],
+																	"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 																	"color" : [ 1.0, 1.0, 1.0, 1.0 ]
 																}
 ,
@@ -2828,6 +2479,7 @@
 , 															{
 																"name" : "SleekBlack-4",
 																"default" : 																{
+																	"fontname" : [ "Avenir Next Ultra Light" ],
 																	"bgfillcolor" : 																	{
 																		"angle" : 269.577728,
 																		"autogradient" : 0,
@@ -2840,8 +2492,7 @@
 																		"type" : "gradient"
 																	}
 ,
-																	"textjustification" : [ 1 ],
-																	"fontname" : [ "Avenir Next Ultra Light" ]
+																	"textjustification" : [ 1 ]
 																}
 ,
 																"parentstyle" : "velvet",
@@ -2856,8 +2507,8 @@
 																}
 ,
 																"button" : 																{
-																	"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 																	"elementcolor" : [ 0.32549, 0.345098, 0.372549, 1.0 ],
+																	"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 																	"color" : [ 1.0, 1.0, 1.0, 1.0 ]
 																}
 ,
@@ -2867,6 +2518,7 @@
 , 															{
 																"name" : "SleekBlack-4-1-1",
 																"default" : 																{
+																	"fontname" : [ "Avenir Next Ultra Light" ],
 																	"bgfillcolor" : 																	{
 																		"angle" : 269.577728,
 																		"autogradient" : 0,
@@ -2879,8 +2531,7 @@
 																		"type" : "gradient"
 																	}
 ,
-																	"textjustification" : [ 1 ],
-																	"fontname" : [ "Avenir Next Ultra Light" ]
+																	"textjustification" : [ 1 ]
 																}
 ,
 																"parentstyle" : "velvet",
@@ -2889,6 +2540,7 @@
 , 															{
 																"name" : "SleekBlack-5",
 																"default" : 																{
+																	"fontname" : [ "Avenir Next Ultra Light" ],
 																	"bgfillcolor" : 																	{
 																		"angle" : 269.577728,
 																		"autogradient" : 0,
@@ -2901,8 +2553,7 @@
 																		"type" : "gradient"
 																	}
 ,
-																	"textjustification" : [ 1 ],
-																	"fontname" : [ "Avenir Next Ultra Light" ]
+																	"textjustification" : [ 1 ]
 																}
 ,
 																"parentstyle" : "velvet",
@@ -2917,8 +2568,8 @@
 																}
 ,
 																"button" : 																{
-																	"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 																	"elementcolor" : [ 0.32549, 0.345098, 0.372549, 1.0 ],
+																	"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 																	"color" : [ 1.0, 1.0, 1.0, 1.0 ]
 																}
 ,
@@ -2934,8 +2585,8 @@
 																}
 ,
 																"button" : 																{
-																	"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 																	"elementcolor" : [ 0.32549, 0.345098, 0.372549, 1.0 ],
+																	"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 																	"color" : [ 1.0, 1.0, 1.0, 1.0 ]
 																}
 ,
@@ -2945,6 +2596,7 @@
 , 															{
 																"name" : "SleekBlack-7",
 																"default" : 																{
+																	"fontname" : [ "Avenir Next Ultra Light" ],
 																	"bgfillcolor" : 																	{
 																		"angle" : 269.577728,
 																		"autogradient" : 0,
@@ -2957,8 +2609,7 @@
 																		"type" : "gradient"
 																	}
 ,
-																	"textjustification" : [ 1 ],
-																	"fontname" : [ "Avenir Next Ultra Light" ]
+																	"textjustification" : [ 1 ]
 																}
 ,
 																"parentstyle" : "velvet",
@@ -2967,6 +2618,7 @@
 , 															{
 																"name" : "SleekBlack-8",
 																"default" : 																{
+																	"fontname" : [ "Avenir Next Ultra Light" ],
 																	"bgfillcolor" : 																	{
 																		"angle" : 269.577728,
 																		"autogradient" : 0,
@@ -2979,8 +2631,7 @@
 																		"type" : "gradient"
 																	}
 ,
-																	"textjustification" : [ 1 ],
-																	"fontname" : [ "Avenir Next Ultra Light" ]
+																	"textjustification" : [ 1 ]
 																}
 ,
 																"parentstyle" : "velvet",
@@ -2989,6 +2640,7 @@
 , 															{
 																"name" : "SleekBlack-9",
 																"default" : 																{
+																	"fontname" : [ "Avenir Next Ultra Light" ],
 																	"bgfillcolor" : 																	{
 																		"angle" : 269.577728,
 																		"autogradient" : 0,
@@ -3001,8 +2653,7 @@
 																		"type" : "gradient"
 																	}
 ,
-																	"textjustification" : [ 1 ],
-																	"fontname" : [ "Avenir Next Ultra Light" ]
+																	"textjustification" : [ 1 ]
 																}
 ,
 																"parentstyle" : "velvet",
@@ -3020,21 +2671,16 @@
 															}
 , 															{
 																"name" : "SleekestBlack",
-																"matrixctrl" : 																{
-																	"bgcolor" : [ 0.163647, 0.174699, 0.17409, 1.0 ],
-																	"elementcolor" : [ 0.095481, 0.100396, 0.100293, 0.34902 ],
-																	"color" : [ 1.0, 1.0, 1.0, 1.0 ]
-																}
-,
-																"pictslider" : 																{
-																	"bgcolor" : [ 0.0, 0.0, 0.0, 0.0 ],
-																	"color" : [ 0.267649, 0.035294, 0.964705, 1.0 ]
-																}
-,
 																"slider" : 																{
-																	"bgcolor" : [ 0.094118, 0.101961, 0.101961, 0.0 ],
 																	"elementcolor" : [ 0.376471, 0.384314, 0.4, 0.0 ],
+																	"bgcolor" : [ 0.094118, 0.101961, 0.101961, 0.0 ],
 																	"color" : [ 0.267649, 0.035294, 0.964705, 1.0 ]
+																}
+,
+																"matrixctrl" : 																{
+																	"elementcolor" : [ 0.095481, 0.100396, 0.100293, 0.34902 ],
+																	"bgcolor" : [ 0.163647, 0.174699, 0.17409, 1.0 ],
+																	"color" : [ 1.0, 1.0, 1.0, 1.0 ]
 																}
 ,
 																"panel" : 																{
@@ -3049,6 +2695,11 @@
 
 																}
 ,
+																"pictslider" : 																{
+																	"bgcolor" : [ 0.0, 0.0, 0.0, 0.0 ],
+																	"color" : [ 0.267649, 0.035294, 0.964705, 1.0 ]
+																}
+,
 																"parentstyle" : "",
 																"multi" : 1
 															}
@@ -3061,8 +2712,8 @@
 																}
 ,
 																"toggle" : 																{
-																	"bgcolor" : [ 0.636487, 0.648652, 0.683149, 1.0 ],
 																	"elementcolor" : [ 0.786675, 0.801885, 0.845022, 1.0 ],
+																	"bgcolor" : [ 0.636487, 0.648652, 0.683149, 1.0 ],
 																	"color" : [ 0.0, 0.0, 0.0, 1.0 ]
 																}
 ,
@@ -3083,8 +2734,8 @@
 																}
 ,
 																"toggle" : 																{
-																	"bgcolor" : [ 0.636487, 0.648652, 0.683149, 1.0 ],
 																	"elementcolor" : [ 0.786675, 0.801885, 0.845022, 1.0 ],
+																	"bgcolor" : [ 0.636487, 0.648652, 0.683149, 1.0 ],
 																	"color" : [ 0.0, 0.0, 0.0, 1.0 ]
 																}
 ,
@@ -3104,48 +2755,15 @@
 																	"textcolor_inverse" : [ 0.0, 0.0, 0.0, 1.0 ]
 																}
 ,
-																"toggle" : 																{
-																	"bgcolor" : [ 0.682032, 0.698052, 0.748716, 1.0 ],
-																	"elementcolor" : [ 0.65098, 0.666667, 0.662745, 1.0 ],
-																	"color" : [ 0.0, 0.0, 0.0, 1.0 ]
-																}
-,
 																"ezdac~" : 																{
-																	"bgcolor" : [ 0.65098, 0.666667, 0.662745, 1.0 ],
 																	"elementcolor" : [ 0.862745, 0.870588, 0.878431, 1.0 ],
-																	"color" : [ 0.0, 0.0, 0.0, 1.0 ]
-																}
-,
-																"attrui" : 																{
-																	"bgcolor" : [ 0.786675, 0.801885, 0.845022, 1.0 ],
-																	"textcolor_inverse" : [ 0.0, 0.0, 0.0, 1.0 ]
-																}
-,
-																"function" : 																{
 																	"bgcolor" : [ 0.65098, 0.666667, 0.662745, 1.0 ],
 																	"color" : [ 0.0, 0.0, 0.0, 1.0 ]
 																}
 ,
-																"slider" : 																{
-																	"bgcolor" : [ 1.0, 1.0, 1.0, 1.0 ],
+																"toggle" : 																{
 																	"elementcolor" : [ 0.65098, 0.666667, 0.662745, 1.0 ],
-																	"color" : [ 0.461105, 0.492646, 0.591878, 1.0 ]
-																}
-,
-																"ezadc~" : 																{
-																	"bgcolor" : [ 0.65098, 0.666667, 0.662745, 1.0 ],
-																	"elementcolor" : [ 0.862745, 0.870588, 0.878431, 1.0 ],
-																	"color" : [ 0.0, 0.0, 0.0, 1.0 ]
-																}
-,
-																"button" : 																{
 																	"bgcolor" : [ 0.682032, 0.698052, 0.748716, 1.0 ],
-																	"elementcolor" : [ 0.786675, 0.801885, 0.845022, 1.0 ],
-																	"color" : [ 1.0, 0.95051, 0.0, 1.0 ]
-																}
-,
-																"multislider" : 																{
-																	"bgcolor" : [ 1.0, 1.0, 1.0, 1.0 ],
 																	"color" : [ 0.0, 0.0, 0.0, 1.0 ]
 																}
 ,
@@ -3154,23 +2772,27 @@
 																	"color" : [ 1.0, 0.861448, 0.16921, 1.0 ]
 																}
 ,
+																"slider" : 																{
+																	"elementcolor" : [ 0.65098, 0.666667, 0.662745, 1.0 ],
+																	"bgcolor" : [ 1.0, 1.0, 1.0, 1.0 ],
+																	"color" : [ 0.461105, 0.492646, 0.591878, 1.0 ]
+																}
+,
+																"ezadc~" : 																{
+																	"elementcolor" : [ 0.862745, 0.870588, 0.878431, 1.0 ],
+																	"bgcolor" : [ 0.65098, 0.666667, 0.662745, 1.0 ],
+																	"color" : [ 0.0, 0.0, 0.0, 1.0 ]
+																}
+,
 																"kslider" : 																{
 																	"elementcolor" : [ 0.65098, 0.666667, 0.662745, 1.0 ],
 																	"color" : [ 1.0, 1.0, 1.0, 1.0 ]
 																}
 ,
-																"message" : 																{
-																	"bgfillcolor" : 																	{
-																		"angle" : 270.0,
-																		"autogradient" : 0,
-																		"color" : [ 0.290196, 0.309804, 0.301961, 1.0 ],
-																		"color1" : [ 0.786675, 0.801885, 0.845022, 1.0 ],
-																		"color2" : [ 0.65098, 0.666667, 0.662745, 1.0 ],
-																		"proportion" : 0.39,
-																		"type" : "gradient"
-																	}
-,
-																	"textcolor_inverse" : [ 0.0, 0.0, 0.0, 1.0 ]
+																"button" : 																{
+																	"elementcolor" : [ 0.786675, 0.801885, 0.845022, 1.0 ],
+																	"bgcolor" : [ 0.682032, 0.698052, 0.748716, 1.0 ],
+																	"color" : [ 1.0, 0.95051, 0.0, 1.0 ]
 																}
 ,
 																"umenu" : 																{
@@ -3186,19 +2808,48 @@
 
 																}
 ,
+																"message" : 																{
+																	"bgfillcolor" : 																	{
+																		"angle" : 270.0,
+																		"autogradient" : 0,
+																		"color" : [ 0.290196, 0.309804, 0.301961, 1.0 ],
+																		"color1" : [ 0.786675, 0.801885, 0.845022, 1.0 ],
+																		"color2" : [ 0.65098, 0.666667, 0.662745, 1.0 ],
+																		"proportion" : 0.39,
+																		"type" : "gradient"
+																	}
+,
+																	"textcolor_inverse" : [ 0.0, 0.0, 0.0, 1.0 ]
+																}
+,
+																"attrui" : 																{
+																	"bgcolor" : [ 0.786675, 0.801885, 0.845022, 1.0 ],
+																	"textcolor_inverse" : [ 0.0, 0.0, 0.0, 1.0 ]
+																}
+,
+																"function" : 																{
+																	"bgcolor" : [ 0.65098, 0.666667, 0.662745, 1.0 ],
+																	"color" : [ 0.0, 0.0, 0.0, 1.0 ]
+																}
+,
+																"multislider" : 																{
+																	"bgcolor" : [ 1.0, 1.0, 1.0, 1.0 ],
+																	"color" : [ 0.0, 0.0, 0.0, 1.0 ]
+																}
+,
 																"parentstyle" : "",
 																"multi" : 1
 															}
 , 															{
 																"name" : "multi001",
 																"umenu" : 																{
-																	"textjustification" : [ 1 ],
-																	"fontsize" : [ 10.0 ]
+																	"fontsize" : [ 10.0 ],
+																	"textjustification" : [ 1 ]
 																}
 ,
 																"message" : 																{
-																	"textjustification" : [ 1 ],
-																	"fontsize" : [ 10.0 ]
+																	"fontsize" : [ 10.0 ],
+																	"textjustification" : [ 1 ]
 																}
 ,
 																"parentstyle" : "SleekestBlack",
@@ -23583,10 +23234,10 @@
 												"name" : "GetsTheJobDone",
 												"default" : 												{
 													"accentcolor" : [ 0.095481, 0.100396, 0.100293, 1.0 ],
-													"bgcolor" : [ 1.0, 1.0, 1.0, 0.65 ],
-													"textjustification" : [ 2 ],
 													"fontsize" : [ 11.0 ],
 													"fontname" : [ "Andale Mono" ],
+													"bgcolor" : [ 1.0, 1.0, 1.0, 0.65 ],
+													"textjustification" : [ 2 ],
 													"textcolor_inverse" : [ 0.0, 0.0, 0.0, 1.0 ]
 												}
 ,
@@ -23596,6 +23247,7 @@
 , 											{
 												"name" : "SleekBlack",
 												"default" : 												{
+													"fontname" : [ "Avenir Next Ultra Light" ],
 													"bgfillcolor" : 													{
 														"angle" : 269.577728,
 														"autogradient" : 0,
@@ -23608,8 +23260,7 @@
 														"type" : "gradient"
 													}
 ,
-													"textjustification" : [ 1 ],
-													"fontname" : [ "Avenir Next Ultra Light" ]
+													"textjustification" : [ 1 ]
 												}
 ,
 												"parentstyle" : "velvet",
@@ -23624,8 +23275,8 @@
 												}
 ,
 												"button" : 												{
-													"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 													"elementcolor" : [ 0.32549, 0.345098, 0.372549, 1.0 ],
+													"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 													"color" : [ 1.0, 1.0, 1.0, 1.0 ]
 												}
 ,
@@ -23635,6 +23286,7 @@
 , 											{
 												"name" : "SleekBlack-1-1",
 												"default" : 												{
+													"fontname" : [ "Avenir Next Ultra Light" ],
 													"bgfillcolor" : 													{
 														"angle" : 269.577728,
 														"autogradient" : 0,
@@ -23647,8 +23299,7 @@
 														"type" : "gradient"
 													}
 ,
-													"textjustification" : [ 1 ],
-													"fontname" : [ "Avenir Next Ultra Light" ]
+													"textjustification" : [ 1 ]
 												}
 ,
 												"parentstyle" : "velvet",
@@ -23663,8 +23314,8 @@
 												}
 ,
 												"button" : 												{
-													"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 													"elementcolor" : [ 0.32549, 0.345098, 0.372549, 1.0 ],
+													"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 													"color" : [ 1.0, 1.0, 1.0, 1.0 ]
 												}
 ,
@@ -23674,6 +23325,7 @@
 , 											{
 												"name" : "SleekBlack-1-1-1-1",
 												"default" : 												{
+													"fontname" : [ "Avenir Next Ultra Light" ],
 													"bgfillcolor" : 													{
 														"angle" : 269.577728,
 														"autogradient" : 0,
@@ -23686,8 +23338,7 @@
 														"type" : "gradient"
 													}
 ,
-													"textjustification" : [ 1 ],
-													"fontname" : [ "Avenir Next Ultra Light" ]
+													"textjustification" : [ 1 ]
 												}
 ,
 												"parentstyle" : "velvet",
@@ -23702,8 +23353,8 @@
 												}
 ,
 												"button" : 												{
-													"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 													"elementcolor" : [ 0.32549, 0.345098, 0.372549, 1.0 ],
+													"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 													"color" : [ 1.0, 1.0, 1.0, 1.0 ]
 												}
 ,
@@ -23713,6 +23364,7 @@
 , 											{
 												"name" : "SleekBlack-1-1-1-1-1-1",
 												"default" : 												{
+													"fontname" : [ "Avenir Next Ultra Light" ],
 													"bgfillcolor" : 													{
 														"angle" : 269.577728,
 														"autogradient" : 0,
@@ -23725,8 +23377,7 @@
 														"type" : "gradient"
 													}
 ,
-													"textjustification" : [ 1 ],
-													"fontname" : [ "Avenir Next Ultra Light" ]
+													"textjustification" : [ 1 ]
 												}
 ,
 												"parentstyle" : "velvet",
@@ -23735,6 +23386,7 @@
 , 											{
 												"name" : "SleekBlack-1-1-1-2",
 												"default" : 												{
+													"fontname" : [ "Avenir Next Ultra Light" ],
 													"bgfillcolor" : 													{
 														"angle" : 269.577728,
 														"autogradient" : 0,
@@ -23747,8 +23399,7 @@
 														"type" : "gradient"
 													}
 ,
-													"textjustification" : [ 1 ],
-													"fontname" : [ "Avenir Next Ultra Light" ]
+													"textjustification" : [ 1 ]
 												}
 ,
 												"parentstyle" : "velvet",
@@ -23757,6 +23408,7 @@
 , 											{
 												"name" : "SleekBlack-1-1-1-3",
 												"default" : 												{
+													"fontname" : [ "Avenir Next Ultra Light" ],
 													"bgfillcolor" : 													{
 														"angle" : 269.577728,
 														"autogradient" : 0,
@@ -23769,8 +23421,7 @@
 														"type" : "gradient"
 													}
 ,
-													"textjustification" : [ 1 ],
-													"fontname" : [ "Avenir Next Ultra Light" ]
+													"textjustification" : [ 1 ]
 												}
 ,
 												"parentstyle" : "velvet",
@@ -23779,6 +23430,7 @@
 , 											{
 												"name" : "SleekBlack-1-1-1-4",
 												"default" : 												{
+													"fontname" : [ "Avenir Next Ultra Light" ],
 													"bgfillcolor" : 													{
 														"angle" : 269.577728,
 														"autogradient" : 0,
@@ -23791,8 +23443,7 @@
 														"type" : "gradient"
 													}
 ,
-													"textjustification" : [ 1 ],
-													"fontname" : [ "Avenir Next Ultra Light" ]
+													"textjustification" : [ 1 ]
 												}
 ,
 												"parentstyle" : "velvet",
@@ -23801,6 +23452,7 @@
 , 											{
 												"name" : "SleekBlack-1-1-2",
 												"default" : 												{
+													"fontname" : [ "Avenir Next Ultra Light" ],
 													"bgfillcolor" : 													{
 														"angle" : 269.577728,
 														"autogradient" : 0,
@@ -23813,8 +23465,7 @@
 														"type" : "gradient"
 													}
 ,
-													"textjustification" : [ 1 ],
-													"fontname" : [ "Avenir Next Ultra Light" ]
+													"textjustification" : [ 1 ]
 												}
 ,
 												"parentstyle" : "velvet",
@@ -23829,8 +23480,8 @@
 												}
 ,
 												"button" : 												{
-													"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 													"elementcolor" : [ 0.32549, 0.345098, 0.372549, 1.0 ],
+													"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 													"color" : [ 1.0, 1.0, 1.0, 1.0 ]
 												}
 ,
@@ -23846,8 +23497,8 @@
 												}
 ,
 												"button" : 												{
-													"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 													"elementcolor" : [ 0.32549, 0.345098, 0.372549, 1.0 ],
+													"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 													"color" : [ 1.0, 1.0, 1.0, 1.0 ]
 												}
 ,
@@ -23863,8 +23514,8 @@
 												}
 ,
 												"button" : 												{
-													"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 													"elementcolor" : [ 0.32549, 0.345098, 0.372549, 1.0 ],
+													"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 													"color" : [ 1.0, 1.0, 1.0, 1.0 ]
 												}
 ,
@@ -23874,6 +23525,7 @@
 , 											{
 												"name" : "SleekBlack-1-2",
 												"default" : 												{
+													"fontname" : [ "Avenir Next Ultra Light" ],
 													"bgfillcolor" : 													{
 														"angle" : 269.577728,
 														"autogradient" : 0,
@@ -23886,8 +23538,7 @@
 														"type" : "gradient"
 													}
 ,
-													"textjustification" : [ 1 ],
-													"fontname" : [ "Avenir Next Ultra Light" ]
+													"textjustification" : [ 1 ]
 												}
 ,
 												"parentstyle" : "velvet",
@@ -23896,6 +23547,7 @@
 , 											{
 												"name" : "SleekBlack-1-3",
 												"default" : 												{
+													"fontname" : [ "Avenir Next Ultra Light" ],
 													"bgfillcolor" : 													{
 														"angle" : 269.577728,
 														"autogradient" : 0,
@@ -23908,8 +23560,7 @@
 														"type" : "gradient"
 													}
 ,
-													"textjustification" : [ 1 ],
-													"fontname" : [ "Avenir Next Ultra Light" ]
+													"textjustification" : [ 1 ]
 												}
 ,
 												"parentstyle" : "velvet",
@@ -23924,8 +23575,8 @@
 												}
 ,
 												"button" : 												{
-													"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 													"elementcolor" : [ 0.32549, 0.345098, 0.372549, 1.0 ],
+													"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 													"color" : [ 1.0, 1.0, 1.0, 1.0 ]
 												}
 ,
@@ -23935,6 +23586,7 @@
 , 											{
 												"name" : "SleekBlack-1-4-1",
 												"default" : 												{
+													"fontname" : [ "Avenir Next Ultra Light" ],
 													"bgfillcolor" : 													{
 														"angle" : 269.577728,
 														"autogradient" : 0,
@@ -23947,8 +23599,7 @@
 														"type" : "gradient"
 													}
 ,
-													"textjustification" : [ 1 ],
-													"fontname" : [ "Avenir Next Ultra Light" ]
+													"textjustification" : [ 1 ]
 												}
 ,
 												"parentstyle" : "velvet",
@@ -23957,6 +23608,7 @@
 , 											{
 												"name" : "SleekBlack-1-5",
 												"default" : 												{
+													"fontname" : [ "Avenir Next Ultra Light" ],
 													"bgfillcolor" : 													{
 														"angle" : 269.577728,
 														"autogradient" : 0,
@@ -23969,8 +23621,7 @@
 														"type" : "gradient"
 													}
 ,
-													"textjustification" : [ 1 ],
-													"fontname" : [ "Avenir Next Ultra Light" ]
+													"textjustification" : [ 1 ]
 												}
 ,
 												"parentstyle" : "velvet",
@@ -23979,6 +23630,7 @@
 , 											{
 												"name" : "SleekBlack-1-6",
 												"default" : 												{
+													"fontname" : [ "Avenir Next Ultra Light" ],
 													"bgfillcolor" : 													{
 														"angle" : 269.577728,
 														"autogradient" : 0,
@@ -23991,8 +23643,7 @@
 														"type" : "gradient"
 													}
 ,
-													"textjustification" : [ 1 ],
-													"fontname" : [ "Avenir Next Ultra Light" ]
+													"textjustification" : [ 1 ]
 												}
 ,
 												"parentstyle" : "velvet",
@@ -24001,6 +23652,7 @@
 , 											{
 												"name" : "SleekBlack-10",
 												"default" : 												{
+													"fontname" : [ "Avenir Next Ultra Light" ],
 													"bgfillcolor" : 													{
 														"angle" : 269.577728,
 														"autogradient" : 0,
@@ -24013,8 +23665,7 @@
 														"type" : "gradient"
 													}
 ,
-													"textjustification" : [ 1 ],
-													"fontname" : [ "Avenir Next Ultra Light" ]
+													"textjustification" : [ 1 ]
 												}
 ,
 												"parentstyle" : "velvet",
@@ -24023,6 +23674,7 @@
 , 											{
 												"name" : "SleekBlack-11",
 												"default" : 												{
+													"fontname" : [ "Avenir Next Ultra Light" ],
 													"bgfillcolor" : 													{
 														"angle" : 269.577728,
 														"autogradient" : 0,
@@ -24035,8 +23687,7 @@
 														"type" : "gradient"
 													}
 ,
-													"textjustification" : [ 1 ],
-													"fontname" : [ "Avenir Next Ultra Light" ]
+													"textjustification" : [ 1 ]
 												}
 ,
 												"parentstyle" : "velvet",
@@ -24045,8 +23696,8 @@
 , 											{
 												"name" : "SleekBlack-2",
 												"default" : 												{
-													"bgcolor" : [ 0.156863, 0.156863, 0.196078, 1.0 ],
 													"elementcolor" : [ 0.304814, 0.254902, 0.278431, 1.0 ],
+													"fontname" : [ "Avenir Next Ultra Light" ],
 													"bgfillcolor" : 													{
 														"angle" : 269.577728,
 														"color" : [ 0.290196, 0.309804, 0.301961, 1.0 ],
@@ -24056,9 +23707,9 @@
 														"type" : "gradient"
 													}
 ,
-													"textjustification" : [ 1 ],
+													"bgcolor" : [ 0.156863, 0.156863, 0.196078, 1.0 ],
 													"color" : [ 0.317647, 0.787235, 0.976471, 1.0 ],
-													"fontname" : [ "Avenir Next Ultra Light" ]
+													"textjustification" : [ 1 ]
 												}
 ,
 												"parentstyle" : "velvet",
@@ -24073,8 +23724,8 @@
 												}
 ,
 												"button" : 												{
-													"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 													"elementcolor" : [ 0.32549, 0.345098, 0.372549, 1.0 ],
+													"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 													"color" : [ 1.0, 1.0, 1.0, 1.0 ]
 												}
 ,
@@ -24090,8 +23741,8 @@
 												}
 ,
 												"button" : 												{
-													"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 													"elementcolor" : [ 0.32549, 0.345098, 0.372549, 1.0 ],
+													"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 													"color" : [ 1.0, 1.0, 1.0, 1.0 ]
 												}
 ,
@@ -24101,6 +23752,7 @@
 , 											{
 												"name" : "SleekBlack-4",
 												"default" : 												{
+													"fontname" : [ "Avenir Next Ultra Light" ],
 													"bgfillcolor" : 													{
 														"angle" : 269.577728,
 														"autogradient" : 0,
@@ -24113,8 +23765,7 @@
 														"type" : "gradient"
 													}
 ,
-													"textjustification" : [ 1 ],
-													"fontname" : [ "Avenir Next Ultra Light" ]
+													"textjustification" : [ 1 ]
 												}
 ,
 												"parentstyle" : "velvet",
@@ -24129,8 +23780,8 @@
 												}
 ,
 												"button" : 												{
-													"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 													"elementcolor" : [ 0.32549, 0.345098, 0.372549, 1.0 ],
+													"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 													"color" : [ 1.0, 1.0, 1.0, 1.0 ]
 												}
 ,
@@ -24140,6 +23791,7 @@
 , 											{
 												"name" : "SleekBlack-4-1-1",
 												"default" : 												{
+													"fontname" : [ "Avenir Next Ultra Light" ],
 													"bgfillcolor" : 													{
 														"angle" : 269.577728,
 														"autogradient" : 0,
@@ -24152,8 +23804,7 @@
 														"type" : "gradient"
 													}
 ,
-													"textjustification" : [ 1 ],
-													"fontname" : [ "Avenir Next Ultra Light" ]
+													"textjustification" : [ 1 ]
 												}
 ,
 												"parentstyle" : "velvet",
@@ -24162,6 +23813,7 @@
 , 											{
 												"name" : "SleekBlack-5",
 												"default" : 												{
+													"fontname" : [ "Avenir Next Ultra Light" ],
 													"bgfillcolor" : 													{
 														"angle" : 269.577728,
 														"autogradient" : 0,
@@ -24174,8 +23826,7 @@
 														"type" : "gradient"
 													}
 ,
-													"textjustification" : [ 1 ],
-													"fontname" : [ "Avenir Next Ultra Light" ]
+													"textjustification" : [ 1 ]
 												}
 ,
 												"parentstyle" : "velvet",
@@ -24190,8 +23841,8 @@
 												}
 ,
 												"button" : 												{
-													"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 													"elementcolor" : [ 0.32549, 0.345098, 0.372549, 1.0 ],
+													"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 													"color" : [ 1.0, 1.0, 1.0, 1.0 ]
 												}
 ,
@@ -24207,8 +23858,8 @@
 												}
 ,
 												"button" : 												{
-													"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 													"elementcolor" : [ 0.32549, 0.345098, 0.372549, 1.0 ],
+													"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 													"color" : [ 1.0, 1.0, 1.0, 1.0 ]
 												}
 ,
@@ -24218,6 +23869,7 @@
 , 											{
 												"name" : "SleekBlack-7",
 												"default" : 												{
+													"fontname" : [ "Avenir Next Ultra Light" ],
 													"bgfillcolor" : 													{
 														"angle" : 269.577728,
 														"autogradient" : 0,
@@ -24230,8 +23882,7 @@
 														"type" : "gradient"
 													}
 ,
-													"textjustification" : [ 1 ],
-													"fontname" : [ "Avenir Next Ultra Light" ]
+													"textjustification" : [ 1 ]
 												}
 ,
 												"parentstyle" : "velvet",
@@ -24240,6 +23891,7 @@
 , 											{
 												"name" : "SleekBlack-8",
 												"default" : 												{
+													"fontname" : [ "Avenir Next Ultra Light" ],
 													"bgfillcolor" : 													{
 														"angle" : 269.577728,
 														"autogradient" : 0,
@@ -24252,8 +23904,7 @@
 														"type" : "gradient"
 													}
 ,
-													"textjustification" : [ 1 ],
-													"fontname" : [ "Avenir Next Ultra Light" ]
+													"textjustification" : [ 1 ]
 												}
 ,
 												"parentstyle" : "velvet",
@@ -24262,6 +23913,7 @@
 , 											{
 												"name" : "SleekBlack-9",
 												"default" : 												{
+													"fontname" : [ "Avenir Next Ultra Light" ],
 													"bgfillcolor" : 													{
 														"angle" : 269.577728,
 														"autogradient" : 0,
@@ -24274,8 +23926,7 @@
 														"type" : "gradient"
 													}
 ,
-													"textjustification" : [ 1 ],
-													"fontname" : [ "Avenir Next Ultra Light" ]
+													"textjustification" : [ 1 ]
 												}
 ,
 												"parentstyle" : "velvet",
@@ -24293,21 +23944,16 @@
 											}
 , 											{
 												"name" : "SleekestBlack",
-												"matrixctrl" : 												{
-													"bgcolor" : [ 0.163647, 0.174699, 0.17409, 1.0 ],
-													"elementcolor" : [ 0.095481, 0.100396, 0.100293, 0.34902 ],
-													"color" : [ 1.0, 1.0, 1.0, 1.0 ]
-												}
-,
-												"pictslider" : 												{
-													"bgcolor" : [ 0.0, 0.0, 0.0, 0.0 ],
-													"color" : [ 0.267649, 0.035294, 0.964705, 1.0 ]
-												}
-,
 												"slider" : 												{
-													"bgcolor" : [ 0.094118, 0.101961, 0.101961, 0.0 ],
 													"elementcolor" : [ 0.376471, 0.384314, 0.4, 0.0 ],
+													"bgcolor" : [ 0.094118, 0.101961, 0.101961, 0.0 ],
 													"color" : [ 0.267649, 0.035294, 0.964705, 1.0 ]
+												}
+,
+												"matrixctrl" : 												{
+													"elementcolor" : [ 0.095481, 0.100396, 0.100293, 0.34902 ],
+													"bgcolor" : [ 0.163647, 0.174699, 0.17409, 1.0 ],
+													"color" : [ 1.0, 1.0, 1.0, 1.0 ]
 												}
 ,
 												"panel" : 												{
@@ -24322,6 +23968,11 @@
 
 												}
 ,
+												"pictslider" : 												{
+													"bgcolor" : [ 0.0, 0.0, 0.0, 0.0 ],
+													"color" : [ 0.267649, 0.035294, 0.964705, 1.0 ]
+												}
+,
 												"parentstyle" : "",
 												"multi" : 1
 											}
@@ -24334,8 +23985,8 @@
 												}
 ,
 												"toggle" : 												{
-													"bgcolor" : [ 0.636487, 0.648652, 0.683149, 1.0 ],
 													"elementcolor" : [ 0.786675, 0.801885, 0.845022, 1.0 ],
+													"bgcolor" : [ 0.636487, 0.648652, 0.683149, 1.0 ],
 													"color" : [ 0.0, 0.0, 0.0, 1.0 ]
 												}
 ,
@@ -24356,8 +24007,8 @@
 												}
 ,
 												"toggle" : 												{
-													"bgcolor" : [ 0.636487, 0.648652, 0.683149, 1.0 ],
 													"elementcolor" : [ 0.786675, 0.801885, 0.845022, 1.0 ],
+													"bgcolor" : [ 0.636487, 0.648652, 0.683149, 1.0 ],
 													"color" : [ 0.0, 0.0, 0.0, 1.0 ]
 												}
 ,
@@ -24377,48 +24028,15 @@
 													"textcolor_inverse" : [ 0.0, 0.0, 0.0, 1.0 ]
 												}
 ,
-												"toggle" : 												{
-													"bgcolor" : [ 0.682032, 0.698052, 0.748716, 1.0 ],
-													"elementcolor" : [ 0.65098, 0.666667, 0.662745, 1.0 ],
-													"color" : [ 0.0, 0.0, 0.0, 1.0 ]
-												}
-,
 												"ezdac~" : 												{
-													"bgcolor" : [ 0.65098, 0.666667, 0.662745, 1.0 ],
 													"elementcolor" : [ 0.862745, 0.870588, 0.878431, 1.0 ],
-													"color" : [ 0.0, 0.0, 0.0, 1.0 ]
-												}
-,
-												"attrui" : 												{
-													"bgcolor" : [ 0.786675, 0.801885, 0.845022, 1.0 ],
-													"textcolor_inverse" : [ 0.0, 0.0, 0.0, 1.0 ]
-												}
-,
-												"function" : 												{
 													"bgcolor" : [ 0.65098, 0.666667, 0.662745, 1.0 ],
 													"color" : [ 0.0, 0.0, 0.0, 1.0 ]
 												}
 ,
-												"slider" : 												{
-													"bgcolor" : [ 1.0, 1.0, 1.0, 1.0 ],
+												"toggle" : 												{
 													"elementcolor" : [ 0.65098, 0.666667, 0.662745, 1.0 ],
-													"color" : [ 0.461105, 0.492646, 0.591878, 1.0 ]
-												}
-,
-												"ezadc~" : 												{
-													"bgcolor" : [ 0.65098, 0.666667, 0.662745, 1.0 ],
-													"elementcolor" : [ 0.862745, 0.870588, 0.878431, 1.0 ],
-													"color" : [ 0.0, 0.0, 0.0, 1.0 ]
-												}
-,
-												"button" : 												{
 													"bgcolor" : [ 0.682032, 0.698052, 0.748716, 1.0 ],
-													"elementcolor" : [ 0.786675, 0.801885, 0.845022, 1.0 ],
-													"color" : [ 1.0, 0.95051, 0.0, 1.0 ]
-												}
-,
-												"multislider" : 												{
-													"bgcolor" : [ 1.0, 1.0, 1.0, 1.0 ],
 													"color" : [ 0.0, 0.0, 0.0, 1.0 ]
 												}
 ,
@@ -24427,23 +24045,27 @@
 													"color" : [ 1.0, 0.861448, 0.16921, 1.0 ]
 												}
 ,
+												"slider" : 												{
+													"elementcolor" : [ 0.65098, 0.666667, 0.662745, 1.0 ],
+													"bgcolor" : [ 1.0, 1.0, 1.0, 1.0 ],
+													"color" : [ 0.461105, 0.492646, 0.591878, 1.0 ]
+												}
+,
+												"ezadc~" : 												{
+													"elementcolor" : [ 0.862745, 0.870588, 0.878431, 1.0 ],
+													"bgcolor" : [ 0.65098, 0.666667, 0.662745, 1.0 ],
+													"color" : [ 0.0, 0.0, 0.0, 1.0 ]
+												}
+,
 												"kslider" : 												{
 													"elementcolor" : [ 0.65098, 0.666667, 0.662745, 1.0 ],
 													"color" : [ 1.0, 1.0, 1.0, 1.0 ]
 												}
 ,
-												"message" : 												{
-													"bgfillcolor" : 													{
-														"angle" : 270.0,
-														"autogradient" : 0,
-														"color" : [ 0.290196, 0.309804, 0.301961, 1.0 ],
-														"color1" : [ 0.786675, 0.801885, 0.845022, 1.0 ],
-														"color2" : [ 0.65098, 0.666667, 0.662745, 1.0 ],
-														"proportion" : 0.39,
-														"type" : "gradient"
-													}
-,
-													"textcolor_inverse" : [ 0.0, 0.0, 0.0, 1.0 ]
+												"button" : 												{
+													"elementcolor" : [ 0.786675, 0.801885, 0.845022, 1.0 ],
+													"bgcolor" : [ 0.682032, 0.698052, 0.748716, 1.0 ],
+													"color" : [ 1.0, 0.95051, 0.0, 1.0 ]
 												}
 ,
 												"umenu" : 												{
@@ -24459,19 +24081,48 @@
 
 												}
 ,
+												"message" : 												{
+													"bgfillcolor" : 													{
+														"angle" : 270.0,
+														"autogradient" : 0,
+														"color" : [ 0.290196, 0.309804, 0.301961, 1.0 ],
+														"color1" : [ 0.786675, 0.801885, 0.845022, 1.0 ],
+														"color2" : [ 0.65098, 0.666667, 0.662745, 1.0 ],
+														"proportion" : 0.39,
+														"type" : "gradient"
+													}
+,
+													"textcolor_inverse" : [ 0.0, 0.0, 0.0, 1.0 ]
+												}
+,
+												"attrui" : 												{
+													"bgcolor" : [ 0.786675, 0.801885, 0.845022, 1.0 ],
+													"textcolor_inverse" : [ 0.0, 0.0, 0.0, 1.0 ]
+												}
+,
+												"function" : 												{
+													"bgcolor" : [ 0.65098, 0.666667, 0.662745, 1.0 ],
+													"color" : [ 0.0, 0.0, 0.0, 1.0 ]
+												}
+,
+												"multislider" : 												{
+													"bgcolor" : [ 1.0, 1.0, 1.0, 1.0 ],
+													"color" : [ 0.0, 0.0, 0.0, 1.0 ]
+												}
+,
 												"parentstyle" : "",
 												"multi" : 1
 											}
 , 											{
 												"name" : "multi001",
 												"umenu" : 												{
-													"textjustification" : [ 1 ],
-													"fontsize" : [ 10.0 ]
+													"fontsize" : [ 10.0 ],
+													"textjustification" : [ 1 ]
 												}
 ,
 												"message" : 												{
-													"textjustification" : [ 1 ],
-													"fontsize" : [ 10.0 ]
+													"fontsize" : [ 10.0 ],
+													"textjustification" : [ 1 ]
 												}
 ,
 												"parentstyle" : "SleekestBlack",
@@ -25724,10 +25375,10 @@
 																"name" : "GetsTheJobDone",
 																"default" : 																{
 																	"accentcolor" : [ 0.095481, 0.100396, 0.100293, 1.0 ],
-																	"bgcolor" : [ 1.0, 1.0, 1.0, 0.65 ],
-																	"textjustification" : [ 2 ],
 																	"fontsize" : [ 11.0 ],
 																	"fontname" : [ "Andale Mono" ],
+																	"bgcolor" : [ 1.0, 1.0, 1.0, 0.65 ],
+																	"textjustification" : [ 2 ],
 																	"textcolor_inverse" : [ 0.0, 0.0, 0.0, 1.0 ]
 																}
 ,
@@ -25737,6 +25388,7 @@
 , 															{
 																"name" : "SleekBlack",
 																"default" : 																{
+																	"fontname" : [ "Avenir Next Ultra Light" ],
 																	"bgfillcolor" : 																	{
 																		"angle" : 269.577728,
 																		"autogradient" : 0,
@@ -25749,8 +25401,7 @@
 																		"type" : "gradient"
 																	}
 ,
-																	"textjustification" : [ 1 ],
-																	"fontname" : [ "Avenir Next Ultra Light" ]
+																	"textjustification" : [ 1 ]
 																}
 ,
 																"parentstyle" : "velvet",
@@ -25765,8 +25416,8 @@
 																}
 ,
 																"button" : 																{
-																	"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 																	"elementcolor" : [ 0.32549, 0.345098, 0.372549, 1.0 ],
+																	"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 																	"color" : [ 1.0, 1.0, 1.0, 1.0 ]
 																}
 ,
@@ -25776,6 +25427,7 @@
 , 															{
 																"name" : "SleekBlack-1-1",
 																"default" : 																{
+																	"fontname" : [ "Avenir Next Ultra Light" ],
 																	"bgfillcolor" : 																	{
 																		"angle" : 269.577728,
 																		"autogradient" : 0,
@@ -25788,8 +25440,7 @@
 																		"type" : "gradient"
 																	}
 ,
-																	"textjustification" : [ 1 ],
-																	"fontname" : [ "Avenir Next Ultra Light" ]
+																	"textjustification" : [ 1 ]
 																}
 ,
 																"parentstyle" : "velvet",
@@ -25804,8 +25455,8 @@
 																}
 ,
 																"button" : 																{
-																	"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 																	"elementcolor" : [ 0.32549, 0.345098, 0.372549, 1.0 ],
+																	"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 																	"color" : [ 1.0, 1.0, 1.0, 1.0 ]
 																}
 ,
@@ -25815,6 +25466,7 @@
 , 															{
 																"name" : "SleekBlack-1-1-1-1",
 																"default" : 																{
+																	"fontname" : [ "Avenir Next Ultra Light" ],
 																	"bgfillcolor" : 																	{
 																		"angle" : 269.577728,
 																		"autogradient" : 0,
@@ -25827,8 +25479,7 @@
 																		"type" : "gradient"
 																	}
 ,
-																	"textjustification" : [ 1 ],
-																	"fontname" : [ "Avenir Next Ultra Light" ]
+																	"textjustification" : [ 1 ]
 																}
 ,
 																"parentstyle" : "velvet",
@@ -25843,8 +25494,8 @@
 																}
 ,
 																"button" : 																{
-																	"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 																	"elementcolor" : [ 0.32549, 0.345098, 0.372549, 1.0 ],
+																	"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 																	"color" : [ 1.0, 1.0, 1.0, 1.0 ]
 																}
 ,
@@ -25854,6 +25505,7 @@
 , 															{
 																"name" : "SleekBlack-1-1-1-1-1-1",
 																"default" : 																{
+																	"fontname" : [ "Avenir Next Ultra Light" ],
 																	"bgfillcolor" : 																	{
 																		"angle" : 269.577728,
 																		"autogradient" : 0,
@@ -25866,8 +25518,7 @@
 																		"type" : "gradient"
 																	}
 ,
-																	"textjustification" : [ 1 ],
-																	"fontname" : [ "Avenir Next Ultra Light" ]
+																	"textjustification" : [ 1 ]
 																}
 ,
 																"parentstyle" : "velvet",
@@ -25876,6 +25527,7 @@
 , 															{
 																"name" : "SleekBlack-1-1-1-2",
 																"default" : 																{
+																	"fontname" : [ "Avenir Next Ultra Light" ],
 																	"bgfillcolor" : 																	{
 																		"angle" : 269.577728,
 																		"autogradient" : 0,
@@ -25888,8 +25540,7 @@
 																		"type" : "gradient"
 																	}
 ,
-																	"textjustification" : [ 1 ],
-																	"fontname" : [ "Avenir Next Ultra Light" ]
+																	"textjustification" : [ 1 ]
 																}
 ,
 																"parentstyle" : "velvet",
@@ -25898,6 +25549,7 @@
 , 															{
 																"name" : "SleekBlack-1-1-1-3",
 																"default" : 																{
+																	"fontname" : [ "Avenir Next Ultra Light" ],
 																	"bgfillcolor" : 																	{
 																		"angle" : 269.577728,
 																		"autogradient" : 0,
@@ -25910,8 +25562,7 @@
 																		"type" : "gradient"
 																	}
 ,
-																	"textjustification" : [ 1 ],
-																	"fontname" : [ "Avenir Next Ultra Light" ]
+																	"textjustification" : [ 1 ]
 																}
 ,
 																"parentstyle" : "velvet",
@@ -25920,6 +25571,7 @@
 , 															{
 																"name" : "SleekBlack-1-1-1-4",
 																"default" : 																{
+																	"fontname" : [ "Avenir Next Ultra Light" ],
 																	"bgfillcolor" : 																	{
 																		"angle" : 269.577728,
 																		"autogradient" : 0,
@@ -25932,8 +25584,7 @@
 																		"type" : "gradient"
 																	}
 ,
-																	"textjustification" : [ 1 ],
-																	"fontname" : [ "Avenir Next Ultra Light" ]
+																	"textjustification" : [ 1 ]
 																}
 ,
 																"parentstyle" : "velvet",
@@ -25942,6 +25593,7 @@
 , 															{
 																"name" : "SleekBlack-1-1-2",
 																"default" : 																{
+																	"fontname" : [ "Avenir Next Ultra Light" ],
 																	"bgfillcolor" : 																	{
 																		"angle" : 269.577728,
 																		"autogradient" : 0,
@@ -25954,8 +25606,7 @@
 																		"type" : "gradient"
 																	}
 ,
-																	"textjustification" : [ 1 ],
-																	"fontname" : [ "Avenir Next Ultra Light" ]
+																	"textjustification" : [ 1 ]
 																}
 ,
 																"parentstyle" : "velvet",
@@ -25970,8 +25621,8 @@
 																}
 ,
 																"button" : 																{
-																	"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 																	"elementcolor" : [ 0.32549, 0.345098, 0.372549, 1.0 ],
+																	"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 																	"color" : [ 1.0, 1.0, 1.0, 1.0 ]
 																}
 ,
@@ -25987,8 +25638,8 @@
 																}
 ,
 																"button" : 																{
-																	"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 																	"elementcolor" : [ 0.32549, 0.345098, 0.372549, 1.0 ],
+																	"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 																	"color" : [ 1.0, 1.0, 1.0, 1.0 ]
 																}
 ,
@@ -26004,8 +25655,8 @@
 																}
 ,
 																"button" : 																{
-																	"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 																	"elementcolor" : [ 0.32549, 0.345098, 0.372549, 1.0 ],
+																	"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 																	"color" : [ 1.0, 1.0, 1.0, 1.0 ]
 																}
 ,
@@ -26015,6 +25666,7 @@
 , 															{
 																"name" : "SleekBlack-1-2",
 																"default" : 																{
+																	"fontname" : [ "Avenir Next Ultra Light" ],
 																	"bgfillcolor" : 																	{
 																		"angle" : 269.577728,
 																		"autogradient" : 0,
@@ -26027,8 +25679,7 @@
 																		"type" : "gradient"
 																	}
 ,
-																	"textjustification" : [ 1 ],
-																	"fontname" : [ "Avenir Next Ultra Light" ]
+																	"textjustification" : [ 1 ]
 																}
 ,
 																"parentstyle" : "velvet",
@@ -26037,6 +25688,7 @@
 , 															{
 																"name" : "SleekBlack-1-3",
 																"default" : 																{
+																	"fontname" : [ "Avenir Next Ultra Light" ],
 																	"bgfillcolor" : 																	{
 																		"angle" : 269.577728,
 																		"autogradient" : 0,
@@ -26049,8 +25701,7 @@
 																		"type" : "gradient"
 																	}
 ,
-																	"textjustification" : [ 1 ],
-																	"fontname" : [ "Avenir Next Ultra Light" ]
+																	"textjustification" : [ 1 ]
 																}
 ,
 																"parentstyle" : "velvet",
@@ -26065,8 +25716,8 @@
 																}
 ,
 																"button" : 																{
-																	"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 																	"elementcolor" : [ 0.32549, 0.345098, 0.372549, 1.0 ],
+																	"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 																	"color" : [ 1.0, 1.0, 1.0, 1.0 ]
 																}
 ,
@@ -26076,6 +25727,7 @@
 , 															{
 																"name" : "SleekBlack-1-4-1",
 																"default" : 																{
+																	"fontname" : [ "Avenir Next Ultra Light" ],
 																	"bgfillcolor" : 																	{
 																		"angle" : 269.577728,
 																		"autogradient" : 0,
@@ -26088,8 +25740,7 @@
 																		"type" : "gradient"
 																	}
 ,
-																	"textjustification" : [ 1 ],
-																	"fontname" : [ "Avenir Next Ultra Light" ]
+																	"textjustification" : [ 1 ]
 																}
 ,
 																"parentstyle" : "velvet",
@@ -26098,6 +25749,7 @@
 , 															{
 																"name" : "SleekBlack-1-5",
 																"default" : 																{
+																	"fontname" : [ "Avenir Next Ultra Light" ],
 																	"bgfillcolor" : 																	{
 																		"angle" : 269.577728,
 																		"autogradient" : 0,
@@ -26110,8 +25762,7 @@
 																		"type" : "gradient"
 																	}
 ,
-																	"textjustification" : [ 1 ],
-																	"fontname" : [ "Avenir Next Ultra Light" ]
+																	"textjustification" : [ 1 ]
 																}
 ,
 																"parentstyle" : "velvet",
@@ -26120,6 +25771,7 @@
 , 															{
 																"name" : "SleekBlack-1-6",
 																"default" : 																{
+																	"fontname" : [ "Avenir Next Ultra Light" ],
 																	"bgfillcolor" : 																	{
 																		"angle" : 269.577728,
 																		"autogradient" : 0,
@@ -26132,8 +25784,7 @@
 																		"type" : "gradient"
 																	}
 ,
-																	"textjustification" : [ 1 ],
-																	"fontname" : [ "Avenir Next Ultra Light" ]
+																	"textjustification" : [ 1 ]
 																}
 ,
 																"parentstyle" : "velvet",
@@ -26142,6 +25793,7 @@
 , 															{
 																"name" : "SleekBlack-10",
 																"default" : 																{
+																	"fontname" : [ "Avenir Next Ultra Light" ],
 																	"bgfillcolor" : 																	{
 																		"angle" : 269.577728,
 																		"autogradient" : 0,
@@ -26154,8 +25806,7 @@
 																		"type" : "gradient"
 																	}
 ,
-																	"textjustification" : [ 1 ],
-																	"fontname" : [ "Avenir Next Ultra Light" ]
+																	"textjustification" : [ 1 ]
 																}
 ,
 																"parentstyle" : "velvet",
@@ -26164,6 +25815,7 @@
 , 															{
 																"name" : "SleekBlack-11",
 																"default" : 																{
+																	"fontname" : [ "Avenir Next Ultra Light" ],
 																	"bgfillcolor" : 																	{
 																		"angle" : 269.577728,
 																		"autogradient" : 0,
@@ -26176,8 +25828,7 @@
 																		"type" : "gradient"
 																	}
 ,
-																	"textjustification" : [ 1 ],
-																	"fontname" : [ "Avenir Next Ultra Light" ]
+																	"textjustification" : [ 1 ]
 																}
 ,
 																"parentstyle" : "velvet",
@@ -26186,8 +25837,8 @@
 , 															{
 																"name" : "SleekBlack-2",
 																"default" : 																{
-																	"bgcolor" : [ 0.156863, 0.156863, 0.196078, 1.0 ],
 																	"elementcolor" : [ 0.304814, 0.254902, 0.278431, 1.0 ],
+																	"fontname" : [ "Avenir Next Ultra Light" ],
 																	"bgfillcolor" : 																	{
 																		"angle" : 269.577728,
 																		"color" : [ 0.290196, 0.309804, 0.301961, 1.0 ],
@@ -26197,9 +25848,9 @@
 																		"type" : "gradient"
 																	}
 ,
-																	"textjustification" : [ 1 ],
+																	"bgcolor" : [ 0.156863, 0.156863, 0.196078, 1.0 ],
 																	"color" : [ 0.317647, 0.787235, 0.976471, 1.0 ],
-																	"fontname" : [ "Avenir Next Ultra Light" ]
+																	"textjustification" : [ 1 ]
 																}
 ,
 																"parentstyle" : "velvet",
@@ -26214,8 +25865,8 @@
 																}
 ,
 																"button" : 																{
-																	"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 																	"elementcolor" : [ 0.32549, 0.345098, 0.372549, 1.0 ],
+																	"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 																	"color" : [ 1.0, 1.0, 1.0, 1.0 ]
 																}
 ,
@@ -26231,8 +25882,8 @@
 																}
 ,
 																"button" : 																{
-																	"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 																	"elementcolor" : [ 0.32549, 0.345098, 0.372549, 1.0 ],
+																	"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 																	"color" : [ 1.0, 1.0, 1.0, 1.0 ]
 																}
 ,
@@ -26242,6 +25893,7 @@
 , 															{
 																"name" : "SleekBlack-4",
 																"default" : 																{
+																	"fontname" : [ "Avenir Next Ultra Light" ],
 																	"bgfillcolor" : 																	{
 																		"angle" : 269.577728,
 																		"autogradient" : 0,
@@ -26254,8 +25906,7 @@
 																		"type" : "gradient"
 																	}
 ,
-																	"textjustification" : [ 1 ],
-																	"fontname" : [ "Avenir Next Ultra Light" ]
+																	"textjustification" : [ 1 ]
 																}
 ,
 																"parentstyle" : "velvet",
@@ -26270,8 +25921,8 @@
 																}
 ,
 																"button" : 																{
-																	"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 																	"elementcolor" : [ 0.32549, 0.345098, 0.372549, 1.0 ],
+																	"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 																	"color" : [ 1.0, 1.0, 1.0, 1.0 ]
 																}
 ,
@@ -26281,6 +25932,7 @@
 , 															{
 																"name" : "SleekBlack-4-1-1",
 																"default" : 																{
+																	"fontname" : [ "Avenir Next Ultra Light" ],
 																	"bgfillcolor" : 																	{
 																		"angle" : 269.577728,
 																		"autogradient" : 0,
@@ -26293,8 +25945,7 @@
 																		"type" : "gradient"
 																	}
 ,
-																	"textjustification" : [ 1 ],
-																	"fontname" : [ "Avenir Next Ultra Light" ]
+																	"textjustification" : [ 1 ]
 																}
 ,
 																"parentstyle" : "velvet",
@@ -26303,6 +25954,7 @@
 , 															{
 																"name" : "SleekBlack-5",
 																"default" : 																{
+																	"fontname" : [ "Avenir Next Ultra Light" ],
 																	"bgfillcolor" : 																	{
 																		"angle" : 269.577728,
 																		"autogradient" : 0,
@@ -26315,8 +25967,7 @@
 																		"type" : "gradient"
 																	}
 ,
-																	"textjustification" : [ 1 ],
-																	"fontname" : [ "Avenir Next Ultra Light" ]
+																	"textjustification" : [ 1 ]
 																}
 ,
 																"parentstyle" : "velvet",
@@ -26331,8 +25982,8 @@
 																}
 ,
 																"button" : 																{
-																	"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 																	"elementcolor" : [ 0.32549, 0.345098, 0.372549, 1.0 ],
+																	"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 																	"color" : [ 1.0, 1.0, 1.0, 1.0 ]
 																}
 ,
@@ -26348,8 +25999,8 @@
 																}
 ,
 																"button" : 																{
-																	"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 																	"elementcolor" : [ 0.32549, 0.345098, 0.372549, 1.0 ],
+																	"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 																	"color" : [ 1.0, 1.0, 1.0, 1.0 ]
 																}
 ,
@@ -26359,6 +26010,7 @@
 , 															{
 																"name" : "SleekBlack-7",
 																"default" : 																{
+																	"fontname" : [ "Avenir Next Ultra Light" ],
 																	"bgfillcolor" : 																	{
 																		"angle" : 269.577728,
 																		"autogradient" : 0,
@@ -26371,8 +26023,7 @@
 																		"type" : "gradient"
 																	}
 ,
-																	"textjustification" : [ 1 ],
-																	"fontname" : [ "Avenir Next Ultra Light" ]
+																	"textjustification" : [ 1 ]
 																}
 ,
 																"parentstyle" : "velvet",
@@ -26381,6 +26032,7 @@
 , 															{
 																"name" : "SleekBlack-8",
 																"default" : 																{
+																	"fontname" : [ "Avenir Next Ultra Light" ],
 																	"bgfillcolor" : 																	{
 																		"angle" : 269.577728,
 																		"autogradient" : 0,
@@ -26393,8 +26045,7 @@
 																		"type" : "gradient"
 																	}
 ,
-																	"textjustification" : [ 1 ],
-																	"fontname" : [ "Avenir Next Ultra Light" ]
+																	"textjustification" : [ 1 ]
 																}
 ,
 																"parentstyle" : "velvet",
@@ -26403,6 +26054,7 @@
 , 															{
 																"name" : "SleekBlack-9",
 																"default" : 																{
+																	"fontname" : [ "Avenir Next Ultra Light" ],
 																	"bgfillcolor" : 																	{
 																		"angle" : 269.577728,
 																		"autogradient" : 0,
@@ -26415,8 +26067,7 @@
 																		"type" : "gradient"
 																	}
 ,
-																	"textjustification" : [ 1 ],
-																	"fontname" : [ "Avenir Next Ultra Light" ]
+																	"textjustification" : [ 1 ]
 																}
 ,
 																"parentstyle" : "velvet",
@@ -26434,21 +26085,16 @@
 															}
 , 															{
 																"name" : "SleekestBlack",
-																"matrixctrl" : 																{
-																	"bgcolor" : [ 0.163647, 0.174699, 0.17409, 1.0 ],
-																	"elementcolor" : [ 0.095481, 0.100396, 0.100293, 0.34902 ],
-																	"color" : [ 1.0, 1.0, 1.0, 1.0 ]
-																}
-,
-																"pictslider" : 																{
-																	"bgcolor" : [ 0.0, 0.0, 0.0, 0.0 ],
-																	"color" : [ 0.267649, 0.035294, 0.964705, 1.0 ]
-																}
-,
 																"slider" : 																{
-																	"bgcolor" : [ 0.094118, 0.101961, 0.101961, 0.0 ],
 																	"elementcolor" : [ 0.376471, 0.384314, 0.4, 0.0 ],
+																	"bgcolor" : [ 0.094118, 0.101961, 0.101961, 0.0 ],
 																	"color" : [ 0.267649, 0.035294, 0.964705, 1.0 ]
+																}
+,
+																"matrixctrl" : 																{
+																	"elementcolor" : [ 0.095481, 0.100396, 0.100293, 0.34902 ],
+																	"bgcolor" : [ 0.163647, 0.174699, 0.17409, 1.0 ],
+																	"color" : [ 1.0, 1.0, 1.0, 1.0 ]
 																}
 ,
 																"panel" : 																{
@@ -26463,6 +26109,11 @@
 
 																}
 ,
+																"pictslider" : 																{
+																	"bgcolor" : [ 0.0, 0.0, 0.0, 0.0 ],
+																	"color" : [ 0.267649, 0.035294, 0.964705, 1.0 ]
+																}
+,
 																"parentstyle" : "",
 																"multi" : 1
 															}
@@ -26475,8 +26126,8 @@
 																}
 ,
 																"toggle" : 																{
-																	"bgcolor" : [ 0.636487, 0.648652, 0.683149, 1.0 ],
 																	"elementcolor" : [ 0.786675, 0.801885, 0.845022, 1.0 ],
+																	"bgcolor" : [ 0.636487, 0.648652, 0.683149, 1.0 ],
 																	"color" : [ 0.0, 0.0, 0.0, 1.0 ]
 																}
 ,
@@ -26497,8 +26148,8 @@
 																}
 ,
 																"toggle" : 																{
-																	"bgcolor" : [ 0.636487, 0.648652, 0.683149, 1.0 ],
 																	"elementcolor" : [ 0.786675, 0.801885, 0.845022, 1.0 ],
+																	"bgcolor" : [ 0.636487, 0.648652, 0.683149, 1.0 ],
 																	"color" : [ 0.0, 0.0, 0.0, 1.0 ]
 																}
 ,
@@ -26518,48 +26169,15 @@
 																	"textcolor_inverse" : [ 0.0, 0.0, 0.0, 1.0 ]
 																}
 ,
-																"toggle" : 																{
-																	"bgcolor" : [ 0.682032, 0.698052, 0.748716, 1.0 ],
-																	"elementcolor" : [ 0.65098, 0.666667, 0.662745, 1.0 ],
-																	"color" : [ 0.0, 0.0, 0.0, 1.0 ]
-																}
-,
 																"ezdac~" : 																{
-																	"bgcolor" : [ 0.65098, 0.666667, 0.662745, 1.0 ],
 																	"elementcolor" : [ 0.862745, 0.870588, 0.878431, 1.0 ],
-																	"color" : [ 0.0, 0.0, 0.0, 1.0 ]
-																}
-,
-																"attrui" : 																{
-																	"bgcolor" : [ 0.786675, 0.801885, 0.845022, 1.0 ],
-																	"textcolor_inverse" : [ 0.0, 0.0, 0.0, 1.0 ]
-																}
-,
-																"function" : 																{
 																	"bgcolor" : [ 0.65098, 0.666667, 0.662745, 1.0 ],
 																	"color" : [ 0.0, 0.0, 0.0, 1.0 ]
 																}
 ,
-																"slider" : 																{
-																	"bgcolor" : [ 1.0, 1.0, 1.0, 1.0 ],
+																"toggle" : 																{
 																	"elementcolor" : [ 0.65098, 0.666667, 0.662745, 1.0 ],
-																	"color" : [ 0.461105, 0.492646, 0.591878, 1.0 ]
-																}
-,
-																"ezadc~" : 																{
-																	"bgcolor" : [ 0.65098, 0.666667, 0.662745, 1.0 ],
-																	"elementcolor" : [ 0.862745, 0.870588, 0.878431, 1.0 ],
-																	"color" : [ 0.0, 0.0, 0.0, 1.0 ]
-																}
-,
-																"button" : 																{
 																	"bgcolor" : [ 0.682032, 0.698052, 0.748716, 1.0 ],
-																	"elementcolor" : [ 0.786675, 0.801885, 0.845022, 1.0 ],
-																	"color" : [ 1.0, 0.95051, 0.0, 1.0 ]
-																}
-,
-																"multislider" : 																{
-																	"bgcolor" : [ 1.0, 1.0, 1.0, 1.0 ],
 																	"color" : [ 0.0, 0.0, 0.0, 1.0 ]
 																}
 ,
@@ -26568,23 +26186,27 @@
 																	"color" : [ 1.0, 0.861448, 0.16921, 1.0 ]
 																}
 ,
+																"slider" : 																{
+																	"elementcolor" : [ 0.65098, 0.666667, 0.662745, 1.0 ],
+																	"bgcolor" : [ 1.0, 1.0, 1.0, 1.0 ],
+																	"color" : [ 0.461105, 0.492646, 0.591878, 1.0 ]
+																}
+,
+																"ezadc~" : 																{
+																	"elementcolor" : [ 0.862745, 0.870588, 0.878431, 1.0 ],
+																	"bgcolor" : [ 0.65098, 0.666667, 0.662745, 1.0 ],
+																	"color" : [ 0.0, 0.0, 0.0, 1.0 ]
+																}
+,
 																"kslider" : 																{
 																	"elementcolor" : [ 0.65098, 0.666667, 0.662745, 1.0 ],
 																	"color" : [ 1.0, 1.0, 1.0, 1.0 ]
 																}
 ,
-																"message" : 																{
-																	"bgfillcolor" : 																	{
-																		"angle" : 270.0,
-																		"autogradient" : 0,
-																		"color" : [ 0.290196, 0.309804, 0.301961, 1.0 ],
-																		"color1" : [ 0.786675, 0.801885, 0.845022, 1.0 ],
-																		"color2" : [ 0.65098, 0.666667, 0.662745, 1.0 ],
-																		"proportion" : 0.39,
-																		"type" : "gradient"
-																	}
-,
-																	"textcolor_inverse" : [ 0.0, 0.0, 0.0, 1.0 ]
+																"button" : 																{
+																	"elementcolor" : [ 0.786675, 0.801885, 0.845022, 1.0 ],
+																	"bgcolor" : [ 0.682032, 0.698052, 0.748716, 1.0 ],
+																	"color" : [ 1.0, 0.95051, 0.0, 1.0 ]
 																}
 ,
 																"umenu" : 																{
@@ -26600,19 +26222,48 @@
 
 																}
 ,
+																"message" : 																{
+																	"bgfillcolor" : 																	{
+																		"angle" : 270.0,
+																		"autogradient" : 0,
+																		"color" : [ 0.290196, 0.309804, 0.301961, 1.0 ],
+																		"color1" : [ 0.786675, 0.801885, 0.845022, 1.0 ],
+																		"color2" : [ 0.65098, 0.666667, 0.662745, 1.0 ],
+																		"proportion" : 0.39,
+																		"type" : "gradient"
+																	}
+,
+																	"textcolor_inverse" : [ 0.0, 0.0, 0.0, 1.0 ]
+																}
+,
+																"attrui" : 																{
+																	"bgcolor" : [ 0.786675, 0.801885, 0.845022, 1.0 ],
+																	"textcolor_inverse" : [ 0.0, 0.0, 0.0, 1.0 ]
+																}
+,
+																"function" : 																{
+																	"bgcolor" : [ 0.65098, 0.666667, 0.662745, 1.0 ],
+																	"color" : [ 0.0, 0.0, 0.0, 1.0 ]
+																}
+,
+																"multislider" : 																{
+																	"bgcolor" : [ 1.0, 1.0, 1.0, 1.0 ],
+																	"color" : [ 0.0, 0.0, 0.0, 1.0 ]
+																}
+,
 																"parentstyle" : "",
 																"multi" : 1
 															}
 , 															{
 																"name" : "multi001",
 																"umenu" : 																{
-																	"textjustification" : [ 1 ],
-																	"fontsize" : [ 10.0 ]
+																	"fontsize" : [ 10.0 ],
+																	"textjustification" : [ 1 ]
 																}
 ,
 																"message" : 																{
-																	"textjustification" : [ 1 ],
-																	"fontsize" : [ 10.0 ]
+																	"fontsize" : [ 10.0 ],
+																	"textjustification" : [ 1 ]
 																}
 ,
 																"parentstyle" : "SleekestBlack",
@@ -39403,10 +39054,10 @@
 												"name" : "GetsTheJobDone",
 												"default" : 												{
 													"accentcolor" : [ 0.095481, 0.100396, 0.100293, 1.0 ],
-													"bgcolor" : [ 1.0, 1.0, 1.0, 0.65 ],
-													"textjustification" : [ 2 ],
 													"fontsize" : [ 11.0 ],
 													"fontname" : [ "Andale Mono" ],
+													"bgcolor" : [ 1.0, 1.0, 1.0, 0.65 ],
+													"textjustification" : [ 2 ],
 													"textcolor_inverse" : [ 0.0, 0.0, 0.0, 1.0 ]
 												}
 ,
@@ -39416,6 +39067,7 @@
 , 											{
 												"name" : "SleekBlack",
 												"default" : 												{
+													"fontname" : [ "Avenir Next Ultra Light" ],
 													"bgfillcolor" : 													{
 														"angle" : 269.577728,
 														"autogradient" : 0,
@@ -39428,8 +39080,7 @@
 														"type" : "gradient"
 													}
 ,
-													"textjustification" : [ 1 ],
-													"fontname" : [ "Avenir Next Ultra Light" ]
+													"textjustification" : [ 1 ]
 												}
 ,
 												"parentstyle" : "velvet",
@@ -39444,8 +39095,8 @@
 												}
 ,
 												"button" : 												{
-													"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 													"elementcolor" : [ 0.32549, 0.345098, 0.372549, 1.0 ],
+													"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 													"color" : [ 1.0, 1.0, 1.0, 1.0 ]
 												}
 ,
@@ -39455,6 +39106,7 @@
 , 											{
 												"name" : "SleekBlack-1-1",
 												"default" : 												{
+													"fontname" : [ "Avenir Next Ultra Light" ],
 													"bgfillcolor" : 													{
 														"angle" : 269.577728,
 														"autogradient" : 0,
@@ -39467,8 +39119,7 @@
 														"type" : "gradient"
 													}
 ,
-													"textjustification" : [ 1 ],
-													"fontname" : [ "Avenir Next Ultra Light" ]
+													"textjustification" : [ 1 ]
 												}
 ,
 												"parentstyle" : "velvet",
@@ -39483,8 +39134,8 @@
 												}
 ,
 												"button" : 												{
-													"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 													"elementcolor" : [ 0.32549, 0.345098, 0.372549, 1.0 ],
+													"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 													"color" : [ 1.0, 1.0, 1.0, 1.0 ]
 												}
 ,
@@ -39494,6 +39145,7 @@
 , 											{
 												"name" : "SleekBlack-1-1-1-1",
 												"default" : 												{
+													"fontname" : [ "Avenir Next Ultra Light" ],
 													"bgfillcolor" : 													{
 														"angle" : 269.577728,
 														"autogradient" : 0,
@@ -39506,8 +39158,7 @@
 														"type" : "gradient"
 													}
 ,
-													"textjustification" : [ 1 ],
-													"fontname" : [ "Avenir Next Ultra Light" ]
+													"textjustification" : [ 1 ]
 												}
 ,
 												"parentstyle" : "velvet",
@@ -39522,8 +39173,8 @@
 												}
 ,
 												"button" : 												{
-													"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 													"elementcolor" : [ 0.32549, 0.345098, 0.372549, 1.0 ],
+													"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 													"color" : [ 1.0, 1.0, 1.0, 1.0 ]
 												}
 ,
@@ -39533,6 +39184,7 @@
 , 											{
 												"name" : "SleekBlack-1-1-1-1-1-1",
 												"default" : 												{
+													"fontname" : [ "Avenir Next Ultra Light" ],
 													"bgfillcolor" : 													{
 														"angle" : 269.577728,
 														"autogradient" : 0,
@@ -39545,8 +39197,7 @@
 														"type" : "gradient"
 													}
 ,
-													"textjustification" : [ 1 ],
-													"fontname" : [ "Avenir Next Ultra Light" ]
+													"textjustification" : [ 1 ]
 												}
 ,
 												"parentstyle" : "velvet",
@@ -39555,6 +39206,7 @@
 , 											{
 												"name" : "SleekBlack-1-1-1-2",
 												"default" : 												{
+													"fontname" : [ "Avenir Next Ultra Light" ],
 													"bgfillcolor" : 													{
 														"angle" : 269.577728,
 														"autogradient" : 0,
@@ -39567,8 +39219,7 @@
 														"type" : "gradient"
 													}
 ,
-													"textjustification" : [ 1 ],
-													"fontname" : [ "Avenir Next Ultra Light" ]
+													"textjustification" : [ 1 ]
 												}
 ,
 												"parentstyle" : "velvet",
@@ -39577,6 +39228,7 @@
 , 											{
 												"name" : "SleekBlack-1-1-1-3",
 												"default" : 												{
+													"fontname" : [ "Avenir Next Ultra Light" ],
 													"bgfillcolor" : 													{
 														"angle" : 269.577728,
 														"autogradient" : 0,
@@ -39589,8 +39241,7 @@
 														"type" : "gradient"
 													}
 ,
-													"textjustification" : [ 1 ],
-													"fontname" : [ "Avenir Next Ultra Light" ]
+													"textjustification" : [ 1 ]
 												}
 ,
 												"parentstyle" : "velvet",
@@ -39599,6 +39250,7 @@
 , 											{
 												"name" : "SleekBlack-1-1-1-4",
 												"default" : 												{
+													"fontname" : [ "Avenir Next Ultra Light" ],
 													"bgfillcolor" : 													{
 														"angle" : 269.577728,
 														"autogradient" : 0,
@@ -39611,8 +39263,7 @@
 														"type" : "gradient"
 													}
 ,
-													"textjustification" : [ 1 ],
-													"fontname" : [ "Avenir Next Ultra Light" ]
+													"textjustification" : [ 1 ]
 												}
 ,
 												"parentstyle" : "velvet",
@@ -39621,6 +39272,7 @@
 , 											{
 												"name" : "SleekBlack-1-1-2",
 												"default" : 												{
+													"fontname" : [ "Avenir Next Ultra Light" ],
 													"bgfillcolor" : 													{
 														"angle" : 269.577728,
 														"autogradient" : 0,
@@ -39633,8 +39285,7 @@
 														"type" : "gradient"
 													}
 ,
-													"textjustification" : [ 1 ],
-													"fontname" : [ "Avenir Next Ultra Light" ]
+													"textjustification" : [ 1 ]
 												}
 ,
 												"parentstyle" : "velvet",
@@ -39649,8 +39300,8 @@
 												}
 ,
 												"button" : 												{
-													"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 													"elementcolor" : [ 0.32549, 0.345098, 0.372549, 1.0 ],
+													"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 													"color" : [ 1.0, 1.0, 1.0, 1.0 ]
 												}
 ,
@@ -39666,8 +39317,8 @@
 												}
 ,
 												"button" : 												{
-													"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 													"elementcolor" : [ 0.32549, 0.345098, 0.372549, 1.0 ],
+													"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 													"color" : [ 1.0, 1.0, 1.0, 1.0 ]
 												}
 ,
@@ -39683,8 +39334,8 @@
 												}
 ,
 												"button" : 												{
-													"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 													"elementcolor" : [ 0.32549, 0.345098, 0.372549, 1.0 ],
+													"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 													"color" : [ 1.0, 1.0, 1.0, 1.0 ]
 												}
 ,
@@ -39694,6 +39345,7 @@
 , 											{
 												"name" : "SleekBlack-1-2",
 												"default" : 												{
+													"fontname" : [ "Avenir Next Ultra Light" ],
 													"bgfillcolor" : 													{
 														"angle" : 269.577728,
 														"autogradient" : 0,
@@ -39706,8 +39358,7 @@
 														"type" : "gradient"
 													}
 ,
-													"textjustification" : [ 1 ],
-													"fontname" : [ "Avenir Next Ultra Light" ]
+													"textjustification" : [ 1 ]
 												}
 ,
 												"parentstyle" : "velvet",
@@ -39716,6 +39367,7 @@
 , 											{
 												"name" : "SleekBlack-1-3",
 												"default" : 												{
+													"fontname" : [ "Avenir Next Ultra Light" ],
 													"bgfillcolor" : 													{
 														"angle" : 269.577728,
 														"autogradient" : 0,
@@ -39728,8 +39380,7 @@
 														"type" : "gradient"
 													}
 ,
-													"textjustification" : [ 1 ],
-													"fontname" : [ "Avenir Next Ultra Light" ]
+													"textjustification" : [ 1 ]
 												}
 ,
 												"parentstyle" : "velvet",
@@ -39744,8 +39395,8 @@
 												}
 ,
 												"button" : 												{
-													"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 													"elementcolor" : [ 0.32549, 0.345098, 0.372549, 1.0 ],
+													"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 													"color" : [ 1.0, 1.0, 1.0, 1.0 ]
 												}
 ,
@@ -39755,6 +39406,7 @@
 , 											{
 												"name" : "SleekBlack-1-4-1",
 												"default" : 												{
+													"fontname" : [ "Avenir Next Ultra Light" ],
 													"bgfillcolor" : 													{
 														"angle" : 269.577728,
 														"autogradient" : 0,
@@ -39767,8 +39419,7 @@
 														"type" : "gradient"
 													}
 ,
-													"textjustification" : [ 1 ],
-													"fontname" : [ "Avenir Next Ultra Light" ]
+													"textjustification" : [ 1 ]
 												}
 ,
 												"parentstyle" : "velvet",
@@ -39777,6 +39428,7 @@
 , 											{
 												"name" : "SleekBlack-1-5",
 												"default" : 												{
+													"fontname" : [ "Avenir Next Ultra Light" ],
 													"bgfillcolor" : 													{
 														"angle" : 269.577728,
 														"autogradient" : 0,
@@ -39789,8 +39441,7 @@
 														"type" : "gradient"
 													}
 ,
-													"textjustification" : [ 1 ],
-													"fontname" : [ "Avenir Next Ultra Light" ]
+													"textjustification" : [ 1 ]
 												}
 ,
 												"parentstyle" : "velvet",
@@ -39799,6 +39450,7 @@
 , 											{
 												"name" : "SleekBlack-1-6",
 												"default" : 												{
+													"fontname" : [ "Avenir Next Ultra Light" ],
 													"bgfillcolor" : 													{
 														"angle" : 269.577728,
 														"autogradient" : 0,
@@ -39811,8 +39463,7 @@
 														"type" : "gradient"
 													}
 ,
-													"textjustification" : [ 1 ],
-													"fontname" : [ "Avenir Next Ultra Light" ]
+													"textjustification" : [ 1 ]
 												}
 ,
 												"parentstyle" : "velvet",
@@ -39821,6 +39472,7 @@
 , 											{
 												"name" : "SleekBlack-10",
 												"default" : 												{
+													"fontname" : [ "Avenir Next Ultra Light" ],
 													"bgfillcolor" : 													{
 														"angle" : 269.577728,
 														"autogradient" : 0,
@@ -39833,8 +39485,7 @@
 														"type" : "gradient"
 													}
 ,
-													"textjustification" : [ 1 ],
-													"fontname" : [ "Avenir Next Ultra Light" ]
+													"textjustification" : [ 1 ]
 												}
 ,
 												"parentstyle" : "velvet",
@@ -39843,6 +39494,7 @@
 , 											{
 												"name" : "SleekBlack-11",
 												"default" : 												{
+													"fontname" : [ "Avenir Next Ultra Light" ],
 													"bgfillcolor" : 													{
 														"angle" : 269.577728,
 														"autogradient" : 0,
@@ -39855,8 +39507,7 @@
 														"type" : "gradient"
 													}
 ,
-													"textjustification" : [ 1 ],
-													"fontname" : [ "Avenir Next Ultra Light" ]
+													"textjustification" : [ 1 ]
 												}
 ,
 												"parentstyle" : "velvet",
@@ -39865,8 +39516,8 @@
 , 											{
 												"name" : "SleekBlack-2",
 												"default" : 												{
-													"bgcolor" : [ 0.156863, 0.156863, 0.196078, 1.0 ],
 													"elementcolor" : [ 0.304814, 0.254902, 0.278431, 1.0 ],
+													"fontname" : [ "Avenir Next Ultra Light" ],
 													"bgfillcolor" : 													{
 														"angle" : 269.577728,
 														"color" : [ 0.290196, 0.309804, 0.301961, 1.0 ],
@@ -39876,9 +39527,9 @@
 														"type" : "gradient"
 													}
 ,
-													"textjustification" : [ 1 ],
+													"bgcolor" : [ 0.156863, 0.156863, 0.196078, 1.0 ],
 													"color" : [ 0.317647, 0.787235, 0.976471, 1.0 ],
-													"fontname" : [ "Avenir Next Ultra Light" ]
+													"textjustification" : [ 1 ]
 												}
 ,
 												"parentstyle" : "velvet",
@@ -39893,8 +39544,8 @@
 												}
 ,
 												"button" : 												{
-													"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 													"elementcolor" : [ 0.32549, 0.345098, 0.372549, 1.0 ],
+													"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 													"color" : [ 1.0, 1.0, 1.0, 1.0 ]
 												}
 ,
@@ -39910,8 +39561,8 @@
 												}
 ,
 												"button" : 												{
-													"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 													"elementcolor" : [ 0.32549, 0.345098, 0.372549, 1.0 ],
+													"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 													"color" : [ 1.0, 1.0, 1.0, 1.0 ]
 												}
 ,
@@ -39921,6 +39572,7 @@
 , 											{
 												"name" : "SleekBlack-4",
 												"default" : 												{
+													"fontname" : [ "Avenir Next Ultra Light" ],
 													"bgfillcolor" : 													{
 														"angle" : 269.577728,
 														"autogradient" : 0,
@@ -39933,8 +39585,7 @@
 														"type" : "gradient"
 													}
 ,
-													"textjustification" : [ 1 ],
-													"fontname" : [ "Avenir Next Ultra Light" ]
+													"textjustification" : [ 1 ]
 												}
 ,
 												"parentstyle" : "velvet",
@@ -39949,8 +39600,8 @@
 												}
 ,
 												"button" : 												{
-													"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 													"elementcolor" : [ 0.32549, 0.345098, 0.372549, 1.0 ],
+													"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 													"color" : [ 1.0, 1.0, 1.0, 1.0 ]
 												}
 ,
@@ -39960,6 +39611,7 @@
 , 											{
 												"name" : "SleekBlack-4-1-1",
 												"default" : 												{
+													"fontname" : [ "Avenir Next Ultra Light" ],
 													"bgfillcolor" : 													{
 														"angle" : 269.577728,
 														"autogradient" : 0,
@@ -39972,8 +39624,7 @@
 														"type" : "gradient"
 													}
 ,
-													"textjustification" : [ 1 ],
-													"fontname" : [ "Avenir Next Ultra Light" ]
+													"textjustification" : [ 1 ]
 												}
 ,
 												"parentstyle" : "velvet",
@@ -39982,6 +39633,7 @@
 , 											{
 												"name" : "SleekBlack-5",
 												"default" : 												{
+													"fontname" : [ "Avenir Next Ultra Light" ],
 													"bgfillcolor" : 													{
 														"angle" : 269.577728,
 														"autogradient" : 0,
@@ -39994,8 +39646,7 @@
 														"type" : "gradient"
 													}
 ,
-													"textjustification" : [ 1 ],
-													"fontname" : [ "Avenir Next Ultra Light" ]
+													"textjustification" : [ 1 ]
 												}
 ,
 												"parentstyle" : "velvet",
@@ -40010,8 +39661,8 @@
 												}
 ,
 												"button" : 												{
-													"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 													"elementcolor" : [ 0.32549, 0.345098, 0.372549, 1.0 ],
+													"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 													"color" : [ 1.0, 1.0, 1.0, 1.0 ]
 												}
 ,
@@ -40027,8 +39678,8 @@
 												}
 ,
 												"button" : 												{
-													"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 													"elementcolor" : [ 0.32549, 0.345098, 0.372549, 1.0 ],
+													"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 													"color" : [ 1.0, 1.0, 1.0, 1.0 ]
 												}
 ,
@@ -40038,6 +39689,7 @@
 , 											{
 												"name" : "SleekBlack-7",
 												"default" : 												{
+													"fontname" : [ "Avenir Next Ultra Light" ],
 													"bgfillcolor" : 													{
 														"angle" : 269.577728,
 														"autogradient" : 0,
@@ -40050,8 +39702,7 @@
 														"type" : "gradient"
 													}
 ,
-													"textjustification" : [ 1 ],
-													"fontname" : [ "Avenir Next Ultra Light" ]
+													"textjustification" : [ 1 ]
 												}
 ,
 												"parentstyle" : "velvet",
@@ -40060,6 +39711,7 @@
 , 											{
 												"name" : "SleekBlack-8",
 												"default" : 												{
+													"fontname" : [ "Avenir Next Ultra Light" ],
 													"bgfillcolor" : 													{
 														"angle" : 269.577728,
 														"autogradient" : 0,
@@ -40072,8 +39724,7 @@
 														"type" : "gradient"
 													}
 ,
-													"textjustification" : [ 1 ],
-													"fontname" : [ "Avenir Next Ultra Light" ]
+													"textjustification" : [ 1 ]
 												}
 ,
 												"parentstyle" : "velvet",
@@ -40082,6 +39733,7 @@
 , 											{
 												"name" : "SleekBlack-9",
 												"default" : 												{
+													"fontname" : [ "Avenir Next Ultra Light" ],
 													"bgfillcolor" : 													{
 														"angle" : 269.577728,
 														"autogradient" : 0,
@@ -40094,8 +39746,7 @@
 														"type" : "gradient"
 													}
 ,
-													"textjustification" : [ 1 ],
-													"fontname" : [ "Avenir Next Ultra Light" ]
+													"textjustification" : [ 1 ]
 												}
 ,
 												"parentstyle" : "velvet",
@@ -40113,21 +39764,16 @@
 											}
 , 											{
 												"name" : "SleekestBlack",
-												"matrixctrl" : 												{
-													"bgcolor" : [ 0.163647, 0.174699, 0.17409, 1.0 ],
-													"elementcolor" : [ 0.095481, 0.100396, 0.100293, 0.34902 ],
-													"color" : [ 1.0, 1.0, 1.0, 1.0 ]
-												}
-,
-												"pictslider" : 												{
-													"bgcolor" : [ 0.0, 0.0, 0.0, 0.0 ],
-													"color" : [ 0.267649, 0.035294, 0.964705, 1.0 ]
-												}
-,
 												"slider" : 												{
-													"bgcolor" : [ 0.094118, 0.101961, 0.101961, 0.0 ],
 													"elementcolor" : [ 0.376471, 0.384314, 0.4, 0.0 ],
+													"bgcolor" : [ 0.094118, 0.101961, 0.101961, 0.0 ],
 													"color" : [ 0.267649, 0.035294, 0.964705, 1.0 ]
+												}
+,
+												"matrixctrl" : 												{
+													"elementcolor" : [ 0.095481, 0.100396, 0.100293, 0.34902 ],
+													"bgcolor" : [ 0.163647, 0.174699, 0.17409, 1.0 ],
+													"color" : [ 1.0, 1.0, 1.0, 1.0 ]
 												}
 ,
 												"panel" : 												{
@@ -40142,6 +39788,11 @@
 
 												}
 ,
+												"pictslider" : 												{
+													"bgcolor" : [ 0.0, 0.0, 0.0, 0.0 ],
+													"color" : [ 0.267649, 0.035294, 0.964705, 1.0 ]
+												}
+,
 												"parentstyle" : "",
 												"multi" : 1
 											}
@@ -40154,8 +39805,8 @@
 												}
 ,
 												"toggle" : 												{
-													"bgcolor" : [ 0.636487, 0.648652, 0.683149, 1.0 ],
 													"elementcolor" : [ 0.786675, 0.801885, 0.845022, 1.0 ],
+													"bgcolor" : [ 0.636487, 0.648652, 0.683149, 1.0 ],
 													"color" : [ 0.0, 0.0, 0.0, 1.0 ]
 												}
 ,
@@ -40176,8 +39827,8 @@
 												}
 ,
 												"toggle" : 												{
-													"bgcolor" : [ 0.636487, 0.648652, 0.683149, 1.0 ],
 													"elementcolor" : [ 0.786675, 0.801885, 0.845022, 1.0 ],
+													"bgcolor" : [ 0.636487, 0.648652, 0.683149, 1.0 ],
 													"color" : [ 0.0, 0.0, 0.0, 1.0 ]
 												}
 ,
@@ -40197,48 +39848,15 @@
 													"textcolor_inverse" : [ 0.0, 0.0, 0.0, 1.0 ]
 												}
 ,
-												"toggle" : 												{
-													"bgcolor" : [ 0.682032, 0.698052, 0.748716, 1.0 ],
-													"elementcolor" : [ 0.65098, 0.666667, 0.662745, 1.0 ],
-													"color" : [ 0.0, 0.0, 0.0, 1.0 ]
-												}
-,
 												"ezdac~" : 												{
-													"bgcolor" : [ 0.65098, 0.666667, 0.662745, 1.0 ],
 													"elementcolor" : [ 0.862745, 0.870588, 0.878431, 1.0 ],
-													"color" : [ 0.0, 0.0, 0.0, 1.0 ]
-												}
-,
-												"attrui" : 												{
-													"bgcolor" : [ 0.786675, 0.801885, 0.845022, 1.0 ],
-													"textcolor_inverse" : [ 0.0, 0.0, 0.0, 1.0 ]
-												}
-,
-												"function" : 												{
 													"bgcolor" : [ 0.65098, 0.666667, 0.662745, 1.0 ],
 													"color" : [ 0.0, 0.0, 0.0, 1.0 ]
 												}
 ,
-												"slider" : 												{
-													"bgcolor" : [ 1.0, 1.0, 1.0, 1.0 ],
+												"toggle" : 												{
 													"elementcolor" : [ 0.65098, 0.666667, 0.662745, 1.0 ],
-													"color" : [ 0.461105, 0.492646, 0.591878, 1.0 ]
-												}
-,
-												"ezadc~" : 												{
-													"bgcolor" : [ 0.65098, 0.666667, 0.662745, 1.0 ],
-													"elementcolor" : [ 0.862745, 0.870588, 0.878431, 1.0 ],
-													"color" : [ 0.0, 0.0, 0.0, 1.0 ]
-												}
-,
-												"button" : 												{
 													"bgcolor" : [ 0.682032, 0.698052, 0.748716, 1.0 ],
-													"elementcolor" : [ 0.786675, 0.801885, 0.845022, 1.0 ],
-													"color" : [ 1.0, 0.95051, 0.0, 1.0 ]
-												}
-,
-												"multislider" : 												{
-													"bgcolor" : [ 1.0, 1.0, 1.0, 1.0 ],
 													"color" : [ 0.0, 0.0, 0.0, 1.0 ]
 												}
 ,
@@ -40247,23 +39865,27 @@
 													"color" : [ 1.0, 0.861448, 0.16921, 1.0 ]
 												}
 ,
+												"slider" : 												{
+													"elementcolor" : [ 0.65098, 0.666667, 0.662745, 1.0 ],
+													"bgcolor" : [ 1.0, 1.0, 1.0, 1.0 ],
+													"color" : [ 0.461105, 0.492646, 0.591878, 1.0 ]
+												}
+,
+												"ezadc~" : 												{
+													"elementcolor" : [ 0.862745, 0.870588, 0.878431, 1.0 ],
+													"bgcolor" : [ 0.65098, 0.666667, 0.662745, 1.0 ],
+													"color" : [ 0.0, 0.0, 0.0, 1.0 ]
+												}
+,
 												"kslider" : 												{
 													"elementcolor" : [ 0.65098, 0.666667, 0.662745, 1.0 ],
 													"color" : [ 1.0, 1.0, 1.0, 1.0 ]
 												}
 ,
-												"message" : 												{
-													"bgfillcolor" : 													{
-														"angle" : 270.0,
-														"autogradient" : 0,
-														"color" : [ 0.290196, 0.309804, 0.301961, 1.0 ],
-														"color1" : [ 0.786675, 0.801885, 0.845022, 1.0 ],
-														"color2" : [ 0.65098, 0.666667, 0.662745, 1.0 ],
-														"proportion" : 0.39,
-														"type" : "gradient"
-													}
-,
-													"textcolor_inverse" : [ 0.0, 0.0, 0.0, 1.0 ]
+												"button" : 												{
+													"elementcolor" : [ 0.786675, 0.801885, 0.845022, 1.0 ],
+													"bgcolor" : [ 0.682032, 0.698052, 0.748716, 1.0 ],
+													"color" : [ 1.0, 0.95051, 0.0, 1.0 ]
 												}
 ,
 												"umenu" : 												{
@@ -40279,19 +39901,48 @@
 
 												}
 ,
+												"message" : 												{
+													"bgfillcolor" : 													{
+														"angle" : 270.0,
+														"autogradient" : 0,
+														"color" : [ 0.290196, 0.309804, 0.301961, 1.0 ],
+														"color1" : [ 0.786675, 0.801885, 0.845022, 1.0 ],
+														"color2" : [ 0.65098, 0.666667, 0.662745, 1.0 ],
+														"proportion" : 0.39,
+														"type" : "gradient"
+													}
+,
+													"textcolor_inverse" : [ 0.0, 0.0, 0.0, 1.0 ]
+												}
+,
+												"attrui" : 												{
+													"bgcolor" : [ 0.786675, 0.801885, 0.845022, 1.0 ],
+													"textcolor_inverse" : [ 0.0, 0.0, 0.0, 1.0 ]
+												}
+,
+												"function" : 												{
+													"bgcolor" : [ 0.65098, 0.666667, 0.662745, 1.0 ],
+													"color" : [ 0.0, 0.0, 0.0, 1.0 ]
+												}
+,
+												"multislider" : 												{
+													"bgcolor" : [ 1.0, 1.0, 1.0, 1.0 ],
+													"color" : [ 0.0, 0.0, 0.0, 1.0 ]
+												}
+,
 												"parentstyle" : "",
 												"multi" : 1
 											}
 , 											{
 												"name" : "multi001",
 												"umenu" : 												{
-													"textjustification" : [ 1 ],
-													"fontsize" : [ 10.0 ]
+													"fontsize" : [ 10.0 ],
+													"textjustification" : [ 1 ]
 												}
 ,
 												"message" : 												{
-													"textjustification" : [ 1 ],
-													"fontsize" : [ 10.0 ]
+													"fontsize" : [ 10.0 ],
+													"textjustification" : [ 1 ]
 												}
 ,
 												"parentstyle" : "SleekestBlack",
@@ -40670,7 +40321,7 @@
 									"maxclass" : "newobj",
 									"numinlets" : 5,
 									"numoutlets" : 5,
-									"outlettype" : [ "bang", "bang", "bang", "", "" ],
+									"outlettype" : [ "", "", "", "", "" ],
 									"patcher" : 									{
 										"fileversion" : 1,
 										"appversion" : 										{
@@ -40753,7 +40404,7 @@
 													"maxclass" : "newobj",
 													"numinlets" : 1,
 													"numoutlets" : 1,
-													"outlettype" : [ "bang" ],
+													"outlettype" : [ "" ],
 													"patcher" : 													{
 														"fileversion" : 1,
 														"appversion" : 														{
@@ -40936,7 +40587,7 @@
 													"maxclass" : "newobj",
 													"numinlets" : 1,
 													"numoutlets" : 1,
-													"outlettype" : [ "bang" ],
+													"outlettype" : [ "" ],
 													"patcher" : 													{
 														"fileversion" : 1,
 														"appversion" : 														{
@@ -41099,7 +40750,7 @@
 													"maxclass" : "newobj",
 													"numinlets" : 1,
 													"numoutlets" : 1,
-													"outlettype" : [ "bang" ],
+													"outlettype" : [ "" ],
 													"patcher" : 													{
 														"fileversion" : 1,
 														"appversion" : 														{
@@ -41262,7 +40913,7 @@
 													"maxclass" : "newobj",
 													"numinlets" : 1,
 													"numoutlets" : 1,
-													"outlettype" : [ "bang" ],
+													"outlettype" : [ "" ],
 													"patcher" : 													{
 														"fileversion" : 1,
 														"appversion" : 														{
@@ -53358,7 +53009,7 @@
 									"maxclass" : "newobj",
 									"numinlets" : 1,
 									"numoutlets" : 2,
-									"outlettype" : [ "", "" ],
+									"outlettype" : [ "", "clear" ],
 									"patcher" : 									{
 										"fileversion" : 1,
 										"appversion" : 										{
@@ -53576,7 +53227,7 @@
 													"maxclass" : "newobj",
 													"numinlets" : 1,
 													"numoutlets" : 1,
-													"outlettype" : [ "" ],
+													"outlettype" : [ "clear" ],
 													"patcher" : 													{
 														"fileversion" : 1,
 														"appversion" : 														{
@@ -53881,7 +53532,7 @@
 													"bgfillcolor_proportion" : 0.39,
 													"bgfillcolor_type" : "color",
 													"id" : "obj-181",
-													"items" : [ "Chromatic", ",", "Major", ",", "minor", ",", "HarmonicMinor", ",", "MajorPentatonic", ",", "WholeTone", ",", "MajorBlues", ",", "minorblues", ",", "RockNRoll" ],
+													"items" : [ "Chromatic", ",", "Major", ",", "minor", ",", "HarmonicMinor", ",", "MajorPentatonic", ",", "WholeTone", ",", "MajorBlues", ",", "minorblues", ",", "RockNRoll", ",", "Chromatic", ",", "Major", ",", "minor", ",", "HarmonicMinor", ",", "MajorPentatonic", ",", "WholeTone", ",", "MajorBlues", ",", "minorblues", ",", "RockNRoll" ],
 													"maxclass" : "umenu",
 													"numinlets" : 1,
 													"numoutlets" : 3,
@@ -54241,10 +53892,10 @@
 												"name" : "GetsTheJobDone",
 												"default" : 												{
 													"accentcolor" : [ 0.095481, 0.100396, 0.100293, 1.0 ],
-													"bgcolor" : [ 1.0, 1.0, 1.0, 0.65 ],
-													"textjustification" : [ 2 ],
 													"fontsize" : [ 11.0 ],
 													"fontname" : [ "Andale Mono" ],
+													"bgcolor" : [ 1.0, 1.0, 1.0, 0.65 ],
+													"textjustification" : [ 2 ],
 													"textcolor_inverse" : [ 0.0, 0.0, 0.0, 1.0 ]
 												}
 ,
@@ -54254,6 +53905,7 @@
 , 											{
 												"name" : "SleekBlack",
 												"default" : 												{
+													"fontname" : [ "Avenir Next Ultra Light" ],
 													"bgfillcolor" : 													{
 														"angle" : 269.577728,
 														"autogradient" : 0,
@@ -54266,8 +53918,7 @@
 														"type" : "gradient"
 													}
 ,
-													"textjustification" : [ 1 ],
-													"fontname" : [ "Avenir Next Ultra Light" ]
+													"textjustification" : [ 1 ]
 												}
 ,
 												"parentstyle" : "velvet",
@@ -54282,8 +53933,8 @@
 												}
 ,
 												"button" : 												{
-													"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 													"elementcolor" : [ 0.32549, 0.345098, 0.372549, 1.0 ],
+													"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 													"color" : [ 1.0, 1.0, 1.0, 1.0 ]
 												}
 ,
@@ -54293,6 +53944,7 @@
 , 											{
 												"name" : "SleekBlack-1-1",
 												"default" : 												{
+													"fontname" : [ "Avenir Next Ultra Light" ],
 													"bgfillcolor" : 													{
 														"angle" : 269.577728,
 														"autogradient" : 0,
@@ -54305,8 +53957,7 @@
 														"type" : "gradient"
 													}
 ,
-													"textjustification" : [ 1 ],
-													"fontname" : [ "Avenir Next Ultra Light" ]
+													"textjustification" : [ 1 ]
 												}
 ,
 												"parentstyle" : "velvet",
@@ -54321,8 +53972,8 @@
 												}
 ,
 												"button" : 												{
-													"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 													"elementcolor" : [ 0.32549, 0.345098, 0.372549, 1.0 ],
+													"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 													"color" : [ 1.0, 1.0, 1.0, 1.0 ]
 												}
 ,
@@ -54332,6 +53983,7 @@
 , 											{
 												"name" : "SleekBlack-1-1-1-1",
 												"default" : 												{
+													"fontname" : [ "Avenir Next Ultra Light" ],
 													"bgfillcolor" : 													{
 														"angle" : 269.577728,
 														"autogradient" : 0,
@@ -54344,8 +53996,7 @@
 														"type" : "gradient"
 													}
 ,
-													"textjustification" : [ 1 ],
-													"fontname" : [ "Avenir Next Ultra Light" ]
+													"textjustification" : [ 1 ]
 												}
 ,
 												"parentstyle" : "velvet",
@@ -54360,8 +54011,8 @@
 												}
 ,
 												"button" : 												{
-													"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 													"elementcolor" : [ 0.32549, 0.345098, 0.372549, 1.0 ],
+													"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 													"color" : [ 1.0, 1.0, 1.0, 1.0 ]
 												}
 ,
@@ -54371,6 +54022,7 @@
 , 											{
 												"name" : "SleekBlack-1-1-1-1-1-1",
 												"default" : 												{
+													"fontname" : [ "Avenir Next Ultra Light" ],
 													"bgfillcolor" : 													{
 														"angle" : 269.577728,
 														"autogradient" : 0,
@@ -54383,8 +54035,7 @@
 														"type" : "gradient"
 													}
 ,
-													"textjustification" : [ 1 ],
-													"fontname" : [ "Avenir Next Ultra Light" ]
+													"textjustification" : [ 1 ]
 												}
 ,
 												"parentstyle" : "velvet",
@@ -54393,6 +54044,7 @@
 , 											{
 												"name" : "SleekBlack-1-1-1-2",
 												"default" : 												{
+													"fontname" : [ "Avenir Next Ultra Light" ],
 													"bgfillcolor" : 													{
 														"angle" : 269.577728,
 														"autogradient" : 0,
@@ -54405,8 +54057,7 @@
 														"type" : "gradient"
 													}
 ,
-													"textjustification" : [ 1 ],
-													"fontname" : [ "Avenir Next Ultra Light" ]
+													"textjustification" : [ 1 ]
 												}
 ,
 												"parentstyle" : "velvet",
@@ -54415,6 +54066,7 @@
 , 											{
 												"name" : "SleekBlack-1-1-1-3",
 												"default" : 												{
+													"fontname" : [ "Avenir Next Ultra Light" ],
 													"bgfillcolor" : 													{
 														"angle" : 269.577728,
 														"autogradient" : 0,
@@ -54427,8 +54079,7 @@
 														"type" : "gradient"
 													}
 ,
-													"textjustification" : [ 1 ],
-													"fontname" : [ "Avenir Next Ultra Light" ]
+													"textjustification" : [ 1 ]
 												}
 ,
 												"parentstyle" : "velvet",
@@ -54437,6 +54088,7 @@
 , 											{
 												"name" : "SleekBlack-1-1-1-4",
 												"default" : 												{
+													"fontname" : [ "Avenir Next Ultra Light" ],
 													"bgfillcolor" : 													{
 														"angle" : 269.577728,
 														"autogradient" : 0,
@@ -54449,8 +54101,7 @@
 														"type" : "gradient"
 													}
 ,
-													"textjustification" : [ 1 ],
-													"fontname" : [ "Avenir Next Ultra Light" ]
+													"textjustification" : [ 1 ]
 												}
 ,
 												"parentstyle" : "velvet",
@@ -54459,6 +54110,7 @@
 , 											{
 												"name" : "SleekBlack-1-1-2",
 												"default" : 												{
+													"fontname" : [ "Avenir Next Ultra Light" ],
 													"bgfillcolor" : 													{
 														"angle" : 269.577728,
 														"autogradient" : 0,
@@ -54471,8 +54123,7 @@
 														"type" : "gradient"
 													}
 ,
-													"textjustification" : [ 1 ],
-													"fontname" : [ "Avenir Next Ultra Light" ]
+													"textjustification" : [ 1 ]
 												}
 ,
 												"parentstyle" : "velvet",
@@ -54487,8 +54138,8 @@
 												}
 ,
 												"button" : 												{
-													"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 													"elementcolor" : [ 0.32549, 0.345098, 0.372549, 1.0 ],
+													"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 													"color" : [ 1.0, 1.0, 1.0, 1.0 ]
 												}
 ,
@@ -54504,8 +54155,8 @@
 												}
 ,
 												"button" : 												{
-													"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 													"elementcolor" : [ 0.32549, 0.345098, 0.372549, 1.0 ],
+													"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 													"color" : [ 1.0, 1.0, 1.0, 1.0 ]
 												}
 ,
@@ -54521,8 +54172,8 @@
 												}
 ,
 												"button" : 												{
-													"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 													"elementcolor" : [ 0.32549, 0.345098, 0.372549, 1.0 ],
+													"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 													"color" : [ 1.0, 1.0, 1.0, 1.0 ]
 												}
 ,
@@ -54532,6 +54183,7 @@
 , 											{
 												"name" : "SleekBlack-1-2",
 												"default" : 												{
+													"fontname" : [ "Avenir Next Ultra Light" ],
 													"bgfillcolor" : 													{
 														"angle" : 269.577728,
 														"autogradient" : 0,
@@ -54544,8 +54196,7 @@
 														"type" : "gradient"
 													}
 ,
-													"textjustification" : [ 1 ],
-													"fontname" : [ "Avenir Next Ultra Light" ]
+													"textjustification" : [ 1 ]
 												}
 ,
 												"parentstyle" : "velvet",
@@ -54554,6 +54205,7 @@
 , 											{
 												"name" : "SleekBlack-1-3",
 												"default" : 												{
+													"fontname" : [ "Avenir Next Ultra Light" ],
 													"bgfillcolor" : 													{
 														"angle" : 269.577728,
 														"autogradient" : 0,
@@ -54566,8 +54218,7 @@
 														"type" : "gradient"
 													}
 ,
-													"textjustification" : [ 1 ],
-													"fontname" : [ "Avenir Next Ultra Light" ]
+													"textjustification" : [ 1 ]
 												}
 ,
 												"parentstyle" : "velvet",
@@ -54582,8 +54233,8 @@
 												}
 ,
 												"button" : 												{
-													"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 													"elementcolor" : [ 0.32549, 0.345098, 0.372549, 1.0 ],
+													"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 													"color" : [ 1.0, 1.0, 1.0, 1.0 ]
 												}
 ,
@@ -54593,6 +54244,7 @@
 , 											{
 												"name" : "SleekBlack-1-4-1",
 												"default" : 												{
+													"fontname" : [ "Avenir Next Ultra Light" ],
 													"bgfillcolor" : 													{
 														"angle" : 269.577728,
 														"autogradient" : 0,
@@ -54605,8 +54257,7 @@
 														"type" : "gradient"
 													}
 ,
-													"textjustification" : [ 1 ],
-													"fontname" : [ "Avenir Next Ultra Light" ]
+													"textjustification" : [ 1 ]
 												}
 ,
 												"parentstyle" : "velvet",
@@ -54615,6 +54266,7 @@
 , 											{
 												"name" : "SleekBlack-1-5",
 												"default" : 												{
+													"fontname" : [ "Avenir Next Ultra Light" ],
 													"bgfillcolor" : 													{
 														"angle" : 269.577728,
 														"autogradient" : 0,
@@ -54627,8 +54279,7 @@
 														"type" : "gradient"
 													}
 ,
-													"textjustification" : [ 1 ],
-													"fontname" : [ "Avenir Next Ultra Light" ]
+													"textjustification" : [ 1 ]
 												}
 ,
 												"parentstyle" : "velvet",
@@ -54637,6 +54288,7 @@
 , 											{
 												"name" : "SleekBlack-1-6",
 												"default" : 												{
+													"fontname" : [ "Avenir Next Ultra Light" ],
 													"bgfillcolor" : 													{
 														"angle" : 269.577728,
 														"autogradient" : 0,
@@ -54649,8 +54301,7 @@
 														"type" : "gradient"
 													}
 ,
-													"textjustification" : [ 1 ],
-													"fontname" : [ "Avenir Next Ultra Light" ]
+													"textjustification" : [ 1 ]
 												}
 ,
 												"parentstyle" : "velvet",
@@ -54659,6 +54310,7 @@
 , 											{
 												"name" : "SleekBlack-10",
 												"default" : 												{
+													"fontname" : [ "Avenir Next Ultra Light" ],
 													"bgfillcolor" : 													{
 														"angle" : 269.577728,
 														"autogradient" : 0,
@@ -54671,8 +54323,7 @@
 														"type" : "gradient"
 													}
 ,
-													"textjustification" : [ 1 ],
-													"fontname" : [ "Avenir Next Ultra Light" ]
+													"textjustification" : [ 1 ]
 												}
 ,
 												"parentstyle" : "velvet",
@@ -54681,6 +54332,7 @@
 , 											{
 												"name" : "SleekBlack-11",
 												"default" : 												{
+													"fontname" : [ "Avenir Next Ultra Light" ],
 													"bgfillcolor" : 													{
 														"angle" : 269.577728,
 														"autogradient" : 0,
@@ -54693,8 +54345,7 @@
 														"type" : "gradient"
 													}
 ,
-													"textjustification" : [ 1 ],
-													"fontname" : [ "Avenir Next Ultra Light" ]
+													"textjustification" : [ 1 ]
 												}
 ,
 												"parentstyle" : "velvet",
@@ -54703,8 +54354,8 @@
 , 											{
 												"name" : "SleekBlack-2",
 												"default" : 												{
-													"bgcolor" : [ 0.156863, 0.156863, 0.196078, 1.0 ],
 													"elementcolor" : [ 0.304814, 0.254902, 0.278431, 1.0 ],
+													"fontname" : [ "Avenir Next Ultra Light" ],
 													"bgfillcolor" : 													{
 														"angle" : 269.577728,
 														"color" : [ 0.290196, 0.309804, 0.301961, 1.0 ],
@@ -54714,9 +54365,9 @@
 														"type" : "gradient"
 													}
 ,
-													"textjustification" : [ 1 ],
+													"bgcolor" : [ 0.156863, 0.156863, 0.196078, 1.0 ],
 													"color" : [ 0.317647, 0.787235, 0.976471, 1.0 ],
-													"fontname" : [ "Avenir Next Ultra Light" ]
+													"textjustification" : [ 1 ]
 												}
 ,
 												"parentstyle" : "velvet",
@@ -54731,8 +54382,8 @@
 												}
 ,
 												"button" : 												{
-													"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 													"elementcolor" : [ 0.32549, 0.345098, 0.372549, 1.0 ],
+													"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 													"color" : [ 1.0, 1.0, 1.0, 1.0 ]
 												}
 ,
@@ -54748,8 +54399,8 @@
 												}
 ,
 												"button" : 												{
-													"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 													"elementcolor" : [ 0.32549, 0.345098, 0.372549, 1.0 ],
+													"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 													"color" : [ 1.0, 1.0, 1.0, 1.0 ]
 												}
 ,
@@ -54759,6 +54410,7 @@
 , 											{
 												"name" : "SleekBlack-4",
 												"default" : 												{
+													"fontname" : [ "Avenir Next Ultra Light" ],
 													"bgfillcolor" : 													{
 														"angle" : 269.577728,
 														"autogradient" : 0,
@@ -54771,8 +54423,7 @@
 														"type" : "gradient"
 													}
 ,
-													"textjustification" : [ 1 ],
-													"fontname" : [ "Avenir Next Ultra Light" ]
+													"textjustification" : [ 1 ]
 												}
 ,
 												"parentstyle" : "velvet",
@@ -54787,8 +54438,8 @@
 												}
 ,
 												"button" : 												{
-													"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 													"elementcolor" : [ 0.32549, 0.345098, 0.372549, 1.0 ],
+													"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 													"color" : [ 1.0, 1.0, 1.0, 1.0 ]
 												}
 ,
@@ -54798,6 +54449,7 @@
 , 											{
 												"name" : "SleekBlack-4-1-1",
 												"default" : 												{
+													"fontname" : [ "Avenir Next Ultra Light" ],
 													"bgfillcolor" : 													{
 														"angle" : 269.577728,
 														"autogradient" : 0,
@@ -54810,8 +54462,7 @@
 														"type" : "gradient"
 													}
 ,
-													"textjustification" : [ 1 ],
-													"fontname" : [ "Avenir Next Ultra Light" ]
+													"textjustification" : [ 1 ]
 												}
 ,
 												"parentstyle" : "velvet",
@@ -54820,6 +54471,7 @@
 , 											{
 												"name" : "SleekBlack-5",
 												"default" : 												{
+													"fontname" : [ "Avenir Next Ultra Light" ],
 													"bgfillcolor" : 													{
 														"angle" : 269.577728,
 														"autogradient" : 0,
@@ -54832,8 +54484,7 @@
 														"type" : "gradient"
 													}
 ,
-													"textjustification" : [ 1 ],
-													"fontname" : [ "Avenir Next Ultra Light" ]
+													"textjustification" : [ 1 ]
 												}
 ,
 												"parentstyle" : "velvet",
@@ -54848,8 +54499,8 @@
 												}
 ,
 												"button" : 												{
-													"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 													"elementcolor" : [ 0.32549, 0.345098, 0.372549, 1.0 ],
+													"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 													"color" : [ 1.0, 1.0, 1.0, 1.0 ]
 												}
 ,
@@ -54865,8 +54516,8 @@
 												}
 ,
 												"button" : 												{
-													"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 													"elementcolor" : [ 0.32549, 0.345098, 0.372549, 1.0 ],
+													"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 													"color" : [ 1.0, 1.0, 1.0, 1.0 ]
 												}
 ,
@@ -54876,6 +54527,7 @@
 , 											{
 												"name" : "SleekBlack-7",
 												"default" : 												{
+													"fontname" : [ "Avenir Next Ultra Light" ],
 													"bgfillcolor" : 													{
 														"angle" : 269.577728,
 														"autogradient" : 0,
@@ -54888,8 +54540,7 @@
 														"type" : "gradient"
 													}
 ,
-													"textjustification" : [ 1 ],
-													"fontname" : [ "Avenir Next Ultra Light" ]
+													"textjustification" : [ 1 ]
 												}
 ,
 												"parentstyle" : "velvet",
@@ -54898,6 +54549,7 @@
 , 											{
 												"name" : "SleekBlack-8",
 												"default" : 												{
+													"fontname" : [ "Avenir Next Ultra Light" ],
 													"bgfillcolor" : 													{
 														"angle" : 269.577728,
 														"autogradient" : 0,
@@ -54910,8 +54562,7 @@
 														"type" : "gradient"
 													}
 ,
-													"textjustification" : [ 1 ],
-													"fontname" : [ "Avenir Next Ultra Light" ]
+													"textjustification" : [ 1 ]
 												}
 ,
 												"parentstyle" : "velvet",
@@ -54920,6 +54571,7 @@
 , 											{
 												"name" : "SleekBlack-9",
 												"default" : 												{
+													"fontname" : [ "Avenir Next Ultra Light" ],
 													"bgfillcolor" : 													{
 														"angle" : 269.577728,
 														"autogradient" : 0,
@@ -54932,8 +54584,7 @@
 														"type" : "gradient"
 													}
 ,
-													"textjustification" : [ 1 ],
-													"fontname" : [ "Avenir Next Ultra Light" ]
+													"textjustification" : [ 1 ]
 												}
 ,
 												"parentstyle" : "velvet",
@@ -54951,21 +54602,16 @@
 											}
 , 											{
 												"name" : "SleekestBlack",
-												"matrixctrl" : 												{
-													"bgcolor" : [ 0.163647, 0.174699, 0.17409, 1.0 ],
-													"elementcolor" : [ 0.095481, 0.100396, 0.100293, 0.34902 ],
-													"color" : [ 1.0, 1.0, 1.0, 1.0 ]
-												}
-,
-												"pictslider" : 												{
-													"bgcolor" : [ 0.0, 0.0, 0.0, 0.0 ],
-													"color" : [ 0.267649, 0.035294, 0.964705, 1.0 ]
-												}
-,
 												"slider" : 												{
-													"bgcolor" : [ 0.094118, 0.101961, 0.101961, 0.0 ],
 													"elementcolor" : [ 0.376471, 0.384314, 0.4, 0.0 ],
+													"bgcolor" : [ 0.094118, 0.101961, 0.101961, 0.0 ],
 													"color" : [ 0.267649, 0.035294, 0.964705, 1.0 ]
+												}
+,
+												"matrixctrl" : 												{
+													"elementcolor" : [ 0.095481, 0.100396, 0.100293, 0.34902 ],
+													"bgcolor" : [ 0.163647, 0.174699, 0.17409, 1.0 ],
+													"color" : [ 1.0, 1.0, 1.0, 1.0 ]
 												}
 ,
 												"panel" : 												{
@@ -54980,6 +54626,11 @@
 
 												}
 ,
+												"pictslider" : 												{
+													"bgcolor" : [ 0.0, 0.0, 0.0, 0.0 ],
+													"color" : [ 0.267649, 0.035294, 0.964705, 1.0 ]
+												}
+,
 												"parentstyle" : "",
 												"multi" : 1
 											}
@@ -54992,8 +54643,8 @@
 												}
 ,
 												"toggle" : 												{
-													"bgcolor" : [ 0.636487, 0.648652, 0.683149, 1.0 ],
 													"elementcolor" : [ 0.786675, 0.801885, 0.845022, 1.0 ],
+													"bgcolor" : [ 0.636487, 0.648652, 0.683149, 1.0 ],
 													"color" : [ 0.0, 0.0, 0.0, 1.0 ]
 												}
 ,
@@ -55014,8 +54665,8 @@
 												}
 ,
 												"toggle" : 												{
-													"bgcolor" : [ 0.636487, 0.648652, 0.683149, 1.0 ],
 													"elementcolor" : [ 0.786675, 0.801885, 0.845022, 1.0 ],
+													"bgcolor" : [ 0.636487, 0.648652, 0.683149, 1.0 ],
 													"color" : [ 0.0, 0.0, 0.0, 1.0 ]
 												}
 ,
@@ -55035,48 +54686,15 @@
 													"textcolor_inverse" : [ 0.0, 0.0, 0.0, 1.0 ]
 												}
 ,
-												"toggle" : 												{
-													"bgcolor" : [ 0.682032, 0.698052, 0.748716, 1.0 ],
-													"elementcolor" : [ 0.65098, 0.666667, 0.662745, 1.0 ],
-													"color" : [ 0.0, 0.0, 0.0, 1.0 ]
-												}
-,
 												"ezdac~" : 												{
-													"bgcolor" : [ 0.65098, 0.666667, 0.662745, 1.0 ],
 													"elementcolor" : [ 0.862745, 0.870588, 0.878431, 1.0 ],
-													"color" : [ 0.0, 0.0, 0.0, 1.0 ]
-												}
-,
-												"attrui" : 												{
-													"bgcolor" : [ 0.786675, 0.801885, 0.845022, 1.0 ],
-													"textcolor_inverse" : [ 0.0, 0.0, 0.0, 1.0 ]
-												}
-,
-												"function" : 												{
 													"bgcolor" : [ 0.65098, 0.666667, 0.662745, 1.0 ],
 													"color" : [ 0.0, 0.0, 0.0, 1.0 ]
 												}
 ,
-												"slider" : 												{
-													"bgcolor" : [ 1.0, 1.0, 1.0, 1.0 ],
+												"toggle" : 												{
 													"elementcolor" : [ 0.65098, 0.666667, 0.662745, 1.0 ],
-													"color" : [ 0.461105, 0.492646, 0.591878, 1.0 ]
-												}
-,
-												"ezadc~" : 												{
-													"bgcolor" : [ 0.65098, 0.666667, 0.662745, 1.0 ],
-													"elementcolor" : [ 0.862745, 0.870588, 0.878431, 1.0 ],
-													"color" : [ 0.0, 0.0, 0.0, 1.0 ]
-												}
-,
-												"button" : 												{
 													"bgcolor" : [ 0.682032, 0.698052, 0.748716, 1.0 ],
-													"elementcolor" : [ 0.786675, 0.801885, 0.845022, 1.0 ],
-													"color" : [ 1.0, 0.95051, 0.0, 1.0 ]
-												}
-,
-												"multislider" : 												{
-													"bgcolor" : [ 1.0, 1.0, 1.0, 1.0 ],
 													"color" : [ 0.0, 0.0, 0.0, 1.0 ]
 												}
 ,
@@ -55085,23 +54703,27 @@
 													"color" : [ 1.0, 0.861448, 0.16921, 1.0 ]
 												}
 ,
+												"slider" : 												{
+													"elementcolor" : [ 0.65098, 0.666667, 0.662745, 1.0 ],
+													"bgcolor" : [ 1.0, 1.0, 1.0, 1.0 ],
+													"color" : [ 0.461105, 0.492646, 0.591878, 1.0 ]
+												}
+,
+												"ezadc~" : 												{
+													"elementcolor" : [ 0.862745, 0.870588, 0.878431, 1.0 ],
+													"bgcolor" : [ 0.65098, 0.666667, 0.662745, 1.0 ],
+													"color" : [ 0.0, 0.0, 0.0, 1.0 ]
+												}
+,
 												"kslider" : 												{
 													"elementcolor" : [ 0.65098, 0.666667, 0.662745, 1.0 ],
 													"color" : [ 1.0, 1.0, 1.0, 1.0 ]
 												}
 ,
-												"message" : 												{
-													"bgfillcolor" : 													{
-														"angle" : 270.0,
-														"autogradient" : 0,
-														"color" : [ 0.290196, 0.309804, 0.301961, 1.0 ],
-														"color1" : [ 0.786675, 0.801885, 0.845022, 1.0 ],
-														"color2" : [ 0.65098, 0.666667, 0.662745, 1.0 ],
-														"proportion" : 0.39,
-														"type" : "gradient"
-													}
-,
-													"textcolor_inverse" : [ 0.0, 0.0, 0.0, 1.0 ]
+												"button" : 												{
+													"elementcolor" : [ 0.786675, 0.801885, 0.845022, 1.0 ],
+													"bgcolor" : [ 0.682032, 0.698052, 0.748716, 1.0 ],
+													"color" : [ 1.0, 0.95051, 0.0, 1.0 ]
 												}
 ,
 												"umenu" : 												{
@@ -55117,19 +54739,48 @@
 
 												}
 ,
+												"message" : 												{
+													"bgfillcolor" : 													{
+														"angle" : 270.0,
+														"autogradient" : 0,
+														"color" : [ 0.290196, 0.309804, 0.301961, 1.0 ],
+														"color1" : [ 0.786675, 0.801885, 0.845022, 1.0 ],
+														"color2" : [ 0.65098, 0.666667, 0.662745, 1.0 ],
+														"proportion" : 0.39,
+														"type" : "gradient"
+													}
+,
+													"textcolor_inverse" : [ 0.0, 0.0, 0.0, 1.0 ]
+												}
+,
+												"attrui" : 												{
+													"bgcolor" : [ 0.786675, 0.801885, 0.845022, 1.0 ],
+													"textcolor_inverse" : [ 0.0, 0.0, 0.0, 1.0 ]
+												}
+,
+												"function" : 												{
+													"bgcolor" : [ 0.65098, 0.666667, 0.662745, 1.0 ],
+													"color" : [ 0.0, 0.0, 0.0, 1.0 ]
+												}
+,
+												"multislider" : 												{
+													"bgcolor" : [ 1.0, 1.0, 1.0, 1.0 ],
+													"color" : [ 0.0, 0.0, 0.0, 1.0 ]
+												}
+,
 												"parentstyle" : "",
 												"multi" : 1
 											}
 , 											{
 												"name" : "multi001",
 												"umenu" : 												{
-													"textjustification" : [ 1 ],
-													"fontsize" : [ 10.0 ]
+													"fontsize" : [ 10.0 ],
+													"textjustification" : [ 1 ]
 												}
 ,
 												"message" : 												{
-													"textjustification" : [ 1 ],
-													"fontsize" : [ 10.0 ]
+													"fontsize" : [ 10.0 ],
+													"textjustification" : [ 1 ]
 												}
 ,
 												"parentstyle" : "SleekestBlack",
@@ -55779,11 +55430,10 @@
 						"styles" : [ 							{
 								"name" : "rnbohighcontrast",
 								"default" : 								{
-									"textcolor" : [ 1.0, 1.0, 1.0, 1.0 ],
 									"clearcolor" : [ 1.0, 1.0, 1.0, 0.0 ],
 									"accentcolor" : [ 0.666667, 0.666667, 0.666667, 1.0 ],
-									"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 									"elementcolor" : [ 0.223386, 0.254749, 0.998086, 1.0 ],
+									"fontsize" : [ 13.0 ],
 									"bgfillcolor" : 									{
 										"angle" : 270.0,
 										"autogradient" : 0.0,
@@ -55795,9 +55445,10 @@
 									}
 ,
 									"stripecolor" : [ 0.258824, 0.258824, 0.258824, 1.0 ],
+									"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
+									"textcolor" : [ 1.0, 1.0, 1.0, 1.0 ],
 									"color" : [ 1.0, 0.87451, 0.141176, 1.0 ],
 									"selectioncolor" : [ 0.301961, 0.694118, 0.94902, 1.0 ],
-									"fontsize" : [ 13.0 ],
 									"textcolor_inverse" : [ 1.0, 1.0, 1.0, 1.0 ]
 								}
 ,
@@ -55807,291 +55458,8 @@
  ]
 					}
 ,
-					"patching_rect" : [ 729.0, 8.0, 225.0, 261.0 ],
+					"patching_rect" : [ 26.666645, 54.333332, 225.0, 261.0 ],
 					"viewvisibility" : 1
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"id" : "obj-26",
-					"maxclass" : "newobj",
-					"numinlets" : 1,
-					"numoutlets" : 0,
-					"patching_rect" : [ 456.0, 272.0, 63.0, 23.0 ],
-					"style" : "",
-					"text" : "print KL2"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"id" : "obj-27",
-					"maxclass" : "message",
-					"numinlets" : 2,
-					"numoutlets" : 1,
-					"outlettype" : [ "" ],
-					"patching_rect" : [ 456.0, 208.0, 36.0, 23.0 ],
-					"style" : "",
-					"text" : "start"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"id" : "obj-28",
-					"maxclass" : "newobj",
-					"numinlets" : 1,
-					"numoutlets" : 1,
-					"outlettype" : [ "" ],
-					"patching_rect" : [ 456.0, 238.0, 50.0, 23.0 ],
-					"style" : "",
-					"text" : "keylink"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"id" : "obj-30",
-					"maxclass" : "message",
-					"numinlets" : 2,
-					"numoutlets" : 1,
-					"outlettype" : [ "" ],
-					"patching_rect" : [ 495.0, 208.0, 50.0, 23.0 ],
-					"style" : "",
-					"text" : "stop"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"id" : "obj-32",
-					"maxclass" : "message",
-					"numinlets" : 2,
-					"numoutlets" : 1,
-					"outlettype" : [ "" ],
-					"patching_rect" : [ 548.0, 208.0, 82.0, 23.0 ],
-					"style" : "",
-					"text" : "dictionary $1"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"id" : "obj-33",
-					"maxclass" : "message",
-					"numinlets" : 2,
-					"numoutlets" : 1,
-					"outlettype" : [ "" ],
-					"patching_rect" : [ 633.0, 208.0, 68.0, 23.0 ],
-					"style" : "",
-					"text" : "symbol $1"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"id" : "obj-18",
-					"maxclass" : "newobj",
-					"numinlets" : 1,
-					"numoutlets" : 0,
-					"patching_rect" : [ 452.0, 170.0, 63.0, 23.0 ],
-					"style" : "",
-					"text" : "print KL2"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"id" : "obj-14",
-					"maxclass" : "message",
-					"numinlets" : 2,
-					"numoutlets" : 1,
-					"outlettype" : [ "" ],
-					"patching_rect" : [ 452.0, 106.0, 36.0, 23.0 ],
-					"style" : "",
-					"text" : "start"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"id" : "obj-11",
-					"maxclass" : "newobj",
-					"numinlets" : 1,
-					"numoutlets" : 1,
-					"outlettype" : [ "" ],
-					"patching_rect" : [ 452.0, 136.0, 50.0, 23.0 ],
-					"style" : "",
-					"text" : "keylink"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"bgcolor" : [ 0.376471, 0.384314, 0.4, 1.0 ],
-					"bgcolor2" : [ 0.290196, 0.309804, 0.301961, 1.0 ],
-					"bgfillcolor_angle" : 270.0,
-					"bgfillcolor_autogradient" : 0.0,
-					"bgfillcolor_color" : [ 0.290196, 0.309804, 0.301961, 1.0 ],
-					"bgfillcolor_color1" : [ 0.376471, 0.384314, 0.4, 1.0 ],
-					"bgfillcolor_color2" : [ 0.290196, 0.309804, 0.301961, 1.0 ],
-					"bgfillcolor_proportion" : 0.39,
-					"bgfillcolor_type" : "gradient",
-					"gradient" : 1,
-					"id" : "obj-91",
-					"maxclass" : "message",
-					"numinlets" : 2,
-					"numoutlets" : 1,
-					"outlettype" : [ "" ],
-					"patching_rect" : [ 416.0, 513.0, 76.0, 23.0 ],
-					"style" : "",
-					"text" : "telephone?"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"id" : "obj-89",
-					"maxclass" : "number",
-					"numinlets" : 1,
-					"numoutlets" : 2,
-					"outlettype" : [ "", "bang" ],
-					"parameter_enable" : 0,
-					"patching_rect" : [ 151.0, 481.0, 50.0, 23.0 ],
-					"style" : ""
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"id" : "obj-86",
-					"maxclass" : "newobj",
-					"numinlets" : 1,
-					"numoutlets" : 0,
-					"patching_rect" : [ 18.0, 609.0, 185.0, 23.0 ],
-					"style" : "",
-					"text" : "udpsend 239.255.60.60 20800"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"id" : "obj-85",
-					"maxclass" : "newobj",
-					"numinlets" : 0,
-					"numoutlets" : 0,
-					"patching_rect" : [ 842.5, 579.0, 104.0, 23.0 ],
-					"style" : "",
-					"text" : "mxj net.udp.recv"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"id" : "obj-84",
-					"maxclass" : "newobj",
-					"numinlets" : 1,
-					"numoutlets" : 1,
-					"outlettype" : [ "" ],
-					"patching_rect" : [ 635.0, 528.0, 112.0, 23.0 ],
-					"style" : "",
-					"text" : "udpreceive 20800"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"id" : "obj-76",
-					"maxclass" : "newobj",
-					"numinlets" : 2,
-					"numoutlets" : 4,
-					"outlettype" : [ "dictionary", "", "", "" ],
-					"patching_rect" : [ 565.0, 668.0, 61.0, 23.0 ],
-					"saved_object_attributes" : 					{
-						"embed" : 0,
-						"parameter_enable" : 0
-					}
-,
-					"style" : "",
-					"text" : "dict"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"id" : "obj-75",
-					"maxclass" : "newobj",
-					"numinlets" : 1,
-					"numoutlets" : 1,
-					"outlettype" : [ "dictionary" ],
-					"patching_rect" : [ 565.0, 635.0, 94.0, 23.0 ],
-					"style" : "",
-					"text" : "dict.deserialize"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"id" : "obj-74",
-					"maxclass" : "newobj",
-					"numinlets" : 1,
-					"numoutlets" : 1,
-					"outlettype" : [ "" ],
-					"patching_rect" : [ 574.0, 605.0, 76.0, 23.0 ],
-					"style" : "",
-					"text" : "fromsymbol"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"id" : "obj-72",
-					"maxclass" : "newobj",
-					"numinlets" : 1,
-					"numoutlets" : 1,
-					"outlettype" : [ "" ],
-					"patching_rect" : [ 35.0, 532.0, 80.0, 23.0 ],
-					"style" : "",
-					"text" : "dict.serialize"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"id" : "obj-70",
-					"maxclass" : "button",
-					"numinlets" : 1,
-					"numoutlets" : 1,
-					"outlettype" : [ "bang" ],
-					"patching_rect" : [ 343.0, 544.0, 24.0, 24.0 ],
-					"style" : ""
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"fontname" : "Arial",
-					"fontsize" : 13.0,
-					"id" : "obj-10",
-					"maxclass" : "newobj",
-					"numinlets" : 1,
-					"numoutlets" : 0,
-					"patching_rect" : [ 816.0, 631.0, 189.0, 23.0 ],
-					"style" : "",
-					"text" : "print receivedmess @popup 1"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"id" : "obj-68",
-					"maxclass" : "button",
-					"numinlets" : 1,
-					"numoutlets" : 1,
-					"outlettype" : [ "bang" ],
-					"patching_rect" : [ 798.0, 656.0, 24.0, 24.0 ],
-					"style" : ""
 				}
 
 			}
@@ -56103,7 +55471,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 623.5, 350.0, 161.0, 96.0 ],
+					"patching_rect" : [ 431.666656, 265.333313, 157.666672, 96.0 ],
 					"style" : "",
 					"text" : "{ root: C, mode: Dorian, chord: { root: C, type: maj7 }, keylinkEnabled: true, chordLinkEnabled: true, abletonLinkEnabled: true, tempo: 120 }"
 				}
@@ -56111,39 +55479,1121 @@
 			}
 , 			{
 				"box" : 				{
-					"id" : "obj-63",
-					"linecount" : 3,
-					"maxclass" : "comment",
-					"numinlets" : 1,
+					"fontsize" : 5.690037,
+					"id" : "obj-71",
+					"maxclass" : "newobj",
+					"numinlets" : 4,
 					"numoutlets" : 0,
-					"patching_rect" : [ 629.0, 454.0, 150.0, 50.0 ],
+					"patcher" : 					{
+						"fileversion" : 1,
+						"appversion" : 						{
+							"major" : 7,
+							"minor" : 3,
+							"revision" : 6,
+							"architecture" : "x64",
+							"modernui" : 1
+						}
+,
+						"rect" : [ 0.0, 0.0, 640.0, 480.0 ],
+						"bglocked" : 0,
+						"openinpresentation" : 0,
+						"default_fontsize" : 12.0,
+						"default_fontface" : 0,
+						"default_fontname" : "Arial",
+						"gridonopen" : 1,
+						"gridsize" : [ 15.0, 15.0 ],
+						"gridsnaponopen" : 1,
+						"objectsnaponopen" : 1,
+						"statusbarvisible" : 2,
+						"toolbarvisible" : 1,
+						"lefttoolbarpinned" : 0,
+						"toptoolbarpinned" : 0,
+						"righttoolbarpinned" : 0,
+						"bottomtoolbarpinned" : 0,
+						"toolbars_unpinned_last_save" : 0,
+						"tallnewobj" : 0,
+						"boxanimatetime" : 200,
+						"enablehscroll" : 1,
+						"enablevscroll" : 1,
+						"devicewidth" : 0.0,
+						"description" : "",
+						"digest" : "",
+						"tags" : "",
+						"style" : "",
+						"subpatcher_template" : "",
+						"boxes" : [ 							{
+								"box" : 								{
+									"id" : "obj-1",
+									"maxclass" : "newobj",
+									"numinlets" : 0,
+									"numoutlets" : 0,
+									"patching_rect" : [ 334.0, 297.0, 56.0, 23.0 ],
+									"style" : "",
+									"text" : "network"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-37",
+									"maxclass" : "message",
+									"numinlets" : 2,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 274.0, 175.0, 36.0, 23.0 ],
+									"style" : "",
+									"text" : "start"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-40",
+									"maxclass" : "message",
+									"numinlets" : 2,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 313.0, 175.0, 50.0, 23.0 ],
+									"style" : "",
+									"text" : "stop"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-41",
+									"maxclass" : "newobj",
+									"numinlets" : 1,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 275.0, 219.0, 88.0, 23.0 ],
+									"style" : "",
+									"text" : "keylink offline"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-35",
+									"maxclass" : "message",
+									"numinlets" : 2,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 374.0, 181.0, 36.0, 23.0 ],
+									"style" : "",
+									"text" : "start"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-36",
+									"maxclass" : "message",
+									"numinlets" : 2,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 413.0, 181.0, 50.0, 23.0 ],
+									"style" : "",
+									"text" : "stop"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-34",
+									"maxclass" : "newobj",
+									"numinlets" : 1,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 375.0, 225.0, 88.0, 23.0 ],
+									"style" : "",
+									"text" : "keylink offline"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-26",
+									"maxclass" : "newobj",
+									"numinlets" : 1,
+									"numoutlets" : 0,
+									"patching_rect" : [ 488.0, 266.0, 63.0, 23.0 ],
+									"style" : "",
+									"text" : "print KL2"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-27",
+									"maxclass" : "message",
+									"numinlets" : 2,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 488.0, 202.0, 36.0, 23.0 ],
+									"style" : "",
+									"text" : "start"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-28",
+									"maxclass" : "newobj",
+									"numinlets" : 1,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 488.0, 232.0, 50.0, 23.0 ],
+									"style" : "",
+									"text" : "keylink"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-30",
+									"maxclass" : "message",
+									"numinlets" : 2,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 527.0, 202.0, 50.0, 23.0 ],
+									"style" : "",
+									"text" : "stop"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-32",
+									"maxclass" : "message",
+									"numinlets" : 2,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 580.0, 202.0, 82.0, 23.0 ],
+									"style" : "",
+									"text" : "dictionary $1"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-33",
+									"maxclass" : "message",
+									"numinlets" : 2,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 665.0, 202.0, 68.0, 23.0 ],
+									"style" : "",
+									"text" : "symbol $1"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-18",
+									"maxclass" : "newobj",
+									"numinlets" : 1,
+									"numoutlets" : 0,
+									"patching_rect" : [ 484.0, 164.0, 63.0, 23.0 ],
+									"style" : "",
+									"text" : "print KL2"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-14",
+									"maxclass" : "message",
+									"numinlets" : 2,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 484.0, 100.0, 36.0, 23.0 ],
+									"style" : "",
+									"text" : "start"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-11",
+									"maxclass" : "newobj",
+									"numinlets" : 1,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 484.0, 130.0, 50.0, 23.0 ],
+									"style" : "",
+									"text" : "keylink"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-89",
+									"maxclass" : "number",
+									"numinlets" : 1,
+									"numoutlets" : 2,
+									"outlettype" : [ "", "bang" ],
+									"parameter_enable" : 0,
+									"patching_rect" : [ 183.0, 475.0, 50.0, 23.0 ],
+									"style" : ""
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-85",
+									"maxclass" : "newobj",
+									"numinlets" : 0,
+									"numoutlets" : 0,
+									"patching_rect" : [ 874.5, 573.0, 104.0, 23.0 ],
+									"style" : "",
+									"text" : "mxj net.udp.recv"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-84",
+									"maxclass" : "newobj",
+									"numinlets" : 1,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 667.0, 522.0, 112.0, 23.0 ],
+									"style" : "",
+									"text" : "udpreceive 20800"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-76",
+									"maxclass" : "newobj",
+									"numinlets" : 2,
+									"numoutlets" : 4,
+									"outlettype" : [ "dictionary", "", "", "" ],
+									"patching_rect" : [ 455.0, 569.0, 61.0, 23.0 ],
+									"saved_object_attributes" : 									{
+										"embed" : 0,
+										"parameter_enable" : 0
+									}
+,
+									"style" : "",
+									"text" : "dict"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-75",
+									"maxclass" : "newobj",
+									"numinlets" : 1,
+									"numoutlets" : 1,
+									"outlettype" : [ "dictionary" ],
+									"patching_rect" : [ 455.0, 536.0, 94.0, 23.0 ],
+									"style" : "",
+									"text" : "dict.deserialize"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-74",
+									"maxclass" : "newobj",
+									"numinlets" : 1,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 455.0, 506.0, 76.0, 23.0 ],
+									"style" : "",
+									"text" : "fromsymbol"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-72",
+									"maxclass" : "newobj",
+									"numinlets" : 1,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 67.0, 526.0, 80.0, 23.0 ],
+									"style" : "",
+									"text" : "dict.serialize"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"fontname" : "Arial",
+									"fontsize" : 13.0,
+									"id" : "obj-10",
+									"maxclass" : "newobj",
+									"numinlets" : 1,
+									"numoutlets" : 0,
+									"patching_rect" : [ 848.0, 625.0, 189.0, 23.0 ],
+									"style" : "",
+									"text" : "print receivedmess @popup 1"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-68",
+									"maxclass" : "button",
+									"numinlets" : 1,
+									"numoutlets" : 1,
+									"outlettype" : [ "bang" ],
+									"patching_rect" : [ 830.0, 650.0, 24.0, 24.0 ],
+									"style" : ""
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-63",
+									"linecount" : 3,
+									"maxclass" : "comment",
+									"numinlets" : 1,
+									"numoutlets" : 0,
+									"patching_rect" : [ 661.0, 448.0, 150.0, 50.0 ],
+									"style" : "",
+									"text" : "Use [udpsend 239.255.60.60 20800] and [udpreceive 20800].\n"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-57",
+									"maxclass" : "message",
+									"numinlets" : 2,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 755.0, 645.0, 50.0, 23.0 ],
+									"style" : ""
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-55",
+									"maxclass" : "newobj",
+									"numinlets" : 0,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 546.5, 461.5, 176.0, 23.0 ],
+									"style" : "",
+									"text" : "mxj net.udp.recv @port 7474"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-45",
+									"maxclass" : "newobj",
+									"numinlets" : 1,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 63.0, 176.0, 113.0, 23.0 ],
+									"style" : "",
+									"text" : "prepend set chord"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-46",
+									"maxclass" : "newobj",
+									"numinlets" : 1,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 80.0, 151.0, 136.0, 23.0 ],
+									"style" : "",
+									"text" : "prepend set chordroot"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-44",
+									"maxclass" : "newobj",
+									"numinlets" : 1,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 107.0, 126.0, 113.0, 23.0 ],
+									"style" : "",
+									"text" : "prepend set mode"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-43",
+									"maxclass" : "newobj",
+									"numinlets" : 1,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 124.0, 101.0, 103.0, 23.0 ],
+									"style" : "",
+									"text" : "prepend set root"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-24",
+									"maxclass" : "newobj",
+									"numinlets" : 1,
+									"numoutlets" : 0,
+									"patching_rect" : [ 50.0, 573.0, 300.0, 23.0 ],
+									"style" : "",
+									"text" : "mxj net.udp.send @address 224.0.0.2 @port 7474"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-15",
+									"maxclass" : "newobj",
+									"numinlets" : 2,
+									"numoutlets" : 4,
+									"outlettype" : [ "dictionary", "", "", "" ],
+									"patching_rect" : [ 67.0, 487.0, 86.0, 23.0 ],
+									"saved_object_attributes" : 									{
+										"embed" : 0,
+										"parameter_enable" : 0
+									}
+,
+									"style" : "rnbohighcontrast",
+									"text" : "dict KeyLink"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "msg1",
+									"maxclass" : "message",
+									"numinlets" : 2,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 50.0, 381.0, 577.0, 38.0 ],
+									"style" : "rnbohighcontrast",
+									"text" : "send {root:C, mode:Dorian, chord:Cmin7, confidence:0.98, keylinkEnabled:true, source:max-demo}"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "comment1",
+									"maxclass" : "comment",
+									"numinlets" : 1,
+									"numoutlets" : 0,
+									"patching_rect" : [ 50.0, 351.0, 444.0, 21.0 ],
+									"style" : "rnbohighcontrast",
+									"text" : "KeyLink Max Example: Send/Receive JSON via UDP multicast (port 20800)"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-51",
+									"maxclass" : "button",
+									"numinlets" : 1,
+									"numoutlets" : 1,
+									"outlettype" : [ "bang" ],
+									"patching_rect" : [ 179.0, 199.0, 24.0, 24.0 ],
+									"style" : ""
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-19",
+									"maxclass" : "message",
+									"numinlets" : 2,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 523.0, 100.0, 50.0, 23.0 ],
+									"style" : "",
+									"text" : "stop"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-20",
+									"maxclass" : "message",
+									"numinlets" : 2,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 576.0, 100.0, 82.0, 23.0 ],
+									"style" : "",
+									"text" : "dictionary $1"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-21",
+									"maxclass" : "message",
+									"numinlets" : 2,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 661.0, 100.0, 68.0, 23.0 ],
+									"style" : "",
+									"text" : "symbol $1"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"comment" : "",
+									"id" : "obj-61",
+									"index" : 1,
+									"maxclass" : "inlet",
+									"numinlets" : 0,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 63.0, 40.0, 30.0, 30.0 ],
+									"style" : ""
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"comment" : "",
+									"id" : "obj-64",
+									"index" : 2,
+									"maxclass" : "inlet",
+									"numinlets" : 0,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 98.0, 40.0, 30.0, 30.0 ],
+									"style" : ""
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"comment" : "",
+									"id" : "obj-66",
+									"index" : 3,
+									"maxclass" : "inlet",
+									"numinlets" : 0,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 133.0, 40.0, 30.0, 30.0 ],
+									"style" : ""
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"comment" : "",
+									"id" : "obj-70",
+									"index" : 4,
+									"maxclass" : "inlet",
+									"numinlets" : 0,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 168.0, 40.0, 30.0, 30.0 ],
+									"style" : ""
+								}
+
+							}
+ ],
+						"lines" : [ 							{
+								"patchline" : 								{
+									"destination" : [ "obj-24", 0 ],
+									"source" : [ "msg1", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-18", 0 ],
+									"source" : [ "obj-11", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-11", 0 ],
+									"source" : [ "obj-14", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-72", 0 ],
+									"source" : [ "obj-15", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-11", 0 ],
+									"source" : [ "obj-19", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-11", 0 ],
+									"source" : [ "obj-20", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-11", 0 ],
+									"source" : [ "obj-21", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-28", 0 ],
+									"source" : [ "obj-27", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-26", 0 ],
+									"source" : [ "obj-28", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-28", 0 ],
+									"source" : [ "obj-30", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-28", 0 ],
+									"source" : [ "obj-32", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-28", 0 ],
+									"source" : [ "obj-33", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-34", 0 ],
+									"source" : [ "obj-35", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-34", 0 ],
+									"source" : [ "obj-36", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-41", 0 ],
+									"source" : [ "obj-37", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-41", 0 ],
+									"source" : [ "obj-40", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-15", 0 ],
+									"source" : [ "obj-43", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-15", 0 ],
+									"source" : [ "obj-44", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-15", 0 ],
+									"source" : [ "obj-45", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-15", 0 ],
+									"source" : [ "obj-46", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-15", 0 ],
+									"source" : [ "obj-51", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-10", 0 ],
+									"order" : 0,
+									"source" : [ "obj-55", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-57", 1 ],
+									"order" : 2,
+									"source" : [ "obj-55", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-68", 0 ],
+									"order" : 1,
+									"source" : [ "obj-55", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-74", 0 ],
+									"order" : 3,
+									"source" : [ "obj-55", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-45", 0 ],
+									"source" : [ "obj-61", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-46", 0 ],
+									"source" : [ "obj-64", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-44", 0 ],
+									"source" : [ "obj-66", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-43", 0 ],
+									"source" : [ "obj-70", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-24", 0 ],
+									"source" : [ "obj-72", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-75", 0 ],
+									"source" : [ "obj-74", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-76", 0 ],
+									"source" : [ "obj-75", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-24", 0 ],
+									"source" : [ "obj-89", 0 ]
+								}
+
+							}
+ ]
+					}
+,
+					"patching_rect" : [ 406.666656, 155.632721, 621.0, 15.0 ],
+					"saved_object_attributes" : 					{
+						"description" : "",
+						"digest" : "",
+						"globalpatchername" : "",
+						"style" : "",
+						"tags" : ""
+					}
+,
 					"style" : "",
-					"text" : "Use [udpsend 239.255.60.60 20800] and [udpreceive 20800].\n"
+					"text" : "p"
 				}
 
 			}
 , 			{
 				"box" : 				{
-					"id" : "obj-57",
+					"id" : "obj-96",
+					"maxclass" : "newobj",
+					"numinlets" : 1,
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"patching_rect" : [ 563.5, 644.0, 129.0, 23.0 ],
+					"style" : "",
+					"text" : "keylink lan __LAN__"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-94",
+					"linecount" : 4,
 					"maxclass" : "message",
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 723.0, 651.0, 50.0, 23.0 ],
+					"patching_rect" : [ 632.25, 265.333313, 157.666672, 67.0 ],
+					"style" : "",
+					"text" : "{key:B, mode:Lydian, tempo:120, chordEnabled:true, chord:{root:C, type:maj}}"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-93",
+					"maxclass" : "message",
+					"numinlets" : 2,
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"patching_rect" : [ 947.0, 475.0, 71.0, 23.0 ],
+					"style" : "",
+					"text" : "{test:hello}"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-92",
+					"linecount" : 2,
+					"maxclass" : "message",
+					"numinlets" : 2,
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"patching_rect" : [ 832.833313, 269.0, 157.666672, 38.0 ],
+					"style" : "",
+					"text" : "{key:C, mode:major, tempo:120}"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-88",
+					"maxclass" : "button",
+					"numinlets" : 1,
+					"numoutlets" : 1,
+					"outlettype" : [ "bang" ],
+					"patching_rect" : [ 18.0, 583.0, 24.0, 24.0 ],
 					"style" : ""
 				}
 
 			}
 , 			{
 				"box" : 				{
-					"id" : "obj-55",
+					"id" : "obj-82",
 					"maxclass" : "newobj",
-					"numinlets" : 0,
+					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 593.540497, 561.0, 176.0, 23.0 ],
+					"patching_rect" : [ 393.5, 644.0, 151.0, 23.0 ],
 					"style" : "",
-					"text" : "mxj net.udp.recv @port 7474"
+					"text" : "keylink wan public-lobby"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-83",
+					"maxclass" : "newobj",
+					"numinlets" : 1,
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"patching_rect" : [ 275.0, 644.0, 144.0, 23.0 ],
+					"style" : "",
+					"text" : "keylink lan public-lobby"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-69",
+					"maxclass" : "newobj",
+					"numinlets" : 1,
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"patching_rect" : [ 187.5, 644.0, 78.0, 23.0 ],
+					"style" : "",
+					"text" : "keylink wan"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-67",
+					"maxclass" : "newobj",
+					"numinlets" : 1,
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"patching_rect" : [ 793.5, 570.5, 63.0, 23.0 ],
+					"style" : "",
+					"text" : "tosymbol"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-65",
+					"linecount" : 2,
+					"maxclass" : "message",
+					"numinlets" : 2,
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"patching_rect" : [ 851.5, 447.0, 130.0, 38.0 ],
+					"style" : "",
+					"text" : "{key:C, mode:major, tempo:120}"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-62",
+					"maxclass" : "button",
+					"numinlets" : 1,
+					"numoutlets" : 1,
+					"outlettype" : [ "bang" ],
+					"patching_rect" : [ 793.5, 461.0, 24.0, 24.0 ],
+					"style" : ""
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-60",
+					"maxclass" : "newobj",
+					"numinlets" : 1,
+					"numoutlets" : 0,
+					"patching_rect" : [ 429.5, 751.0, 97.0, 23.0 ],
+					"style" : "",
+					"text" : "print receiveKL"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-59",
+					"maxclass" : "newobj",
+					"numinlets" : 1,
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"patching_rect" : [ 429.5, 711.0, 107.0, 23.0 ],
+					"style" : "",
+					"text" : "udpreceive 7474"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-58",
+					"maxclass" : "newobj",
+					"numinlets" : 1,
+					"numoutlets" : 0,
+					"patching_rect" : [ 781.833313, 644.0, 165.0, 23.0 ],
+					"style" : "",
+					"text" : "udpsend 239.255.0.1 7474"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-53",
+					"maxclass" : "newobj",
+					"numinlets" : 1,
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"patching_rect" : [ 108.0, 644.0, 71.0, 23.0 ],
+					"style" : "",
+					"text" : "keylink lan"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-13",
+					"maxclass" : "newobj",
+					"numinlets" : 1,
+					"numoutlets" : 0,
+					"patching_rect" : [ 50.0, 685.0, 96.0, 23.0 ],
+					"style" : "",
+					"text" : "print anything?"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-42",
+					"maxclass" : "message",
+					"numinlets" : 2,
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"patching_rect" : [ 50.0, 583.0, 36.0, 23.0 ],
+					"style" : "",
+					"text" : "start"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-48",
+					"maxclass" : "newobj",
+					"numinlets" : 1,
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"patching_rect" : [ 50.0, 644.0, 50.0, 23.0 ],
+					"style" : "",
+					"text" : "keylink"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-50",
+					"maxclass" : "message",
+					"numinlets" : 2,
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"patching_rect" : [ 89.0, 583.0, 50.0, 23.0 ],
+					"style" : "",
+					"text" : "stop"
 				}
 
 			}
@@ -56154,88 +56604,9 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 246.5, -31.0, 75.0, 23.0 ],
+					"patching_rect" : [ 645.166626, 14.333338, 75.0, 23.0 ],
 					"style" : "",
 					"text" : "loadmess 1"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"id" : "obj-49",
-					"linecount" : 2,
-					"maxclass" : "message",
-					"numinlets" : 2,
-					"numoutlets" : 1,
-					"outlettype" : [ "" ],
-					"patching_rect" : [ 192.0, 517.0, 124.0, 38.0 ],
-					"style" : "",
-					"text" : "send dictionary Keylink"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"id" : "obj-47",
-					"maxclass" : "newobj",
-					"numinlets" : 1,
-					"numoutlets" : 1,
-					"outlettype" : [ "" ],
-					"patching_rect" : [ 303.0, 482.0, 88.0, 23.0 ],
-					"style" : "",
-					"text" : "prepend send"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"id" : "obj-45",
-					"maxclass" : "newobj",
-					"numinlets" : 1,
-					"numoutlets" : 1,
-					"outlettype" : [ "" ],
-					"patching_rect" : [ 31.0, 182.0, 113.0, 23.0 ],
-					"style" : "",
-					"text" : "prepend set chord"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"id" : "obj-46",
-					"maxclass" : "newobj",
-					"numinlets" : 1,
-					"numoutlets" : 1,
-					"outlettype" : [ "" ],
-					"patching_rect" : [ 48.0, 157.0, 136.0, 23.0 ],
-					"style" : "",
-					"text" : "prepend set chordroot"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"id" : "obj-44",
-					"maxclass" : "newobj",
-					"numinlets" : 1,
-					"numoutlets" : 1,
-					"outlettype" : [ "" ],
-					"patching_rect" : [ 75.0, 132.0, 113.0, 23.0 ],
-					"style" : "",
-					"text" : "prepend set mode"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"id" : "obj-43",
-					"maxclass" : "newobj",
-					"numinlets" : 1,
-					"numoutlets" : 1,
-					"outlettype" : [ "" ],
-					"patching_rect" : [ 92.0, 107.0, 103.0, 23.0 ],
-					"style" : "",
-					"text" : "prepend set root"
 				}
 
 			}
@@ -56249,7 +56620,7 @@
 					"numoutlets" : 3,
 					"outlettype" : [ "int", "", "" ],
 					"parameter_enable" : 0,
-					"patching_rect" : [ 71.0, 42.0, 49.0, 23.0 ],
+					"patching_rect" : [ 469.666656, 87.333328, 49.0, 23.0 ],
 					"presentation" : 1,
 					"presentation_rect" : [ 117.0, 57.0, 100.0, 23.0 ],
 					"style" : "rnbohighcontrast"
@@ -56266,24 +56637,10 @@
 					"numoutlets" : 3,
 					"outlettype" : [ "int", "", "" ],
 					"parameter_enable" : 0,
-					"patching_rect" : [ 71.0, 16.0, 49.0, 23.0 ],
+					"patching_rect" : [ 469.666656, 61.333332, 49.0, 23.0 ],
 					"presentation" : 1,
 					"presentation_rect" : [ 117.0, 31.0, 100.0, 23.0 ],
 					"style" : "rnbohighcontrast"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"id" : "obj-29",
-					"linecount" : 8,
-					"maxclass" : "message",
-					"numinlets" : 2,
-					"numoutlets" : 1,
-					"outlettype" : [ "" ],
-					"patching_rect" : [ 816.0, 401.0, 226.0, 125.0 ],
-					"style" : "",
-					"text" : "dict Keylink set root C, dict Keylink set mode Dorian, dict Keylink set chord::root C, dict Keylink set chord::type maj7, dict Keylink set keylinkEnabled 1, dict Keylink set chordLinkEnabled 1, dict Keylink set abletonLinkEnabled 1, dict Keylink set tempo 120"
 				}
 
 			}
@@ -56294,34 +56651,9 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 452.0, 8.0, 112.0, 23.0 ],
+					"patching_rect" : [ 850.666626, 53.333332, 112.0, 23.0 ],
 					"style" : "",
 					"text" : "udpreceive 20800"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"id" : "obj-24",
-					"maxclass" : "newobj",
-					"numinlets" : 1,
-					"numoutlets" : 0,
-					"patching_rect" : [ 18.0, 579.0, 300.0, 23.0 ],
-					"style" : "",
-					"text" : "mxj net.udp.send @address 224.0.0.2 @port 7474"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"id" : "obj-23",
-					"linecount" : 3,
-					"maxclass" : "comment",
-					"numinlets" : 1,
-					"numoutlets" : 0,
-					"patching_rect" : [ 18.5, 635.5, 508.0, 50.0 ],
-					"style" : "",
-					"text" : "239.255.60.60 is a common multicast address for LAN music apps.\n20800 is the default KeyLink UDP port (adjust if your relay/server uses a different port).\n\n"
 				}
 
 			}
@@ -56612,7 +56944,7 @@
  ]
 					}
 ,
-					"patching_rect" : [ 231.0, 52.0, 87.0, 23.0 ],
+					"patching_rect" : [ 629.666626, 97.333328, 87.0, 23.0 ],
 					"saved_object_attributes" : 					{
 						"description" : "",
 						"digest" : "",
@@ -56628,24 +56960,6 @@
 			}
 , 			{
 				"box" : 				{
-					"id" : "obj-15",
-					"maxclass" : "newobj",
-					"numinlets" : 2,
-					"numoutlets" : 4,
-					"outlettype" : [ "dictionary", "", "", "" ],
-					"patching_rect" : [ 35.0, 493.0, 86.0, 23.0 ],
-					"saved_object_attributes" : 					{
-						"embed" : 0,
-						"parameter_enable" : 0
-					}
-,
-					"style" : "rnbohighcontrast",
-					"text" : "dict KeyLink"
-				}
-
-			}
-, 			{
-				"box" : 				{
 					"arrow" : 0,
 					"id" : "obj-9",
 					"items" : "<empty>",
@@ -56654,7 +56968,7 @@
 					"numoutlets" : 3,
 					"outlettype" : [ "int", "", "" ],
 					"parameter_enable" : 0,
-					"patching_rect" : [ 122.0, 42.0, 85.0, 23.0 ],
+					"patching_rect" : [ 520.666626, 87.333328, 85.0, 23.0 ],
 					"presentation" : 1,
 					"presentation_rect" : [ 102.0, 42.0, 100.0, 23.0 ],
 					"style" : "rnbohighcontrast"
@@ -56671,7 +56985,7 @@
 					"numoutlets" : 3,
 					"outlettype" : [ "int", "", "" ],
 					"parameter_enable" : 0,
-					"patching_rect" : [ 122.0, 16.0, 85.0, 23.0 ],
+					"patching_rect" : [ 520.666626, 61.333332, 85.0, 23.0 ],
 					"presentation" : 1,
 					"presentation_rect" : [ 102.0, 16.0, 100.0, 23.0 ],
 					"style" : "rnbohighcontrast"
@@ -56687,7 +57001,7 @@
 					"numoutlets" : 2,
 					"outlettype" : [ "", "float" ],
 					"parameter_enable" : 1,
-					"patching_rect" : [ 307.0, 18.0, 50.0, 17.0 ],
+					"patching_rect" : [ 705.666626, 63.333332, 50.0, 17.0 ],
 					"presentation" : 1,
 					"presentation_rect" : [ 307.0, 18.0, 50.0, 17.0 ],
 					"saved_attribute_attributes" : 					{
@@ -56715,7 +57029,7 @@
 					"numoutlets" : 2,
 					"outlettype" : [ "", "" ],
 					"parameter_enable" : 1,
-					"patching_rect" : [ 243.0, 17.0, 62.068969, 20.689656 ],
+					"patching_rect" : [ 641.666626, 62.333332, 62.06897, 20.689655 ],
 					"presentation" : 1,
 					"presentation_rect" : [ 243.0, 17.0, 62.06897, 20.689655 ],
 					"rounded" : 5.0,
@@ -56744,7 +57058,7 @@
 					"numoutlets" : 2,
 					"outlettype" : [ "", "" ],
 					"parameter_enable" : 1,
-					"patching_rect" : [ 8.0, 43.0, 62.068969, 20.689656 ],
+					"patching_rect" : [ 406.666656, 88.333328, 62.06897, 20.689655 ],
 					"presentation" : 1,
 					"presentation_rect" : [ 38.0, 43.0, 62.06897, 20.689655 ],
 					"rounded" : 8.0,
@@ -56773,7 +57087,7 @@
 					"numoutlets" : 2,
 					"outlettype" : [ "", "" ],
 					"parameter_enable" : 1,
-					"patching_rect" : [ 7.0, 17.0, 62.068969, 20.689656 ],
+					"patching_rect" : [ 405.666656, 62.333332, 62.06897, 20.689655 ],
 					"presentation" : 1,
 					"presentation_rect" : [ 37.0, 17.0, 62.06897, 20.689655 ],
 					"rounded" : 8.0,
@@ -56796,89 +57110,12 @@
 			}
 , 			{
 				"box" : 				{
-					"id" : "msg1",
-					"linecount" : 2,
-					"maxclass" : "message",
-					"numinlets" : 2,
-					"numoutlets" : 1,
-					"outlettype" : [ "" ],
-					"patching_rect" : [ 18.0, 387.0, 577.0, 38.0 ],
-					"style" : "rnbohighcontrast",
-					"text" : "send {root:C, mode:Dorian, chord:Cmin7, confidence:0.98, keylinkEnabled:true, source:max-demo}"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"id" : "comment1",
-					"maxclass" : "comment",
-					"numinlets" : 1,
-					"numoutlets" : 0,
-					"patching_rect" : [ 18.0, 357.0, 444.0, 21.0 ],
-					"style" : "rnbohighcontrast",
-					"text" : "KeyLink Max Example: Send/Receive JSON via UDP multicast (port 20800)"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"id" : "obj-51",
-					"maxclass" : "button",
-					"numinlets" : 1,
-					"numoutlets" : 1,
-					"outlettype" : [ "bang" ],
-					"patching_rect" : [ 147.0, 205.0, 24.0, 24.0 ],
-					"style" : ""
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"id" : "obj-19",
-					"maxclass" : "message",
-					"numinlets" : 2,
-					"numoutlets" : 1,
-					"outlettype" : [ "" ],
-					"patching_rect" : [ 491.0, 106.0, 50.0, 23.0 ],
-					"style" : "",
-					"text" : "stop"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"id" : "obj-20",
-					"maxclass" : "message",
-					"numinlets" : 2,
-					"numoutlets" : 1,
-					"outlettype" : [ "" ],
-					"patching_rect" : [ 544.0, 106.0, 82.0, 23.0 ],
-					"style" : "",
-					"text" : "dictionary $1"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"id" : "obj-21",
-					"maxclass" : "message",
-					"numinlets" : 2,
-					"numoutlets" : 1,
-					"outlettype" : [ "" ],
-					"patching_rect" : [ 629.0, 106.0, 68.0, 23.0 ],
-					"style" : "",
-					"text" : "symbol $1"
-				}
-
-			}
-, 			{
-				"box" : 				{
 					"id" : "obj-90",
 					"maxclass" : "message",
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 369.0, 847.0, 68.0, 23.0 ],
+					"patching_rect" : [ 371.0, 578.0, 68.0, 23.0 ],
 					"style" : "",
 					"text" : "symbol $1"
 				}
@@ -56887,20 +57124,6 @@
  ],
 		"lines" : [ 			{
 				"patchline" : 				{
-					"destination" : [ "obj-24", 0 ],
-					"source" : [ "msg1", 0 ]
-				}
-
-			}
-, 			{
-				"patchline" : 				{
-					"destination" : [ "obj-18", 0 ],
-					"source" : [ "obj-11", 0 ]
-				}
-
-			}
-, 			{
-				"patchline" : 				{
 					"destination" : [ "obj-6", 1 ],
 					"source" : [ "obj-12", 0 ]
 				}
@@ -56908,31 +57131,8 @@
 			}
 , 			{
 				"patchline" : 				{
-					"destination" : [ "obj-11", 0 ],
-					"source" : [ "obj-14", 0 ]
-				}
-
-			}
-, 			{
-				"patchline" : 				{
-					"destination" : [ "obj-47", 0 ],
-					"order" : 0,
-					"source" : [ "obj-15", 0 ]
-				}
-
-			}
-, 			{
-				"patchline" : 				{
-					"destination" : [ "obj-72", 0 ],
-					"order" : 1,
-					"source" : [ "obj-15", 0 ]
-				}
-
-			}
-, 			{
-				"patchline" : 				{
 					"destination" : [ "obj-5", 0 ],
-					"midpoints" : [ 240.5, 78.0, 217.0, 78.0, 217.0, 12.0, 252.5, 12.0 ],
+					"midpoints" : [ 639.166626, 123.333328, 615.666641, 123.333328, 615.666641, 57.333328, 651.166626, 57.333328 ],
 					"source" : [ "obj-17", 0 ]
 				}
 
@@ -56940,106 +57140,22 @@
 , 			{
 				"patchline" : 				{
 					"destination" : [ "obj-7", 0 ],
-					"midpoints" : [ 308.5, 85.0, 208.0, 85.0, 208.0, 3.0, 316.5, 3.0 ],
+					"midpoints" : [ 707.166626, 130.333328, 606.666641, 130.333328, 606.666641, 48.333328, 715.166626, 48.333328 ],
 					"source" : [ "obj-17", 1 ]
 				}
 
 			}
 , 			{
 				"patchline" : 				{
-					"destination" : [ "obj-11", 0 ],
-					"source" : [ "obj-19", 0 ]
-				}
-
-			}
-, 			{
-				"patchline" : 				{
-					"destination" : [ "obj-11", 0 ],
-					"source" : [ "obj-20", 0 ]
-				}
-
-			}
-, 			{
-				"patchline" : 				{
-					"destination" : [ "obj-11", 0 ],
-					"source" : [ "obj-21", 0 ]
-				}
-
-			}
-, 			{
-				"patchline" : 				{
-					"destination" : [ "obj-28", 0 ],
-					"source" : [ "obj-27", 0 ]
-				}
-
-			}
-, 			{
-				"patchline" : 				{
-					"destination" : [ "obj-26", 0 ],
-					"source" : [ "obj-28", 0 ]
-				}
-
-			}
-, 			{
-				"patchline" : 				{
-					"destination" : [ "obj-28", 0 ],
-					"source" : [ "obj-30", 0 ]
-				}
-
-			}
-, 			{
-				"patchline" : 				{
-					"destination" : [ "obj-28", 0 ],
-					"source" : [ "obj-32", 0 ]
-				}
-
-			}
-, 			{
-				"patchline" : 				{
-					"destination" : [ "obj-28", 0 ],
-					"source" : [ "obj-33", 0 ]
-				}
-
-			}
-, 			{
-				"patchline" : 				{
-					"destination" : [ "obj-34", 0 ],
-					"source" : [ "obj-35", 0 ]
-				}
-
-			}
-, 			{
-				"patchline" : 				{
-					"destination" : [ "obj-34", 0 ],
-					"source" : [ "obj-36", 0 ]
-				}
-
-			}
-, 			{
-				"patchline" : 				{
-					"destination" : [ "obj-41", 0 ],
-					"source" : [ "obj-37", 0 ]
-				}
-
-			}
-, 			{
-				"patchline" : 				{
-					"destination" : [ "obj-46", 0 ],
+					"destination" : [ "obj-71", 1 ],
 					"source" : [ "obj-38", 1 ]
 				}
 
 			}
 , 			{
 				"patchline" : 				{
-					"destination" : [ "obj-43", 0 ],
+					"destination" : [ "obj-71", 3 ],
 					"source" : [ "obj-39", 1 ]
-				}
-
-			}
-, 			{
-				"patchline" : 				{
-					"destination" : [ "obj-41", 0 ],
-					"source" : [ "obj-40", 0 ]
 				}
 
 			}
@@ -57093,41 +57209,6 @@
 			}
 , 			{
 				"patchline" : 				{
-					"destination" : [ "obj-15", 0 ],
-					"source" : [ "obj-43", 0 ]
-				}
-
-			}
-, 			{
-				"patchline" : 				{
-					"destination" : [ "obj-15", 0 ],
-					"source" : [ "obj-44", 0 ]
-				}
-
-			}
-, 			{
-				"patchline" : 				{
-					"destination" : [ "obj-15", 0 ],
-					"source" : [ "obj-45", 0 ]
-				}
-
-			}
-, 			{
-				"patchline" : 				{
-					"destination" : [ "obj-15", 0 ],
-					"source" : [ "obj-46", 0 ]
-				}
-
-			}
-, 			{
-				"patchline" : 				{
-					"destination" : [ "obj-49", 1 ],
-					"source" : [ "obj-47", 0 ]
-				}
-
-			}
-, 			{
-				"patchline" : 				{
 					"destination" : [ "obj-13", 0 ],
 					"source" : [ "obj-48", 0 ]
 				}
@@ -57136,7 +57217,7 @@
 , 			{
 				"patchline" : 				{
 					"destination" : [ "obj-17", 0 ],
-					"midpoints" : [ 252.5, 39.0, 240.5, 39.0 ],
+					"midpoints" : [ 651.166626, 84.333328, 639.166626, 84.333328 ],
 					"source" : [ "obj-5", 0 ]
 				}
 
@@ -57191,13 +57272,6 @@
 			}
 , 			{
 				"patchline" : 				{
-					"destination" : [ "obj-15", 0 ],
-					"source" : [ "obj-51", 0 ]
-				}
-
-			}
-, 			{
-				"patchline" : 				{
 					"destination" : [ "obj-13", 0 ],
 					"source" : [ "obj-53", 0 ]
 				}
@@ -57216,38 +57290,6 @@
 					"destination" : [ "obj-5", 0 ],
 					"order" : 0,
 					"source" : [ "obj-54", 0 ]
-				}
-
-			}
-, 			{
-				"patchline" : 				{
-					"destination" : [ "obj-10", 0 ],
-					"order" : 0,
-					"source" : [ "obj-55", 0 ]
-				}
-
-			}
-, 			{
-				"patchline" : 				{
-					"destination" : [ "obj-57", 1 ],
-					"order" : 2,
-					"source" : [ "obj-55", 0 ]
-				}
-
-			}
-, 			{
-				"patchline" : 				{
-					"destination" : [ "obj-68", 0 ],
-					"order" : 1,
-					"source" : [ "obj-55", 0 ]
-				}
-
-			}
-, 			{
-				"patchline" : 				{
-					"destination" : [ "obj-74", 0 ],
-					"order" : 3,
-					"source" : [ "obj-55", 0 ]
 				}
 
 			}
@@ -57281,6 +57323,13 @@
 			}
 , 			{
 				"patchline" : 				{
+					"destination" : [ "obj-90", 0 ],
+					"source" : [ "obj-66", 0 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
 					"destination" : [ "obj-58", 0 ],
 					"source" : [ "obj-67", 0 ]
 				}
@@ -57296,42 +57345,14 @@
 , 			{
 				"patchline" : 				{
 					"destination" : [ "obj-17", 1 ],
-					"midpoints" : [ 316.5, 39.0, 308.5, 39.0 ],
+					"midpoints" : [ 715.166626, 84.333328, 707.166626, 84.333328 ],
 					"source" : [ "obj-7", 0 ]
 				}
 
 			}
 , 			{
 				"patchline" : 				{
-					"destination" : [ "obj-24", 0 ],
-					"source" : [ "obj-70", 0 ]
-				}
-
-			}
-, 			{
-				"patchline" : 				{
-					"destination" : [ "obj-24", 0 ],
-					"source" : [ "obj-72", 0 ]
-				}
-
-			}
-, 			{
-				"patchline" : 				{
-					"destination" : [ "obj-75", 0 ],
-					"source" : [ "obj-74", 0 ]
-				}
-
-			}
-, 			{
-				"patchline" : 				{
-					"destination" : [ "obj-76", 0 ],
-					"source" : [ "obj-75", 0 ]
-				}
-
-			}
-, 			{
-				"patchline" : 				{
-					"destination" : [ "obj-44", 0 ],
+					"destination" : [ "obj-71", 2 ],
 					"source" : [ "obj-8", 1 ]
 				}
 
@@ -57400,29 +57421,64 @@
 			}
 , 			{
 				"patchline" : 				{
-					"destination" : [ "obj-24", 0 ],
-					"source" : [ "obj-89", 0 ]
-				}
-
-			}
-, 			{
-				"patchline" : 				{
-					"destination" : [ "obj-45", 0 ],
+					"destination" : [ "obj-71", 0 ],
 					"source" : [ "obj-9", 1 ]
 				}
 
 			}
 , 			{
 				"patchline" : 				{
-					"destination" : [ "obj-83", 0 ],
+					"destination" : [ "obj-48", 0 ],
+					"order" : 6,
 					"source" : [ "obj-90", 0 ]
 				}
 
 			}
 , 			{
 				"patchline" : 				{
-					"destination" : [ "obj-24", 0 ],
-					"source" : [ "obj-91", 0 ]
+					"destination" : [ "obj-53", 0 ],
+					"order" : 5,
+					"source" : [ "obj-90", 0 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-58", 0 ],
+					"order" : 0,
+					"source" : [ "obj-90", 0 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-69", 0 ],
+					"order" : 4,
+					"source" : [ "obj-90", 0 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-82", 0 ],
+					"order" : 2,
+					"source" : [ "obj-90", 0 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-83", 0 ],
+					"order" : 3,
+					"source" : [ "obj-90", 0 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-96", 0 ],
+					"order" : 1,
+					"source" : [ "obj-90", 0 ]
 				}
 
 			}
@@ -57442,56 +57498,7 @@
 			}
 , 			{
 				"patchline" : 				{
-					"destination" : [ "obj-48", 0 ],
-					"order" : 6,
-					"source" : [ "obj-94", 0 ]
-				}
-
-			}
-, 			{
-				"patchline" : 				{
-					"destination" : [ "obj-53", 0 ],
-					"order" : 5,
-					"source" : [ "obj-94", 0 ]
-				}
-
-			}
-, 			{
-				"patchline" : 				{
-					"destination" : [ "obj-67", 0 ],
-					"order" : 0,
-					"source" : [ "obj-94", 0 ]
-				}
-
-			}
-, 			{
-				"patchline" : 				{
-					"destination" : [ "obj-69", 0 ],
-					"order" : 4,
-					"source" : [ "obj-94", 0 ]
-				}
-
-			}
-, 			{
-				"patchline" : 				{
-					"destination" : [ "obj-82", 0 ],
-					"order" : 2,
-					"source" : [ "obj-94", 0 ]
-				}
-
-			}
-, 			{
-				"patchline" : 				{
-					"destination" : [ "obj-83", 0 ],
-					"order" : 3,
-					"source" : [ "obj-94", 0 ]
-				}
-
-			}
-, 			{
-				"patchline" : 				{
-					"destination" : [ "obj-96", 0 ],
-					"order" : 1,
+					"destination" : [ "obj-90", 0 ],
 					"source" : [ "obj-94", 0 ]
 				}
 
@@ -57505,29 +57512,29 @@
 			}
  ],
 		"parameters" : 		{
-			"obj-6::obj-72::obj-96" : [ "kslider[23]", "kslider[2]", 0 ],
+			"obj-7" : [ "live.tempo", "live.tempo", 0 ],
+			"obj-6::obj-132" : [ "live.text[9]", "live.text", 0 ],
 			"obj-6::obj-72::obj-19" : [ "kslider[22]", "kslider[2]", 0 ],
-			"obj-6::obj-72::obj-63" : [ "number[5]", "number", 0 ],
-			"obj-2" : [ "live.text", "live.text", 0 ],
-			"obj-6::obj-98" : [ "live.toggle[3]", "live.toggle", 0 ],
 			"obj-6::obj-13" : [ "SimpleKLTab[3]", "live.tab", 0 ],
 			"obj-6::obj-43" : [ "umenu[13]", "umenu[2]", 0 ],
-			"obj-4" : [ "live.text[4]", "live.text", 0 ],
-			"obj-6::obj-30" : [ "live.tab[5]", "live.tab", 0 ],
-			"obj-6::obj-267" : [ "live.text[10]", "live.text", 0 ],
 			"obj-6::obj-21" : [ "umenu[15]", "umenu[2]", 0 ],
-			"obj-6::obj-72::obj-26" : [ "umenu[16]", "umenu[6]", 0 ],
-			"obj-6::obj-58" : [ "number[6]", "number[1]", 0 ],
-			"obj-6::obj-131::obj-141" : [ "live.text[11]", "live.text", 0 ],
-			"obj-6::obj-8" : [ "kslider[21]", "kslider[2]", 0 ],
-			"obj-6::obj-131::obj-48" : [ "live.tab[6]", "live.tab", 0 ],
-			"obj-6::obj-132" : [ "live.text[9]", "live.text", 0 ],
-			"obj-6::obj-60::obj-181" : [ "umenu[17]", "umenu[2]", 0 ],
-			"obj-6::obj-60::obj-53" : [ "umenu[14]", "umenu[2]", 0 ],
-			"obj-6::obj-72::obj-30" : [ "kslider[25]", "kslider[2]", 0 ],
+			"obj-4" : [ "live.text[4]", "live.text", 0 ],
+			"obj-6::obj-72::obj-96" : [ "kslider[23]", "kslider[2]", 0 ],
 			"obj-6::obj-72::obj-3" : [ "kslider[24]", "kslider[2]", 0 ],
-			"obj-7" : [ "live.tempo", "live.tempo", 0 ],
-			"obj-5" : [ "live.linktog", "live.linktog", 0 ]
+			"obj-2" : [ "live.text", "live.text", 0 ],
+			"obj-6::obj-131::obj-48" : [ "live.tab[6]", "live.tab", 0 ],
+			"obj-6::obj-60::obj-181" : [ "umenu[17]", "umenu[2]", 0 ],
+			"obj-6::obj-267" : [ "live.text[10]", "live.text", 0 ],
+			"obj-6::obj-131::obj-141" : [ "live.text[11]", "live.text", 0 ],
+			"obj-6::obj-58" : [ "number[6]", "number[1]", 0 ],
+			"obj-6::obj-72::obj-26" : [ "umenu[16]", "umenu[6]", 0 ],
+			"obj-6::obj-98" : [ "live.toggle[3]", "live.toggle", 0 ],
+			"obj-6::obj-72::obj-30" : [ "kslider[25]", "kslider[2]", 0 ],
+			"obj-6::obj-30" : [ "live.tab[5]", "live.tab", 0 ],
+			"obj-6::obj-8" : [ "kslider[21]", "kslider[2]", 0 ],
+			"obj-6::obj-72::obj-63" : [ "number[5]", "number", 0 ],
+			"obj-5" : [ "live.linktog", "live.linktog", 0 ],
+			"obj-6::obj-60::obj-53" : [ "umenu[14]", "umenu[2]", 0 ]
 		}
 ,
 		"dependency_cache" : [ 			{
@@ -57545,11 +57552,10 @@
 		"styles" : [ 			{
 				"name" : "rnbohighcontrast",
 				"default" : 				{
-					"textcolor" : [ 1.0, 1.0, 1.0, 1.0 ],
 					"clearcolor" : [ 1.0, 1.0, 1.0, 0.0 ],
 					"accentcolor" : [ 0.666667, 0.666667, 0.666667, 1.0 ],
-					"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 					"elementcolor" : [ 0.223386, 0.254749, 0.998086, 1.0 ],
+					"fontsize" : [ 13.0 ],
 					"bgfillcolor" : 					{
 						"angle" : 270.0,
 						"autogradient" : 0.0,
@@ -57561,9 +57567,10 @@
 					}
 ,
 					"stripecolor" : [ 0.258824, 0.258824, 0.258824, 1.0 ],
+					"bgcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
+					"textcolor" : [ 1.0, 1.0, 1.0, 1.0 ],
 					"color" : [ 1.0, 0.87451, 0.141176, 1.0 ],
 					"selectioncolor" : [ 0.301961, 0.694118, 0.94902, 1.0 ],
-					"fontsize" : [ 13.0 ],
 					"textcolor_inverse" : [ 1.0, 1.0, 1.0, 1.0 ]
 				}
 ,
