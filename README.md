@@ -141,12 +141,34 @@ The KeyLink external object provides:
 [udpreceive 7474] → [keylink]
 ```
 
+## 🎯 Universal Naming Standards
+
+KeyLink establishes **comprehensive naming conventions** and **alias resolution** to ensure unified tonal synchronization across all platforms and musical traditions.
+
+### 🌍 **Cross-Cultural Support**
+- **Root Notes**: `C#` ↔ `Db` ↔ `Cis` ↔ `Des` → canonical `C#`
+- **Modes**: `Major` ↔ `Maj` ↔ `M` ↔ `Ionian` → canonical `major`
+- **Chords**: `maj7` ↔ `M7` ↔ `major7` → canonical `maj7`
+
+### 🎵 **Musical Traditions**
+- **Western Classical**: Major, minor, diminished, augmented
+- **Jazz & Popular**: maj7, m7, sus4, Hendrix chords
+- **World Music**: Indian Ragas, Japanese scales, Arabic Maqam
+- **Contemporary**: Messiaen modes, experimental constructs
+
+### 📚 **Implementation**
+- **[Naming Standards](docs/NAMING_STANDARDS.md)** - Complete alias reference
+- **[Protocol Standards](docs/keylink-standards.json)** - Machine-readable specifications
+- **[JavaScript SDK](demo/web/src/keylink-aliases.js)** - Web implementation
+- **[Max/MSP External](demo/max/externals/keylink_aliases.cpp)** - Max implementation
+
 ## 🛠️ Technical Details
 
 - **Protocol**: JSON over UDP multicast + WebSocket
 - **Network**: UDP 239.255.0.1:7474, WebSocket :20801
 - **PWA**: Service Worker + Manifest
 - **Max/MSP**: C++ external with ASIO networking
+- **Alias Resolution**: Comprehensive naming standards
 - **License**: MIT (open source)
 
 ## 🤝 Contributing

@@ -1,0 +1,161 @@
+{
+  "keylink_version": "1.0.0",
+  "description": "KeyLink Protocol Standards - Comprehensive naming conventions and alias resolution for unified tonal synchronization",
+  "last_updated": "2025-01-31",
+  "author": "KeyLink Team",
+  "license": "MIT",
+  
+  "root_notes": {
+    "canonical": ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"],
+    "aliases": {
+      "C": ["C", "Do", "1", "I"],
+      "C#": ["C#", "Db", "Cis", "Des", "Do#", "Reb"],
+      "D": ["D", "Re", "2", "II"],
+      "D#": ["D#", "Eb", "Dis", "Es", "Re#", "Mib"],
+      "E": ["E", "Mi", "3", "III"],
+      "F": ["F", "Fa", "4", "IV"],
+      "F#": ["F#", "Gb", "Fis", "Ges", "Fa#", "Solb"],
+      "G": ["G", "Sol", "5", "V"],
+      "G#": ["G#", "Ab", "Gis", "As", "Sol#", "Lab"],
+      "A": ["A", "La", "6", "VI"],
+      "A#": ["A#", "Bb", "Ais", "B", "La#", "Sib"],
+      "B": ["B", "Si", "7", "VII"]
+    }
+  },
+
+  "modes": {
+    "canonical": ["major", "minor", "dorian", "phrygian", "lydian", "mixolydian", "aeolian", "locrian"],
+    "aliases": {
+      "major": ["major", "Maj", "M", "Ionian", "1", "I", "dur", "major scale"],
+      "minor": ["minor", "min", "m", "Aeolian", "6", "VI", "moll", "natural minor", "minor scale"],
+      "dorian": ["dorian", "Dorian", "2", "II", "dorian mode"],
+      "phrygian": ["phrygian", "Phrygian", "3", "III", "phrygian mode"],
+      "lydian": ["lydian", "Lydian", "4", "IV", "lydian mode"],
+      "mixolydian": ["mixolydian", "Mixolydian", "5", "V", "mixolydian mode"],
+      "aeolian": ["aeolian", "Aeolian", "6", "VI", "aeolian mode"],
+      "locrian": ["locrian", "Locrian", "7", "VII", "locrian mode"],
+      
+      "harmonic_minor": ["harmonic minor", "HarmonicMinor", "harmonic_minor", "harmonic-minor"],
+      "melodic_minor": ["melodic minor", "MelodicMinor", "melodic_minor", "melodic-minor"],
+      "pentatonic_major": ["major pentatonic", "MajorPentatonic", "pentatonic major", "pentatonic_major"],
+      "pentatonic_minor": ["minor pentatonic", "MinorPentatonic", "pentatonic minor", "pentatonic_minor"],
+      "blues": ["blues", "Blues", "blues scale", "blues_scale"],
+      "whole_tone": ["whole tone", "WholeTone", "whole_tone", "whole-tone", "augmented"],
+      "chromatic": ["chromatic", "Chromatic", "chromatic scale", "chromatic_scale"],
+      
+      "japanese": ["hira joshi", "HiraJoshi", "kokin joshi", "KokinJoshi", "iwato", "Iwato", "sakura", "Sakura"],
+      "chinese": ["youlan", "Youlan", "biyu", "BiYu", "kung", "Kung"],
+      "indian": ["raga", "Raga", "maqam", "Maqam", "hijaz", "Hijaz", "shadd'araban", "Shadd'araban"],
+      "messiaen": ["messiaen mode 1", "MessiaenMode1", "messiaen_1", "messiaen-1"]
+    }
+  },
+
+  "chord_types": {
+    "canonical": ["maj", "min", "dim", "aug", "sus2", "sus4", "7", "maj7", "m7", "dim7", "m7b5"],
+    "aliases": {
+      "maj": ["maj", "major", "Major", "M", "triad", "major triad", "major_triad"],
+      "min": ["min", "minor", "Minor", "m", "minor triad", "minor_triad"],
+      "dim": ["dim", "diminished", "Diminished", "d", "diminished triad", "diminished_triad"],
+      "aug": ["aug", "augmented", "Augmented", "A", "augmented triad", "augmented_triad"],
+      "sus2": ["sus2", "suspended second", "suspended_second", "sus2nd"],
+      "sus4": ["sus4", "suspended fourth", "suspended_fourth", "sus4th"],
+      
+      "7": ["7", "dom7", "dominant7", "dominant 7", "dominant_seventh", "seventh"],
+      "maj7": ["maj7", "major7", "Major7", "M7", "major seventh", "major_seventh"],
+      "m7": ["m7", "min7", "minor7", "Minor7", "minor seventh", "minor_seventh"],
+      "dim7": ["dim7", "diminished7", "diminished seventh", "diminished_seventh"],
+      "m7b5": ["m7b5", "half diminished", "half_diminished", "halfdim", "ø"],
+      
+      "maj9": ["maj9", "major9", "Major9", "M9", "major ninth", "major_ninth"],
+      "m9": ["m9", "min9", "minor9", "Minor9", "minor ninth", "minor_ninth"],
+      "9": ["9", "dom9", "dominant9", "dominant ninth", "dominant_ninth"],
+      "add9": ["add9", "add ninth", "add_ninth", "+9"],
+      
+      "13": ["13", "dom13", "dominant13", "dominant thirteenth", "dominant_thirteenth"],
+      "7sus4": ["7sus4", "dominant7sus4", "dominant seventh suspended fourth"],
+      "9sus4": ["9sus4", "dominant9sus4", "dominant ninth suspended fourth"],
+      
+      "7#9": ["7#9", "hendrix", "Hendrix", "dominant7#9", "dominant seventh sharp ninth"],
+      "7b5": ["7b5", "dominant7b5", "dominant seventh flat fifth"],
+      "7b9": ["7b9", "dominant7b9", "dominant seventh flat ninth"],
+      "7#5": ["7#5", "dominant7#5", "dominant seventh sharp fifth"],
+      
+      "aug6": ["aug6", "augmented sixth", "augmented_sixth", "french augmented sixth", "Fr+6"],
+      "neap6": ["neap6", "neapolitan sixth", "neapolitan_sixth", "N6"]
+    }
+  },
+
+  "special_scales": {
+    "blues_variants": {
+      "blues_pentatonic": ["blues pentatonic", "BluesPentatonic", "blues_pentatonic"],
+      "blues_hexatonic": ["blues hexatonic", "BluesHexatonic", "blues_hexatonic"],
+      "blues_heptatonic": ["blues heptatonic", "BluesHeptatonic", "blues_heptatonic"],
+      "blues_octatonic": ["blues octatonic", "BluesOctatonic", "blues_octatonic"],
+      "blues_enneatonic": ["blues enneatonic", "BluesEnneatonic", "blues_enneatonic"]
+    },
+    
+    "bebop_scales": {
+      "bebop_major": ["bebop major", "BebopMajor", "bebop_major"],
+      "bebop_dominant": ["bebop dominant", "BebopDominant", "bebop_dominant"],
+      "bebop_minor": ["bebop minor", "BebopMinor", "bebop_minor"],
+      "bebop_half_diminished": ["bebop half diminished", "BebopHalfDiminished", "bebop_half_diminished"]
+    },
+    
+    "world_scales": {
+      "hira_joshi": ["hira joshi", "HiraJoshi", "hira_joshi"],
+      "kokin_joshi": ["kokin joshi", "KokinJoshi", "kokin_joshi"],
+      "iwato": ["iwato", "Iwato"],
+      "sakura": ["sakura", "Sakura", "sakura pentatonic"],
+      "youlan": ["youlan", "Youlan"],
+      "biyu": ["biyu", "BiYu"],
+      "kung": ["kung", "Kung"],
+      "ritsu": ["ritsu", "Ritsu"],
+      "ritusen": ["ritusen", "Ritusen"],
+      "maqam_hijaz": ["maqam hijaz", "MaqamHijaz", "maqam_hijaz"],
+      "maqam_shadd_araban": ["maqam shadd'araban", "MaqamShadd'araban", "maqam_shadd_araban"]
+    },
+    
+    "messiaen_modes": {
+      "messiaen_1": ["messiaen mode 1", "MessiaenMode1", "messiaen_1"],
+      "messiaen_2": ["messiaen mode 2", "MessiaenMode2", "messiaen_2"],
+      "messiaen_3": ["messiaen mode 3", "MessiaenMode3", "messiaen_3"],
+      "messiaen_4": ["messiaen mode 4", "MessiaenMode4", "messiaen_4"],
+      "messiaen_5": ["messiaen mode 5", "MessiaenMode5", "messiaen_5"],
+      "messiaen_6": ["messiaen mode 6", "MessiaenMode6", "messiaen_6"],
+      "messiaen_7": ["messiaen mode 7", "MessiaenMode7", "messiaen_7"]
+    }
+  },
+
+  "message_schema": {
+    "required_fields": ["root_note", "mode", "timestamp", "source"],
+    "optional_fields": ["chord_type", "tempo", "key_signature", "metadata"],
+    "example": {
+      "root_note": "G#",
+      "mode": "aeolian",
+      "chord_type": "m7",
+      "tempo": 120,
+      "key_signature": "G# minor",
+      "timestamp": 1698702712000,
+      "source": "max_patch_1",
+      "metadata": {
+        "version": "1.0.0",
+        "confidence": 0.95,
+        "detection_method": "manual"
+      }
+    }
+  },
+
+  "resolution_rules": {
+    "priority_order": ["canonical", "aliases", "special_scales"],
+    "fallback_behavior": "use_input_as_canonical",
+    "case_sensitivity": false,
+    "whitespace_handling": "trim_and_normalize"
+  },
+
+  "extensibility": {
+    "custom_aliases": "supported",
+    "community_contributions": "encouraged",
+    "versioning": "semantic",
+    "backward_compatibility": "required"
+  }
+} 
