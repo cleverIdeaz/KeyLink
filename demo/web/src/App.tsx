@@ -444,24 +444,7 @@ export default function App() {
             </select>
           </div>
 
-          {/* Mode Hot-Swap Button */}
-          <button
-            onClick={handleModeHotSwap}
-            style={{
-              background: modeHotSwap ? '#F5C242' : '#444',
-              color: modeHotSwap ? '#222' : '#ccc',
-              border: '1px solid #555',
-              borderRadius: '4px',
-              padding: '6px 8px',
-              cursor: 'pointer',
-              fontSize: '12px',
-              fontWeight: 'bold',
-              minWidth: '40px'
-            }}
-            title="Hot-swap between Major/Minor"
-          >
-            {mode === 'major' ? 'M' : mode === 'minor' ? 'm' : 'M/m'}
-          </button>
+
 
 
 
@@ -966,6 +949,10 @@ export default function App() {
             resolver={aliasResolver}
             root={root}
             onRootChange={setRoot}
+            mode={mode}
+            modeCategory={modeCategory}
+            onModeChange={setMode}
+            onModeCategoryChange={setModeCategory}
           />
         </div>
       )}

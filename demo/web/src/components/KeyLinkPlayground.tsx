@@ -16,6 +16,25 @@ const POPULAR_SCALES = [
   { name: 'Chromatic', pattern: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11] }
 ];
 
+const MODE_CATEGORIES = {
+  simple: {
+    name: 'Simple',
+    options: ['major', 'minor']
+  },
+  modes: {
+    name: 'Modes',
+    options: ['major', 'minor', 'dorian', 'phrygian', 'lydian', 'mixolydian', 'locrian']
+  },
+  chords: {
+    name: 'Chords',
+    options: ['maj', 'min', '7', 'maj7', 'min7', 'dim', 'aug', 'sus2', 'sus4']
+  },
+  scales: {
+    name: 'Scales',
+    options: ['major', 'minor', 'pentatonic', 'blues', 'harmonic-minor', 'melodic-minor', 'whole-tone', 'chromatic']
+  }
+};
+
 // Root notes - moved outside component to prevent recreation
 const ROOTS = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
 
@@ -27,10 +46,25 @@ interface KeyLinkPlaygroundProps {
   resolver: KeyLinkAliasResolver;
   root?: string;
   onRootChange?: (root: string) => void;
+  mode?: string;
+  modeCategory?: string;
+  onModeChange?: (mode: string) => void;
+  onModeCategoryChange?: (category: string) => void;
 }
 
-export default function KeyLinkPlayground({ onStateChange, resolver, root, onRootChange }: KeyLinkPlaygroundProps) {
+export default function KeyLinkPlayground({ 
+  onStateChange, 
+  resolver, 
+  root, 
+  onRootChange, 
+  mode, 
+  modeCategory, 
+  onModeChange, 
+  onModeCategoryChange 
+}: KeyLinkPlaygroundProps) {
   const [selectedRoot, setSelectedRoot] = useState<string>(root || 'C');
+  const [selectedMode, setSelectedMode] = useState<string>(mode || 'major');
+  const [selectedModeCategory, setSelectedModeCategory] = useState<string>(modeCategory || 'simple');
   const [notationView, setNotationView] = useState<NotationView>('piano');
   const [currentPattern, setCurrentPattern] = useState<NotePattern | null>(null);
 
@@ -40,6 +74,20 @@ export default function KeyLinkPlayground({ onStateChange, resolver, root, onRoo
       setSelectedRoot(root);
     }
   }, [root, selectedRoot]);
+
+  // Sync with parent mode when it changes
+  useEffect(() => {
+    if (mode && mode !== selectedMode) {
+      setSelectedMode(mode);
+    }
+  }, [mode, selectedMode]);
+
+  // Sync with parent modeCategory when it changes
+  useEffect(() => {
+    if (modeCategory && modeCategory !== selectedModeCategory) {
+      setSelectedModeCategory(modeCategory);
+    }
+  }, [modeCategory, selectedModeCategory]);
 
   // Set default pattern on mount
   useEffect(() => {
@@ -116,43 +164,62 @@ export default function KeyLinkPlayground({ onStateChange, resolver, root, onRoo
         </div>
       </div>
 
-      {/* Scale Selection */}
+      {/* Mode/Category Selection - Synced with main interface */}
       <div style={{ marginBottom: '20px', textAlign: 'center' }}>
-        <label style={{ display: 'block', marginBottom: '8px', color: '#F5C242', fontSize: '16px', fontWeight: 'bold' }}>Scale Type</label>
+        <label style={{ display: 'block', marginBottom: '8px', color: '#F5C242', fontSize: '16px', fontWeight: 'bold' }}>Mode/Category</label>
+        
+        {/* Category Selector */}
+        <div style={{ marginBottom: '12px' }}>
+          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', justifyContent: 'center' }}>
+            {Object.entries(MODE_CATEGORIES).map(([key, cat]) => (
+              <button
+                key={key}
+                onClick={() => {
+                  setSelectedModeCategory(key);
+                  setSelectedMode(cat.options[0]);
+                  if (onModeCategoryChange) onModeCategoryChange(key);
+                  if (onModeChange) onModeChange(cat.options[0]);
+                }}
+                style={{
+                  background: selectedModeCategory === key ? '#F5C242' : '#333',
+                  color: selectedModeCategory === key ? '#222' : '#ccc',
+                  border: '1px solid #555',
+                  borderRadius: '6px',
+                  padding: '8px 12px',
+                  cursor: 'pointer',
+                  fontSize: '14px',
+                  fontWeight: 'bold',
+                  transition: 'all 0.2s ease'
+                }}
+              >
+                {cat.name}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Mode Selector */}
         <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', justifyContent: 'center' }}>
-          {POPULAR_SCALES.map((scale) => (
+          {MODE_CATEGORIES[selectedModeCategory as keyof typeof MODE_CATEGORIES]?.options.map((option) => (
             <button
-              key={scale.name}
+              key={option}
               onClick={() => {
-                const rootIndex = ROOTS.indexOf(selectedRoot);
-                const notes = scale.pattern.map((interval: number) => ROOTS[(rootIndex + interval) % 12]);
-                setCurrentPattern({
-                  intervals: scale.pattern,
-                  notes,
-                  name: scale.name
-                });
-                onStateChange({
-                  root: selectedRoot,
-                  mode: scale.name.toLowerCase(),
-                  note_pattern: scale.pattern,
-                  notes: notes,
-                  source: 'keylink-playground',
-                  timestamp: Date.now()
-                });
+                setSelectedMode(option);
+                if (onModeChange) onModeChange(option);
               }}
               style={{
-                background: currentPattern?.name === scale.name ? '#F5C242' : '#333',
-                color: currentPattern?.name === scale.name ? '#222' : '#ccc',
+                background: selectedMode === option ? '#F5C242' : '#333',
+                color: selectedMode === option ? '#222' : '#ccc',
                 border: '1px solid #555',
-                borderRadius: '8px',
-                padding: '10px 16px',
+                borderRadius: '6px',
+                padding: '8px 12px',
                 cursor: 'pointer',
                 fontSize: '14px',
                 fontWeight: 'bold',
                 transition: 'all 0.2s ease'
               }}
             >
-              {scale.name}
+              {option.charAt(0).toUpperCase() + option.slice(1)}
             </button>
           ))}
         </div>
@@ -160,8 +227,8 @@ export default function KeyLinkPlayground({ onStateChange, resolver, root, onRoo
 
       {/* View Selection */}
       <div style={{ marginBottom: '20px', textAlign: 'center' }}>
-        <div style={{ display: 'flex', gap: '8px', justifyContent: 'center' }}>
-          {(['piano', 'staff'] as NotationView[]).map(view => (
+        <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', flexWrap: 'wrap' }}>
+          {(['piano', 'staff', 'guitar', 'ukulele'] as NotationView[]).map(view => (
             <button
               key={view}
               onClick={() => setNotationView(view)}
@@ -177,7 +244,10 @@ export default function KeyLinkPlayground({ onStateChange, resolver, root, onRoo
                 transition: 'all 0.2s ease'
               }}
             >
-              {view === 'piano' ? '🎹 Piano' : '🎼 Staff'}
+              {view === 'piano' ? '🎹 Piano' : 
+               view === 'staff' ? '🎼 Staff' : 
+               view === 'guitar' ? '🎸 Guitar' : 
+               '🪕 Ukulele'}
             </button>
           ))}
         </div>
