@@ -25,12 +25,21 @@ type NotationView = 'piano' | 'staff' | 'guitar' | 'ukulele';
 interface KeyLinkPlaygroundProps {
   onStateChange: (state: any) => void;
   resolver: KeyLinkAliasResolver;
+  root?: string;
+  onRootChange?: (root: string) => void;
 }
 
-export default function KeyLinkPlayground({ onStateChange, resolver }: KeyLinkPlaygroundProps) {
-  const [selectedRoot, setSelectedRoot] = useState<string>('C');
+export default function KeyLinkPlayground({ onStateChange, resolver, root, onRootChange }: KeyLinkPlaygroundProps) {
+  const [selectedRoot, setSelectedRoot] = useState<string>(root || 'C');
   const [notationView, setNotationView] = useState<NotationView>('piano');
   const [currentPattern, setCurrentPattern] = useState<NotePattern | null>(null);
+
+  // Sync with parent root when it changes
+  useEffect(() => {
+    if (root && root !== selectedRoot) {
+      setSelectedRoot(root);
+    }
+  }, [root, selectedRoot]);
 
   // Set default pattern on mount
   useEffect(() => {
@@ -82,7 +91,12 @@ export default function KeyLinkPlayground({ onStateChange, resolver }: KeyLinkPl
           {ROOTS.map(root => (
             <button
               key={root}
-              onClick={() => setSelectedRoot(root)}
+              onClick={() => {
+                setSelectedRoot(root);
+                if (onRootChange) {
+                  onRootChange(root);
+                }
+              }}
               style={{
                 background: selectedRoot === root ? '#F5C242' : '#333',
                 color: selectedRoot === root ? '#222' : '#ccc',

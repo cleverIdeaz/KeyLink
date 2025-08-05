@@ -490,7 +490,33 @@ export default function App() {
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <label style={{ color: '#ccc', fontSize: '14px' }}>Mode:</label>
-            <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap' }}>
+            
+            {/* Small category selector */}
+            <select
+              value={modeCategory}
+              onChange={(e) => {
+                setModeCategory(e.target.value);
+                const category = MODE_CATEGORIES[e.target.value as keyof typeof MODE_CATEGORIES];
+                setMode(category.options[0]);
+                setHasUserInteracted(true);
+              }}
+              style={{
+                background: '#333',
+                color: '#fff',
+                border: '1px solid #555',
+                borderRadius: '4px',
+                padding: '4px 6px',
+                fontSize: '12px',
+                width: '60px'
+              }}
+            >
+              {Object.entries(MODE_CATEGORIES).map(([key, cat]) => (
+                <option key={key} value={key}>{cat.name}</option>
+              ))}
+            </select>
+            
+            {/* Dynamic mode interface */}
+            <div style={{ display: 'flex', gap: '4px' }}>
               {modeCategory === 'simple' ? (
                 // Simple M/m buttons
                 <>
@@ -894,6 +920,8 @@ export default function App() {
           <KeyLinkPlayground 
             onStateChange={handlePlaygroundStateChange}
             resolver={aliasResolver}
+            root={root}
+            onRootChange={setRoot}
           />
         </div>
       )}
