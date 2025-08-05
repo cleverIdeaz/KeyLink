@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { KeyLinkClient } from './keylink-sdk';
 import MidiPlayer, { MidiData } from './components/MidiPlayer';
+import KeyLinkPlayground from './components/KeyLinkPlayground';
+import KeyLinkAliasResolver from './keylink-aliases';
 
 // Minimal, modern KeyLink Demo UI
 // Connects to relay server via WebSocket and syncs with LAN/Max/MSP/Node
@@ -84,6 +86,18 @@ export default function App() {
   // Add mode hot-swap state
   const [modeHotSwap, setModeHotSwap] = useState(false);
   const [abletonLinkEnabled, setAbletonLinkEnabled] = useState(false);
+  const [showPlayground, setShowPlayground] = useState(false);
+  const [aliasResolver, setAliasResolver] = useState<KeyLinkAliasResolver | null>(null);
+
+  // Initialize alias resolver
+  useEffect(() => {
+    const initResolver = async () => {
+      const resolver = new KeyLinkAliasResolver();
+      await resolver.initialize();
+      setAliasResolver(resolver);
+    };
+    initResolver();
+  }, []);
 
   // PWA Detection
   useEffect(() => {
@@ -323,6 +337,22 @@ export default function App() {
     setShowMaxDownload(true);
   };
 
+  const handlePlaygroundToggle = () => {
+    setShowPlayground(!showPlayground);
+  };
+
+  const handlePlaygroundStateChange = (state: any) => {
+    // Send the playground state through KeyLink
+    if (kl.current && kl.current.isConnected()) {
+      kl.current.setState({
+        key: state.root,
+        mode: state.mode,
+        enabled: true
+      });
+      addLog(`Playground: ${state.mode} in ${state.root}`, 'sent');
+    }
+  };
+
   // Use a more responsive layout with Flexbox
   return (
     <div style={{
@@ -462,9 +492,14 @@ export default function App() {
         </div>
       </div>
 
-      <button onClick={() => setShowAdvanced(a => !a)} style={{ marginBottom: '16px', background: '#333', color: '#F5C242', border: 'none', padding: '10px 20px', borderRadius: '8px', cursor: 'pointer' }}>
-        {showAdvanced ? 'Hide Advanced' : 'Show Advanced'}
-      </button>
+      <div style={{ display: 'flex', gap: '12px', marginBottom: '16px' }}>
+        <button onClick={() => setShowAdvanced(a => !a)} style={{ background: '#333', color: '#F5C242', border: 'none', padding: '10px 20px', borderRadius: '8px', cursor: 'pointer' }}>
+          {showAdvanced ? 'Hide Advanced' : 'Show Advanced'}
+        </button>
+        <button onClick={handlePlaygroundToggle} style={{ background: showPlayground ? '#F5C242' : '#333', color: showPlayground ? '#222' : '#F5C242', border: 'none', padding: '10px 20px', borderRadius: '8px', cursor: 'pointer' }}>
+          {showPlayground ? 'Hide Playground' : 'Show Playground'}
+        </button>
+      </div>
 
       {/* Advanced Section */}
       {showAdvanced && (
@@ -689,6 +724,16 @@ export default function App() {
               </div>
             </div>
           )}
+        </div>
+      )}
+
+      {/* Interactive Playground */}
+      {showPlayground && aliasResolver && (
+        <div style={{ width: '100%', maxWidth: '800px', marginTop: '24px' }}>
+          <KeyLinkPlayground 
+            onStateChange={handlePlaygroundStateChange}
+            resolver={aliasResolver}
+          />
         </div>
       )}
 
