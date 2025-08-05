@@ -1,0 +1,565 @@
+{
+  "keylink_version": "1.0.0",
+  "description": "KeyLink Protocol Standards - Comprehensive naming conventions and alias resolution for unified tonal synchronization",
+  "last_updated": "2025-01-31",
+  "author": "KeyLink Team",
+  "license": "MIT",
+  
+  "root_notes": {
+    "canonical": ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"],
+    "aliases": {
+      "C": ["C", "Do", "1", "I"],
+      "C#": ["C#", "Db", "Cis", "Des", "Do#", "Reb"],
+      "D": ["D", "Re", "2", "II"],
+      "D#": ["D#", "Eb", "Dis", "Es", "Re#", "Mib"],
+      "E": ["E", "Mi", "3", "III"],
+      "F": ["F", "Fa", "4", "IV"],
+      "F#": ["F#", "Gb", "Fis", "Ges", "Fa#", "Solb"],
+      "G": ["G", "Sol", "5", "V"],
+      "G#": ["G#", "Ab", "Gis", "As", "Sol#", "Lab"],
+      "A": ["A", "La", "6", "VI"],
+      "A#": ["A#", "Bb", "Ais", "B", "La#", "Sib"],
+      "B": ["B", "Si", "7", "VII"]
+    }
+  },
+
+  "modes": {
+    "canonical": ["major", "minor", "dorian", "phrygian", "lydian", "mixolydian", "aeolian", "locrian"],
+    "aliases": {
+      "major": ["major", "Maj", "M", "Ionian", "1", "I", "dur", "major scale"],
+      "minor": ["minor", "min", "m", "Aeolian", "6", "VI", "moll", "natural minor", "minor scale"],
+      "dorian": ["dorian", "Dorian", "2", "II", "dorian mode"],
+      "phrygian": ["phrygian", "Phrygian", "3", "III", "phrygian mode"],
+      "lydian": ["lydian", "Lydian", "4", "IV", "lydian mode"],
+      "mixolydian": ["mixolydian", "Mixolydian", "5", "V", "mixolydian mode"],
+      "aeolian": ["aeolian", "Aeolian", "6", "VI", "aeolian mode"],
+      "locrian": ["locrian", "Locrian", "7", "VII", "locrian mode"],
+      
+      "harmonic_minor": ["harmonic minor", "HarmonicMinor", "harmonic_minor", "harmonic-minor"],
+      "melodic_minor": ["melodic minor", "MelodicMinor", "melodic_minor", "melodic-minor"],
+      "pentatonic_major": ["major pentatonic", "MajorPentatonic", "pentatonic major", "pentatonic_major"],
+      "pentatonic_minor": ["minor pentatonic", "MinorPentatonic", "pentatonic minor", "pentatonic_minor"],
+      "blues": ["blues", "Blues", "blues scale", "blues_scale"],
+      "whole_tone": ["whole tone", "WholeTone", "whole_tone", "whole-tone", "augmented"],
+      "chromatic": ["chromatic", "Chromatic", "chromatic scale", "chromatic_scale"],
+      
+      "japanese": ["hira joshi", "HiraJoshi", "kokin joshi", "KokinJoshi", "iwato", "Iwato", "sakura", "Sakura"],
+      "chinese": ["youlan", "Youlan", "biyu", "BiYu", "kung", "Kung"],
+      "indian": ["raga", "Raga", "maqam", "Maqam", "hijaz", "Hijaz", "shadd'araban", "Shadd'araban"],
+      "messiaen": ["messiaen mode 1", "MessiaenMode1", "messiaen_1", "messiaen-1"]
+    }
+  },
+
+  "chord_types": {
+    "canonical": ["maj", "min", "dim", "aug", "sus2", "sus4", "7", "maj7", "m7", "dim7", "m7b5"],
+    "aliases": {
+      "maj": ["maj", "major", "Major", "M", "triad", "major triad", "major_triad"],
+      "min": ["min", "minor", "Minor", "m", "minor triad", "minor_triad"],
+      "dim": ["dim", "diminished", "Diminished", "d", "diminished triad", "diminished_triad"],
+      "aug": ["aug", "augmented", "Augmented", "A", "augmented triad", "augmented_triad"],
+      "sus2": ["sus2", "suspended second", "suspended_second", "sus2nd"],
+      "sus4": ["sus4", "suspended fourth", "suspended_fourth", "sus4th"],
+      
+      "7": ["7", "dom7", "dominant7", "dominant 7", "dominant_seventh", "seventh"],
+      "maj7": ["maj7", "major7", "Major7", "M7", "major seventh", "major_seventh"],
+      "m7": ["m7", "min7", "minor7", "Minor7", "minor seventh", "minor_seventh"],
+      "dim7": ["dim7", "diminished7", "diminished seventh", "diminished_seventh"],
+      "m7b5": ["m7b5", "half diminished", "half_diminished", "halfdim", "ø"],
+      
+      "maj9": ["maj9", "major9", "Major9", "M9", "major ninth", "major_ninth"],
+      "m9": ["m9", "min9", "minor9", "Minor9", "minor ninth", "minor_ninth"],
+      "9": ["9", "dom9", "dominant9", "dominant ninth", "dominant_ninth"],
+      "add9": ["add9", "add ninth", "add_ninth", "+9"],
+      
+      "13": ["13", "dom13", "dominant13", "dominant thirteenth", "dominant_thirteenth"],
+      "7sus4": ["7sus4", "dominant7sus4", "dominant seventh suspended fourth"],
+      "9sus4": ["9sus4", "dominant9sus4", "dominant ninth suspended fourth"],
+      
+      "7#9": ["7#9", "hendrix", "Hendrix", "dominant7#9", "dominant seventh sharp ninth"],
+      "7b5": ["7b5", "dominant7b5", "dominant seventh flat fifth"],
+      "7b9": ["7b9", "dominant7b9", "dominant seventh flat ninth"],
+      "7#5": ["7#5", "dominant7#5", "dominant seventh sharp fifth"],
+      
+      "aug6": ["aug6", "augmented sixth", "augmented_sixth", "french augmented sixth", "Fr+6"],
+      "neap6": ["neap6", "neapolitan sixth", "neapolitan_sixth", "N6"]
+    }
+  },
+
+  "note_primitives": {
+    "description": "Complete set of note combinations in 12-tone equal temperament, organized by interval patterns and comprehensive indexed list. Each primitive includes interval notation and common names.",
+    "comprehensive_indexed_list": {
+      "description": "Complete set of 2067 note combinations in 12-tone equal temperament, organized by index and name. Each primitive includes interval notation and comprehensive aliases.",
+      "total_combinations": 2067,
+      "source": "User's comprehensive 12TET note primitive list",
+      "file_reference": "docs/comprehensive-note-primitives.json"
+    },
+    "intervals": {
+      "unison": {
+        "pattern": [0],
+        "aliases": ["unison", "prime", "1", "P1", "perfect unison"]
+      },
+      "minor_second": {
+        "pattern": [0, 1],
+        "aliases": ["minor second", "m2", "minor 2nd", "semitone", "half step"]
+      },
+      "major_second": {
+        "pattern": [0, 2],
+        "aliases": ["major second", "M2", "major 2nd", "whole tone", "whole step"]
+      },
+      "minor_third": {
+        "pattern": [0, 3],
+        "aliases": ["minor third", "m3", "minor 3rd"]
+      },
+      "major_third": {
+        "pattern": [0, 4],
+        "aliases": ["major third", "M3", "major 3rd"]
+      },
+      "perfect_fourth": {
+        "pattern": [0, 5],
+        "aliases": ["perfect fourth", "P4", "perfect 4th", "fourth"]
+      },
+      "tritone": {
+        "pattern": [0, 6],
+        "aliases": ["tritone", "augmented fourth", "diminished fifth", "A4", "d5", "devil's interval"]
+      },
+      "perfect_fifth": {
+        "pattern": [0, 7],
+        "aliases": ["perfect fifth", "P5", "perfect 5th", "fifth"]
+      },
+      "minor_sixth": {
+        "pattern": [0, 8],
+        "aliases": ["minor sixth", "m6", "minor 6th"]
+      },
+      "major_sixth": {
+        "pattern": [0, 9],
+        "aliases": ["major sixth", "M6", "major 6th"]
+      },
+      "minor_seventh": {
+        "pattern": [0, 10],
+        "aliases": ["minor seventh", "m7", "minor 7th"]
+      },
+      "major_seventh": {
+        "pattern": [0, 11],
+        "aliases": ["major seventh", "M7", "major 7th"]
+      },
+      "octave": {
+        "pattern": [0, 12],
+        "aliases": ["octave", "8ve", "perfect octave", "P8"]
+      }
+    },
+    
+    "dyads": {
+      "power_chord": {
+        "pattern": [0, 7],
+        "aliases": ["power chord", "fifth", "5", "perfect fifth", "P5"]
+      },
+      "minor_second_dyad": {
+        "pattern": [0, 1],
+        "aliases": ["minor second", "m2", "semitone cluster"]
+      },
+      "major_second_dyad": {
+        "pattern": [0, 2],
+        "aliases": ["major second", "M2", "whole tone cluster"]
+      },
+      "minor_third_dyad": {
+        "pattern": [0, 3],
+        "aliases": ["minor third", "m3", "minor third cluster"]
+      },
+      "major_third_dyad": {
+        "pattern": [0, 4],
+        "aliases": ["major third", "M3", "major third cluster"]
+      },
+      "tritone_dyad": {
+        "pattern": [0, 6],
+        "aliases": ["tritone", "augmented fourth", "diminished fifth", "A4", "d5"]
+      }
+    },
+    
+    "triads": {
+      "major_triad": {
+        "pattern": [0, 4, 7],
+        "aliases": ["major", "maj", "M", "major triad", "major chord"]
+      },
+      "minor_triad": {
+        "pattern": [0, 3, 7],
+        "aliases": ["minor", "min", "m", "minor triad", "minor chord"]
+      },
+      "diminished_triad": {
+        "pattern": [0, 3, 6],
+        "aliases": ["diminished", "dim", "d", "diminished triad", "diminished chord"]
+      },
+      "augmented_triad": {
+        "pattern": [0, 4, 8],
+        "aliases": ["augmented", "aug", "A", "augmented triad", "augmented chord"]
+      },
+      "sus2_triad": {
+        "pattern": [0, 2, 7],
+        "aliases": ["sus2", "suspended second", "suspended 2nd"]
+      },
+      "sus4_triad": {
+        "pattern": [0, 5, 7],
+        "aliases": ["sus4", "suspended fourth", "suspended 4th"]
+      }
+    },
+    
+    "tetrads": {
+      "major_seventh": {
+        "pattern": [0, 4, 7, 11],
+        "aliases": ["maj7", "major7", "M7", "major seventh", "major 7th"]
+      },
+      "minor_seventh": {
+        "pattern": [0, 3, 7, 10],
+        "aliases": ["m7", "min7", "minor7", "minor seventh", "minor 7th"]
+      },
+      "dominant_seventh": {
+        "pattern": [0, 4, 7, 10],
+        "aliases": ["7", "dom7", "dominant7", "dominant seventh", "dominant 7th"]
+      },
+      "diminished_seventh": {
+        "pattern": [0, 3, 6, 9],
+        "aliases": ["dim7", "diminished7", "diminished seventh", "diminished 7th"]
+      },
+      "half_diminished": {
+        "pattern": [0, 3, 6, 10],
+        "aliases": ["m7b5", "half diminished", "half_diminished", "ø", "ø7"]
+      },
+      "major_sixth": {
+        "pattern": [0, 4, 7, 9],
+        "aliases": ["maj6", "major6", "M6", "major sixth", "major 6th"]
+      },
+      "minor_sixth": {
+        "pattern": [0, 3, 7, 9],
+        "aliases": ["m6", "min6", "minor6", "minor sixth", "minor 6th"]
+      }
+    },
+    
+    "pentads": {
+      "major_ninth": {
+        "pattern": [0, 4, 7, 11, 14],
+        "aliases": ["maj9", "major9", "M9", "major ninth", "major 9th"]
+      },
+      "minor_ninth": {
+        "pattern": [0, 3, 7, 10, 14],
+        "aliases": ["m9", "min9", "minor9", "minor ninth", "minor 9th"]
+      },
+      "dominant_ninth": {
+        "pattern": [0, 4, 7, 10, 14],
+        "aliases": ["9", "dom9", "dominant9", "dominant ninth", "dominant 9th"]
+      },
+      "major_seventh_sus4": {
+        "pattern": [0, 5, 7, 11, 14],
+        "aliases": ["maj7sus4", "major7sus4", "M7sus4", "major seventh suspended fourth"]
+      },
+      "dominant_seventh_sus4": {
+        "pattern": [0, 5, 7, 10, 14],
+        "aliases": ["7sus4", "dom7sus4", "dominant7sus4", "dominant seventh suspended fourth"]
+      }
+    },
+    
+    "hexads": {
+      "major_thirteenth": {
+        "pattern": [0, 4, 7, 11, 14, 21],
+        "aliases": ["maj13", "major13", "M13", "major thirteenth", "major 13th"]
+      },
+      "minor_thirteenth": {
+        "pattern": [0, 3, 7, 10, 14, 21],
+        "aliases": ["m13", "min13", "minor13", "minor thirteenth", "minor 13th"]
+      },
+      "dominant_thirteenth": {
+        "pattern": [0, 4, 7, 10, 14, 21],
+        "aliases": ["13", "dom13", "dominant13", "dominant thirteenth", "dominant 13th"]
+      }
+    },
+    
+    "scales": {
+      "major_scale": {
+        "pattern": [0, 2, 4, 5, 7, 9, 11],
+        "aliases": ["major", "ionian", "major scale", "major diatonic"]
+      },
+      "minor_scale": {
+        "pattern": [0, 2, 3, 5, 7, 8, 10],
+        "aliases": ["minor", "aeolian", "natural minor", "minor scale", "minor diatonic"]
+      },
+      "dorian_mode": {
+        "pattern": [0, 2, 3, 5, 7, 9, 10],
+        "aliases": ["dorian", "dorian mode"]
+      },
+      "phrygian_mode": {
+        "pattern": [0, 1, 3, 5, 7, 8, 10],
+        "aliases": ["phrygian", "phrygian mode"]
+      },
+      "lydian_mode": {
+        "pattern": [0, 2, 4, 6, 7, 9, 11],
+        "aliases": ["lydian", "lydian mode"]
+      },
+      "mixolydian_mode": {
+        "pattern": [0, 2, 4, 5, 7, 9, 10],
+        "aliases": ["mixolydian", "mixolydian mode"]
+      },
+      "locrian_mode": {
+        "pattern": [0, 1, 3, 5, 6, 8, 10],
+        "aliases": ["locrian", "locrian mode"]
+      },
+      "harmonic_minor": {
+        "pattern": [0, 2, 3, 5, 7, 8, 11],
+        "aliases": ["harmonic minor", "harmonic minor scale"]
+      },
+      "melodic_minor": {
+        "pattern": [0, 2, 3, 5, 7, 9, 11],
+        "aliases": ["melodic minor", "melodic minor scale"]
+      },
+      "major_pentatonic": {
+        "pattern": [0, 2, 4, 7, 9],
+        "aliases": ["major pentatonic", "pentatonic major", "major pentatonic scale"]
+      },
+      "minor_pentatonic": {
+        "pattern": [0, 3, 5, 7, 10],
+        "aliases": ["minor pentatonic", "pentatonic minor", "minor pentatonic scale"]
+      },
+      "blues_scale": {
+        "pattern": [0, 3, 5, 6, 7, 10],
+        "aliases": ["blues", "blues scale", "blues hexatonic"]
+      },
+      "whole_tone_scale": {
+        "pattern": [0, 2, 4, 6, 8, 10],
+        "aliases": ["whole tone", "whole tone scale", "augmented scale"]
+      },
+      "chromatic_scale": {
+        "pattern": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+        "aliases": ["chromatic", "chromatic scale", "12-tone"]
+      }
+    },
+    
+    "clusters": {
+      "minor_second_cluster": {
+        "pattern": [0, 1, 2],
+        "aliases": ["minor second cluster", "semitone cluster", "chromatic cluster"]
+      },
+      "major_second_cluster": {
+        "pattern": [0, 2, 4],
+        "aliases": ["major second cluster", "whole tone cluster"]
+      },
+      "minor_third_cluster": {
+        "pattern": [0, 3, 6],
+        "aliases": ["minor third cluster", "diminished triad cluster"]
+      },
+      "major_third_cluster": {
+        "pattern": [0, 4, 8],
+        "aliases": ["major third cluster", "augmented triad cluster"]
+      },
+      "quartal_cluster": {
+        "pattern": [0, 5, 10],
+        "aliases": ["quartal", "quartal harmony", "perfect fourth cluster"]
+      },
+      "quintal_cluster": {
+        "pattern": [0, 7, 14],
+        "aliases": ["quintal", "quintal harmony", "perfect fifth cluster"]
+      }
+    },
+    
+    "extended_harmony": {
+      "major_seventh_sharp_five": {
+        "pattern": [0, 4, 8, 11],
+        "aliases": ["maj7#5", "major7#5", "M7#5", "major seventh sharp five"]
+      },
+      "minor_seventh_flat_five": {
+        "pattern": [0, 3, 6, 10],
+        "aliases": ["m7b5", "min7b5", "minor7b5", "minor seventh flat five", "half diminished"]
+      },
+      "dominant_seventh_sharp_five": {
+        "pattern": [0, 4, 8, 10],
+        "aliases": ["7#5", "dom7#5", "dominant7#5", "dominant seventh sharp five"]
+      },
+      "dominant_seventh_flat_five": {
+        "pattern": [0, 4, 6, 10],
+        "aliases": ["7b5", "dom7b5", "dominant7b5", "dominant seventh flat five"]
+      },
+      "dominant_seventh_sharp_nine": {
+        "pattern": [0, 4, 7, 10, 15],
+        "aliases": ["7#9", "dom7#9", "dominant7#9", "dominant seventh sharp nine", "hendrix chord"]
+      },
+      "dominant_seventh_flat_nine": {
+        "pattern": [0, 4, 7, 10, 13],
+        "aliases": ["7b9", "dom7b9", "dominant7b9", "dominant seventh flat nine"]
+      },
+      "major_seventh_add_nine": {
+        "pattern": [0, 4, 7, 11, 14],
+        "aliases": ["maj7add9", "major7add9", "M7add9", "major seventh add nine"]
+      },
+      "minor_seventh_add_nine": {
+        "pattern": [0, 3, 7, 10, 14],
+        "aliases": ["m7add9", "min7add9", "minor7add9", "minor seventh add nine"]
+      }
+    },
+    
+    "altered_chords": {
+      "augmented_major_seventh": {
+        "pattern": [0, 4, 8, 11],
+        "aliases": ["augmaj7", "augmented major seventh", "augmented major 7th"]
+      },
+      "augmented_minor_seventh": {
+        "pattern": [0, 4, 8, 10],
+        "aliases": ["augm7", "augmented minor seventh", "augmented minor 7th"]
+      },
+      "diminished_major_seventh": {
+        "pattern": [0, 3, 6, 11],
+        "aliases": ["dimmaj7", "diminished major seventh", "diminished major 7th"]
+      },
+      "diminished_minor_seventh": {
+        "pattern": [0, 3, 6, 9],
+        "aliases": ["dim7", "diminished minor seventh", "diminished minor 7th"]
+      }
+    },
+    
+    "polychords": {
+      "major_over_minor": {
+        "pattern": [0, 4, 7, 12, 15, 19],
+        "aliases": ["major over minor", "major/minor", "major on minor"]
+      },
+      "minor_over_major": {
+        "pattern": [0, 3, 7, 12, 16, 19],
+        "aliases": ["minor over major", "minor/major", "minor on major"]
+      },
+      "major_over_dominant": {
+        "pattern": [0, 4, 7, 12, 16, 19, 22],
+        "aliases": ["major over dominant", "major/dominant", "major on dominant"]
+      }
+    },
+    
+    "quartal_harmony": {
+      "quartal_triad": {
+        "pattern": [0, 5, 10],
+        "aliases": ["quartal triad", "quartal chord", "perfect fourth stack"]
+      },
+      "quartal_tetrad": {
+        "pattern": [0, 5, 10, 15],
+        "aliases": ["quartal tetrad", "quartal four-note chord", "perfect fourth stack"]
+      },
+      "quartal_pentad": {
+        "pattern": [0, 5, 10, 15, 20],
+        "aliases": ["quartal pentad", "quartal five-note chord", "perfect fourth stack"]
+      }
+    },
+    
+    "quintal_harmony": {
+      "quintal_triad": {
+        "pattern": [0, 7, 14],
+        "aliases": ["quintal triad", "quintal chord", "perfect fifth stack"]
+      },
+      "quintal_tetrad": {
+        "pattern": [0, 7, 14, 21],
+        "aliases": ["quintal tetrad", "quintal four-note chord", "perfect fifth stack"]
+      },
+      "quintal_pentad": {
+        "pattern": [0, 7, 14, 21, 28],
+        "aliases": ["quintal pentad", "quintal five-note chord", "perfect fifth stack"]
+      }
+    },
+    
+    "secundal_harmony": {
+      "secundal_triad": {
+        "pattern": [0, 1, 2],
+        "aliases": ["secundal triad", "secundal chord", "minor second cluster"]
+      },
+      "secundal_tetrad": {
+        "pattern": [0, 1, 2, 3],
+        "aliases": ["secundal tetrad", "secundal four-note chord", "minor second cluster"]
+      },
+      "secundal_pentad": {
+        "pattern": [0, 1, 2, 3, 4],
+        "aliases": ["secundal pentad", "secundal five-note chord", "minor second cluster"]
+      }
+    },
+    
+    "tertian_harmony": {
+      "tertian_triad": {
+        "pattern": [0, 4, 7],
+        "aliases": ["tertian triad", "tertian chord", "major triad"]
+      },
+      "tertian_tetrad": {
+        "pattern": [0, 4, 7, 11],
+        "aliases": ["tertian tetrad", "tertian four-note chord", "major seventh"]
+      },
+      "tertian_pentad": {
+        "pattern": [0, 4, 7, 11, 14],
+        "aliases": ["tertian pentad", "tertian five-note chord", "major ninth"]
+      }
+    }
+  },
+
+  "special_scales": {
+    "blues_variants": {
+      "blues_pentatonic": ["blues pentatonic", "BluesPentatonic", "blues_pentatonic"],
+      "blues_hexatonic": ["blues hexatonic", "BluesHexatonic", "blues_hexatonic"],
+      "blues_heptatonic": ["blues heptatonic", "BluesHeptatonic", "blues_heptatonic"],
+      "blues_octatonic": ["blues octatonic", "BluesOctatonic", "blues_octatonic"],
+      "blues_enneatonic": ["blues enneatonic", "BluesEnneatonic", "blues_enneatonic"]
+    },
+    
+    "bebop_scales": {
+      "bebop_major": ["bebop major", "BebopMajor", "bebop_major"],
+      "bebop_dominant": ["bebop dominant", "BebopDominant", "bebop_dominant"],
+      "bebop_minor": ["bebop minor", "BebopMinor", "bebop_minor"],
+      "bebop_half_diminished": ["bebop half diminished", "BebopHalfDiminished", "bebop_half_diminished"]
+    },
+    
+    "world_scales": {
+      "hira_joshi": ["hira joshi", "HiraJoshi", "hira_joshi"],
+      "kokin_joshi": ["kokin joshi", "KokinJoshi", "kokin_joshi"],
+      "iwato": ["iwato", "Iwato"],
+      "sakura": ["sakura", "Sakura", "sakura pentatonic"],
+      "youlan": ["youlan", "Youlan"],
+      "biyu": ["biyu", "BiYu"],
+      "kung": ["kung", "Kung"],
+      "ritsu": ["ritsu", "Ritsu"],
+      "ritusen": ["ritusen", "Ritusen"],
+      "maqam_hijaz": ["maqam hijaz", "MaqamHijaz", "maqam_hijaz"],
+      "maqam_shadd_araban": ["maqam shadd'araban", "MaqamShadd'araban", "maqam_shadd_araban"]
+    },
+    
+    "messiaen_modes": {
+      "messiaen_1": ["messiaen mode 1", "MessiaenMode1", "messiaen_1"],
+      "messiaen_2": ["messiaen mode 2", "MessiaenMode2", "messiaen_2"],
+      "messiaen_3": ["messiaen mode 3", "MessiaenMode3", "messiaen_3"],
+      "messiaen_4": ["messiaen mode 4", "MessiaenMode4", "messiaen_4"],
+      "messiaen_5": ["messiaen mode 5", "MessiaenMode5", "messiaen_5"],
+      "messiaen_6": ["messiaen mode 6", "MessiaenMode6", "messiaen_6"],
+      "messiaen_7": ["messiaen mode 7", "MessiaenMode7", "messiaen_7"]
+    }
+  },
+
+  "message_schema": {
+    "required_fields": ["root_note", "mode", "timestamp", "source"],
+    "optional_fields": ["chord_type", "tempo", "key_signature", "metadata", "note_pattern"],
+    "example": {
+      "root_note": "G#",
+      "mode": "aeolian",
+      "chord_type": "m7",
+      "tempo": 120,
+      "key_signature": "G# minor",
+      "timestamp": 1698702712000,
+      "source": "max_patch_1",
+      "note_pattern": [0, 3, 7, 10],
+      "metadata": {
+        "version": "1.0.0",
+        "confidence": 0.95,
+        "detection_method": "manual",
+        "primitive_type": "minor_seventh"
+      }
+    }
+  },
+
+  "resolution_rules": {
+    "priority_order": ["canonical", "aliases", "note_primitives", "special_scales"],
+    "fallback_behavior": "use_input_as_canonical",
+    "case_sensitivity": false,
+    "whitespace_handling": "trim_and_normalize"
+  },
+
+  "extensibility": {
+    "custom_aliases": "supported",
+    "community_contributions": "encouraged",
+    "versioning": "semantic",
+    "backward_compatibility": "required"
+  }
+} 

@@ -21,10 +21,15 @@ class KeyLinkAliasResolver {
     } else {
       // Load from local standards file
       try {
+        console.log('Loading KeyLink standards from /keylink-standards.json');
         const response = await fetch('/keylink-standards.json');
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
         this.standards = await response.json();
+        console.log('Successfully loaded KeyLink standards');
       } catch (error) {
-        console.warn('Could not load KeyLink standards, using built-in defaults');
+        console.warn('Could not load KeyLink standards, using built-in defaults:', error);
         this.standards = this.getDefaultStandards();
       }
     }
@@ -550,8 +555,13 @@ class KeyLinkAliasResolver {
     }
 
     try {
+      console.log('Loading comprehensive note primitives from /comprehensive-note-primitives.json');
       const response = await fetch('/comprehensive-note-primitives.json');
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
       const comprehensiveData = await response.json();
+      console.log('Successfully loaded comprehensive note primitives');
       return comprehensiveData;
     } catch (error) {
       console.warn('Could not load comprehensive note primitives:', error);

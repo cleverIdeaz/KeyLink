@@ -92,9 +92,15 @@ export default function App() {
   // Initialize alias resolver
   useEffect(() => {
     const initResolver = async () => {
-      const resolver = new KeyLinkAliasResolver();
-      await resolver.initialize();
-      setAliasResolver(resolver);
+      try {
+        const resolver = new KeyLinkAliasResolver();
+        await resolver.initialize();
+        setAliasResolver(resolver);
+        addLog('Alias resolver initialized successfully', 'info');
+      } catch (error) {
+        console.error('Failed to initialize alias resolver:', error);
+        addLog('Failed to initialize alias resolver', 'error');
+      }
     };
     initResolver();
   }, []);

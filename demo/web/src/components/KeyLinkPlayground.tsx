@@ -144,24 +144,29 @@ export default function KeyLinkPlayground({ onStateChange, resolver }: KeyLinkPl
     [selectedCategory]
   );
 
-  // Update pattern when selection changes
+    // Update pattern when selection changes
   useEffect(() => {
     const updatePattern = async () => {
+      if (!resolver) {
+        console.warn('Resolver not initialized yet');
+        return;
+      }
+
       const subCategory = currentSubCategories.find(sub => sub.id === selectedSubCategory);
       if (subCategory?.primitiveIndex !== undefined) {
         try {
           const primitive = await resolver.resolvePrimitiveByIndex(subCategory.primitiveIndex);
-                     if (primitive) {
-             // Apply the pattern to the selected root
-             const rootIndex = ROOTS.indexOf(selectedRoot);
-             const intervals = (primitive as any).intervals || [0, 2, 4, 5, 7, 9, 11]; // Default major scale
-             const notes = intervals.map((interval: number) => ROOTS[(rootIndex + interval) % 12]);
-             
-             setCurrentPattern({
-               intervals,
-               notes,
-               name: (primitive as any).name || subCategory.name
-             });
+          if (primitive) {
+            // Apply the pattern to the selected root
+            const rootIndex = ROOTS.indexOf(selectedRoot);
+            const intervals = (primitive as any).intervals || [0, 2, 4, 5, 7, 9, 11]; // Default major scale
+            const notes = intervals.map((interval: number) => ROOTS[(rootIndex + interval) % 12]);
+            
+            setCurrentPattern({
+              intervals,
+              notes,
+              name: (primitive as any).name || subCategory.name
+            });
 
             // Send KeyLink message
             onStateChange({
@@ -175,12 +180,34 @@ export default function KeyLinkPlayground({ onStateChange, resolver }: KeyLinkPl
           }
         } catch (error) {
           console.error('Error resolving primitive:', error);
+          // Set a default pattern if resolution fails
+          setCurrentPattern({
+            intervals: [0, 2, 4, 5, 7, 9, 11],
+            notes: ['C', 'D', 'E', 'F', 'G', 'A', 'B'],
+            name: subCategory.name
+          });
         }
       }
     };
 
     updatePattern();
   }, [selectedCategory, selectedSubCategory, selectedRoot, resolver, onStateChange, currentSubCategories]);
+
+  if (!resolver) {
+    return (
+      <div className="keylink-playground" style={{
+        background: '#1a1a1a',
+        color: '#fff',
+        padding: '20px',
+        borderRadius: '8px',
+        fontFamily: 'Arial, sans-serif',
+        textAlign: 'center'
+      }}>
+        <h2 style={{ color: '#F5C242', margin: '0 0 10px 0' }}>KeyLink Interactive Playground</h2>
+        <p style={{ color: '#ccc', margin: 0 }}>Loading note primitives...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="keylink-playground" style={{
