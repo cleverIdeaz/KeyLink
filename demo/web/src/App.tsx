@@ -85,7 +85,6 @@ export default function App() {
   const [showMaxDownload, setShowMaxDownload] = useState(false);
 
   // Add mode hot-swap state
-  const [modeHotSwap, setModeHotSwap] = useState(false);
   const [abletonLinkEnabled, setAbletonLinkEnabled] = useState(false);
   const [showPlayground, setShowPlayground] = useState(false);
   const [aliasResolver, setAliasResolver] = useState<KeyLinkAliasResolver | null>(null);
@@ -300,20 +299,6 @@ export default function App() {
     setHasUserInteracted(true);
   };
 
-  // Add mode hot-swap handler
-  const handleModeHotSwap = () => {
-    setModeHotSwap(!modeHotSwap);
-    if (mode === 'major') {
-      setMode('minor');
-    } else if (mode === 'minor') {
-      setMode('major');
-    } else {
-      setMode('major'); // Default to major for other modes
-    }
-    setHasUserInteracted(true);
-  };
-
-  // Add Ableton Link handler
   const handleAbletonLink = () => {
     setAbletonLinkEnabled(!abletonLinkEnabled);
     // TODO: Implement Ableton Link SDK integration
