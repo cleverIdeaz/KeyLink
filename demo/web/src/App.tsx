@@ -462,31 +462,7 @@ export default function App() {
             {mode === 'major' ? 'M' : mode === 'minor' ? 'm' : 'M/m'}
           </button>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <label style={{ color: '#ccc', fontSize: '14px' }}>Category:</label>
-            <select
-              value={modeCategory}
-              onChange={(e) => {
-                setModeCategory(e.target.value);
-                const category = MODE_CATEGORIES[e.target.value as keyof typeof MODE_CATEGORIES];
-                setMode(category.options[0]);
-                setHasUserInteracted(true);
-              }}
-              style={{
-                background: '#333',
-                color: '#fff',
-                border: '1px solid #555',
-                borderRadius: '4px',
-                padding: '6px 8px',
-                fontSize: '14px',
-                minWidth: '80px'
-              }}
-            >
-              {Object.entries(MODE_CATEGORIES).map(([key, cat]) => (
-                <option key={key} value={key}>{cat.name}</option>
-              ))}
-            </select>
-          </div>
+
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <label style={{ color: '#ccc', fontSize: '14px' }}>Mode:</label>
