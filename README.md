@@ -261,4 +261,4 @@ MIT License - see [LICENSE](LICENSE) file.
 
 **🎵 Happy syncing!**
 
-**[🐙 GitHub Repository](https://github.com/cleverIdeaz/KeyLink)** • **[📖 Protocol Docs](docs/protocol.md)** • **[🤝 Contributing](CONTRIBUTING.md)** 
+**[🐙 GitHub Repository](https://github.com/cleverIdeaz/KeyLink)** • **[📖 Protocol Docs](docs/protocol.md)** • **[🤝 Contributing](CONTRIBUTING.md)** # Force rebuild Tue Aug  5 15:20:35 EDT 2025
