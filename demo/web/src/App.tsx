@@ -89,6 +89,7 @@ export default function App() {
   const [mode, setMode] = useState('major');
   const [showModeModal, setShowModeModal] = useState(false);
   const [modeCategory, setModeCategory] = useState('simple');
+  const [showCategoryModal, setShowCategoryModal] = useState(false);
   const [keylinkOn, setKeylinkOn] = useState(true);
   const [tempo, setTempo] = useState(120);
   const [chordLinkOn, setChordLinkOn] = useState(true);
@@ -467,29 +468,27 @@ export default function App() {
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <label style={{ color: '#ccc', fontSize: '14px' }}>Mode:</label>
             
-            {/* Small category selector */}
-            <select
-              value={modeCategory}
-              onChange={(e) => {
-                setModeCategory(e.target.value);
-                const category = MODE_CATEGORIES[e.target.value as keyof typeof MODE_CATEGORIES];
-                setMode(category.options[0]);
-                setHasUserInteracted(true);
-              }}
+            {/* Circular category selector button */}
+            <button
+              onClick={() => setShowCategoryModal(true)}
               style={{
                 background: '#333',
-                color: '#fff',
+                color: '#F5C242',
                 border: '1px solid #555',
-                borderRadius: '4px',
-                padding: '4px 6px',
+                borderRadius: '50%',
+                width: '24px',
+                height: '24px',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
                 fontSize: '12px',
-                width: '60px'
+                fontWeight: 'bold'
               }}
+              title="Select mode category"
             >
-              {Object.entries(MODE_CATEGORIES).map(([key, cat]) => (
-                <option key={key} value={key}>{cat.name}</option>
-              ))}
-            </select>
+              ⚙️
+            </button>
             
             {/* Dynamic mode interface */}
             <div style={{ display: 'flex', gap: '4px' }}>
@@ -874,6 +873,75 @@ export default function App() {
             
             <button
               onClick={() => setShowModeModal(false)}
+              style={{
+                background: 'transparent',
+                color: '#666',
+                border: '1px solid #666',
+                padding: '8px 16px',
+                borderRadius: '4px',
+                cursor: 'pointer',
+                width: '100%'
+              }}
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Category Selection Modal */}
+      {showCategoryModal && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'rgba(0, 0, 0, 0.8)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 1000
+        }}>
+          <div style={{
+            background: '#1a1a1a',
+            padding: '24px',
+            borderRadius: '12px',
+            maxWidth: '400px',
+            width: '90%',
+            maxHeight: '80vh',
+            overflowY: 'auto'
+          }}>
+            <h3 style={{ margin: '0 0 16px 0', color: '#F5C242' }}>Select Mode Category</h3>
+            
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '8px', marginBottom: '16px' }}>
+              {Object.entries(MODE_CATEGORIES).map(([key, cat]) => (
+                <button
+                  key={key}
+                  onClick={() => { 
+                    setModeCategory(key); 
+                    setMode(cat.options[0]);
+                    setShowCategoryModal(false); 
+                    setHasUserInteracted(true); 
+                  }}
+                  style={{
+                    background: modeCategory === key ? '#F5C242' : '#333',
+                    color: modeCategory === key ? '#222' : '#ccc',
+                    border: '1px solid #555',
+                    borderRadius: '6px',
+                    padding: '12px 8px',
+                    cursor: 'pointer',
+                    fontSize: '14px',
+                    fontWeight: 'bold'
+                  }}
+                >
+                  {cat.name}
+                </button>
+              ))}
+            </div>
+            
+            <button
+              onClick={() => setShowCategoryModal(false)}
               style={{
                 background: 'transparent',
                 color: '#666',

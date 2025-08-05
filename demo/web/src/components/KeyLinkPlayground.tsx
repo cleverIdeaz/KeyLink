@@ -278,16 +278,30 @@ export default function KeyLinkPlayground({ onStateChange, resolver, root, onRoo
 
 // Piano Keyboard Component
 function PianoKeyboard({ root, activeNotes, pattern }: { root: string; activeNotes: string[]; pattern: NotePattern }) {
-  const whiteKeys = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
-  const blackKeys = ['C#', 'D#', 'F#', 'G#', 'A#'];
+  // Create a full octave of keys starting from the root
+  const allNotes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+  const rootIndex = allNotes.indexOf(root);
+  
+  // Generate notes for one octave starting from root
+  const octaveNotes = [];
+  for (let i = 0; i < 12; i++) {
+    const noteIndex = (rootIndex + i) % 12;
+    octaveNotes.push(allNotes[noteIndex]);
+  }
+  
+  const whiteKeys = octaveNotes.filter(note => !note.includes('#'));
+  const blackKeys = octaveNotes.filter(note => note.includes('#'));
   
   return (
     <div style={{ textAlign: 'center' }}>
+      <h4 style={{ color: '#F5C242', margin: '0 0 10px 0' }}>Piano Keyboard - {root} Key</h4>
       <div style={{ 
         display: 'flex', 
         justifyContent: 'center', 
         position: 'relative',
-        height: '120px'
+        height: '120px',
+        margin: '0 auto',
+        maxWidth: 'fit-content'
       }}>
         {/* White Keys */}
         {whiteKeys.map((note, index) => {
@@ -315,9 +329,14 @@ function PianoKeyboard({ root, activeNotes, pattern }: { root: string; activeNot
           );
         })}
         
-        {/* Black Keys */}
+        {/* Black Keys - positioned between white keys */}
         {blackKeys.map((note, index) => {
           const isActive = activeNotes.includes(note);
+          // Calculate position based on white key positions
+          const whiteKeyPositions = [0, 2, 4, 5, 7, 9, 11]; // C, D, E, F, G, A, B
+          const noteIndex = allNotes.indexOf(note);
+          const whiteKeyIndex = whiteKeyPositions.findIndex(pos => pos > noteIndex) - 1;
+          
           return (
             <div
               key={note}
@@ -334,7 +353,7 @@ function PianoKeyboard({ root, activeNotes, pattern }: { root: string; activeNot
                 fontWeight: 'bold',
                 position: 'absolute',
                 zIndex: 2,
-                left: `${(index < 2 ? index + 1 : index + 2) * 40 - 12}px`
+                left: `${whiteKeyIndex * 40 + 28}px`
               }}
             >
               {note}
@@ -350,30 +369,81 @@ function PianoKeyboard({ root, activeNotes, pattern }: { root: string; activeNot
 function StaffNotation({ root, activeNotes, pattern }: { root: string; activeNotes: string[]; pattern: NotePattern }) {
   return (
     <div style={{ textAlign: 'center' }}>
+      <h4 style={{ color: '#F5C242', margin: '0 0 10px 0' }}>Musical Staff - {root} Key</h4>
       <div style={{ 
         background: '#fff', 
         color: '#000', 
         padding: '20px', 
-        borderRadius: '4px',
-        fontFamily: 'serif'
+        borderRadius: '8px',
+        fontFamily: 'serif',
+        border: '2px solid #333'
       }}>
-        <div style={{ fontSize: '14px', marginBottom: '10px' }}>
-          Treble Clef
-        </div>
+        {/* Treble Clef Symbol */}
         <div style={{ 
-          display: 'flex', 
-          justifyContent: 'center', 
-          alignItems: 'center',
-          height: '80px',
-          border: '1px solid #ccc',
-          background: '#f9f9f9'
+          fontSize: '24px', 
+          marginBottom: '10px',
+          textAlign: 'left',
+          marginLeft: '10px'
         }}>
-          <span style={{ fontSize: '12px' }}>
-            {activeNotes.join(' ')}
-          </span>
+          𝄞
         </div>
-        <div style={{ fontSize: '12px', marginTop: '10px', color: '#666' }}>
-          {pattern.name} in {root}
+        
+        {/* Staff Lines */}
+        <div style={{ 
+          position: 'relative',
+          height: '60px',
+          margin: '10px 0'
+        }}>
+          {/* Staff lines */}
+          {[0, 1, 2, 3, 4].map(line => (
+            <div
+              key={line}
+              style={{
+                position: 'absolute',
+                left: '40px',
+                right: '20px',
+                height: '1px',
+                background: '#000',
+                top: `${line * 12}px`
+              }}
+            />
+          ))}
+          
+          {/* Note positions on staff */}
+          <div style={{ 
+            position: 'absolute',
+            left: '60px',
+            right: '20px',
+            top: '0',
+            height: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-around'
+          }}>
+            {activeNotes.slice(0, 8).map((note, index) => (
+              <div
+                key={note}
+                style={{
+                  fontSize: '16px',
+                  fontWeight: 'bold',
+                  color: '#F5C242',
+                  transform: 'translateY(-2px)'
+                }}
+              >
+                ♪
+              </div>
+            ))}
+          </div>
+        </div>
+        
+        <div style={{ 
+          fontSize: '12px', 
+          marginTop: '10px', 
+          color: '#666',
+          textAlign: 'left',
+          marginLeft: '10px'
+        }}>
+          {pattern.name} in {root} - Notes: {activeNotes.join(', ')}
         </div>
       </div>
     </div>
