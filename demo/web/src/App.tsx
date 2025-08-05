@@ -400,10 +400,11 @@ export default function App() {
         <button onClick={handleKeylinkToggle} style={{ flexGrow: 1, padding: '12px 24px', fontSize: '24px', background: keylinkOn ? '#F5C242' : '#888', color: '#222', border: 'none', borderRadius: '10px', cursor: 'pointer' }}>
           KeyLink
         </button>
-        {/* Key and Mode Controls */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
+        {/* Root and Mode Controls */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '16px', justifyContent: 'center' }}>
+          {/* Root Selection */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <label style={{ color: '#ccc', fontSize: '14px' }}>Root:</label>
+            <label style={{ color: '#F5C242', fontSize: '14px', fontWeight: 'bold' }}>root()</label>
             <select
               value={root}
               onChange={(e) => { setRoot(e.target.value); setHasUserInteracted(true); }}
@@ -413,39 +414,26 @@ export default function App() {
                 border: '1px solid #555',
                 borderRadius: '4px',
                 padding: '6px 8px',
-                fontSize: '14px'
+                fontSize: '14px',
+                minWidth: '60px'
               }}
             >
-              {['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'].map(note => (
-                <option key={note} value={note}>{note}</option>
+              {ROOTS.map(r => (
+                <option key={r} value={r}>{r}</option>
               ))}
             </select>
           </div>
 
-          {/* Mode Hot-Swap Button */}
-          <button
-            onClick={handleModeHotSwap}
-            style={{
-              background: modeHotSwap ? '#F5C242' : '#444',
-              color: modeHotSwap ? '#222' : '#ccc',
-              border: '1px solid #555',
-              borderRadius: '4px',
-              padding: '6px 8px',
-              cursor: 'pointer',
-              fontSize: '12px',
-              fontWeight: 'bold',
-              minWidth: '40px'
-            }}
-            title="Hot-swap between Major/Minor"
-          >
-            {mode === 'major' ? 'M' : mode === 'minor' ? 'm' : 'M/m'}
-          </button>
-
+          {/* Mode Selection */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <label style={{ color: '#ccc', fontSize: '14px' }}>Mode:</label>
+            <label style={{ color: '#F5C242', fontSize: '14px', fontWeight: 'bold' }}>mode()</label>
             <div style={{ display: 'flex', gap: '4px' }}>
+              {/* Simple M/m Toggle */}
               <button
-                onClick={() => { setMode('major'); setHasUserInteracted(true); }}
+                onClick={() => { 
+                  setMode('major'); 
+                  setHasUserInteracted(true);
+                }}
                 style={{
                   background: mode === 'major' ? '#F5C242' : '#333',
                   color: mode === 'major' ? '#222' : '#ccc',
@@ -460,7 +448,10 @@ export default function App() {
                 M
               </button>
               <button
-                onClick={() => { setMode('minor'); setHasUserInteracted(true); }}
+                onClick={() => { 
+                  setMode('minor'); 
+                  setHasUserInteracted(true);
+                }}
                 style={{
                   background: mode === 'minor' ? '#F5C242' : '#333',
                   color: mode === 'minor' ? '#222' : '#ccc',
@@ -474,22 +465,52 @@ export default function App() {
               >
                 m
               </button>
-              <button
-                onClick={() => setShowModeModal(true)}
+              
+              {/* Advanced Mode Selector */}
+              <select
+                value={mode}
+                onChange={(e) => { 
+                  setMode(e.target.value); 
+                  setHasUserInteracted(true);
+                }}
                 style={{
                   background: '#333',
-                  color: '#ccc',
+                  color: '#fff',
                   border: '1px solid #555',
                   borderRadius: '4px',
                   padding: '6px 8px',
-                  cursor: 'pointer',
-                  fontSize: '14px',
-                  fontWeight: 'bold'
+                  fontSize: '12px',
+                  minWidth: '100px'
                 }}
-                title="More modes"
               >
-                ⋯
-              </button>
+                <optgroup label="Simple">
+                  <option value="major">Major</option>
+                  <option value="minor">Minor</option>
+                </optgroup>
+                <optgroup label="Modes">
+                  <option value="dorian">Dorian</option>
+                  <option value="phrygian">Phrygian</option>
+                  <option value="lydian">Lydian</option>
+                  <option value="mixolydian">Mixolydian</option>
+                  <option value="locrian">Locrian</option>
+                </optgroup>
+                <optgroup label="Chords">
+                  <option value="maj">Major Triad</option>
+                  <option value="min">Minor Triad</option>
+                  <option value="dim">Diminished</option>
+                  <option value="aug">Augmented</option>
+                  <option value="maj7">Major 7</option>
+                  <option value="m7">Minor 7</option>
+                  <option value="7">Dominant 7</option>
+                  <option value="sus2">Sus2</option>
+                  <option value="sus4">Sus4</option>
+                </optgroup>
+                <optgroup label="Scales">
+                  <option value="pentatonic">Pentatonic</option>
+                  <option value="blues">Blues</option>
+                  <option value="chromatic">Chromatic</option>
+                </optgroup>
+              </select>
             </div>
           </div>
         </div>
