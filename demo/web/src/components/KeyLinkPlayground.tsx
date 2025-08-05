@@ -133,7 +133,7 @@ export default function KeyLinkPlayground({ onStateChange, resolver }: KeyLinkPl
   const [selectedRoot, setSelectedRoot] = useState<string>('C');
   const [notationView, setNotationView] = useState<NotationView>('piano');
   const [currentPattern, setCurrentPattern] = useState<NotePattern | null>(null);
-  const [showSubModal, setShowSubModal] = useState(false);
+  // const [showSubModal, setShowSubModal] = useState(false);
 
   // Root notes
   const ROOTS = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
@@ -177,7 +177,7 @@ export default function KeyLinkPlayground({ onStateChange, resolver }: KeyLinkPl
     };
 
     updatePattern();
-  }, [selectedCategory, selectedSubCategory, selectedRoot, resolver, onStateChange]);
+  }, [selectedCategory, selectedSubCategory, selectedRoot, resolver, onStateChange, ROOTS, currentSubCategories]);
 
   return (
     <div className="keylink-playground" style={{

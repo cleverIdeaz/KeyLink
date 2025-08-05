@@ -619,6 +619,9 @@ if (typeof module !== 'undefined' && module.exports) {
   module.exports = KeyLinkAliasResolver;
 }
 
+// ES6 default export for modern bundlers
+export default KeyLinkAliasResolver;
+
 // Make available globally for browser use
 if (typeof window !== 'undefined') {
   window.KeyLinkAliasResolver = KeyLinkAliasResolver;

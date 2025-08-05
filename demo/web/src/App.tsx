@@ -267,18 +267,19 @@ export default function App() {
     setKeylinkOn(on => !on); 
     setHasUserInteracted(true);
   };
-  const handleRoot = (e: React.ChangeEvent<HTMLSelectElement>) => { 
-    setRoot(e.target.value); 
-    setHasUserInteracted(true);
-  };
-  const handleMode = (e: React.ChangeEvent<HTMLSelectElement>) => { 
-    setMode(e.target.value); 
-    setHasUserInteracted(true);
-  };
-  const handleTempo = (e: React.ChangeEvent<HTMLInputElement>) => { 
-    setTempo(Number(e.target.value) || 120); 
-    setHasUserInteracted(true);
-  };
+  // These handlers are now handled inline in the JSX
+  // const handleRoot = (e: React.ChangeEvent<HTMLSelectElement>) => { 
+  //   setRoot(e.target.value); 
+  //   setHasUserInteracted(true);
+  // };
+  // const handleMode = (e: React.ChangeEvent<HTMLSelectElement>) => { 
+  //   setMode(e.target.value); 
+  //   setHasUserInteracted(true);
+  // };
+  // const handleTempo = (e: React.ChangeEvent<HTMLInputElement>) => { 
+  //   setTempo(Number(e.target.value) || 120); 
+  //   setHasUserInteracted(true);
+  // };
   const handleChordRoot = (e: React.ChangeEvent<HTMLSelectElement>) => { 
     setChordRoot(e.target.value); 
     setHasUserInteracted(true);
