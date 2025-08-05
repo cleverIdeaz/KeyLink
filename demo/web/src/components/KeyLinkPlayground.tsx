@@ -89,18 +89,56 @@ export default function KeyLinkPlayground({
     }
   }, [modeCategory, selectedModeCategory]);
 
-  // Set default pattern on mount
+  // Update pattern when root or mode changes
   useEffect(() => {
     const rootIndex = ROOTS.indexOf(selectedRoot);
-    const defaultScale = POPULAR_SCALES[0]; // Major scale
-    const notes = defaultScale.pattern.map((interval: number) => ROOTS[(rootIndex + interval) % 12]);
+    
+    // Map mode names to patterns
+    const modePatterns: { [key: string]: number[] } = {
+      'major': [0, 2, 4, 5, 7, 9, 11],
+      'minor': [0, 2, 3, 5, 7, 8, 10],
+      'dorian': [0, 2, 3, 5, 7, 9, 10],
+      'phrygian': [0, 1, 3, 5, 7, 8, 10],
+      'lydian': [0, 2, 4, 6, 7, 9, 11],
+      'mixolydian': [0, 2, 4, 5, 7, 9, 10],
+      'locrian': [0, 1, 3, 5, 6, 8, 10],
+      'pentatonic': [0, 2, 4, 7, 9],
+      'blues': [0, 3, 5, 6, 7, 10],
+      'chromatic': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+      'harmonic-minor': [0, 2, 3, 5, 7, 8, 11],
+      'melodic-minor': [0, 2, 3, 5, 7, 9, 11],
+      'whole-tone': [0, 2, 4, 6, 8, 10],
+      // Chord patterns
+      'maj': [0, 4, 7],
+      'min': [0, 3, 7],
+      '7': [0, 4, 7, 10],
+      'maj7': [0, 4, 7, 11],
+      'min7': [0, 3, 7, 10],
+      'dim': [0, 3, 6],
+      'aug': [0, 4, 8],
+      'sus2': [0, 2, 7],
+      'sus4': [0, 5, 7]
+    };
+    
+    const pattern = modePatterns[selectedMode] || modePatterns['major'];
+    const notes = pattern.map((interval: number) => ROOTS[(rootIndex + interval) % 12]);
     
     setCurrentPattern({
-      intervals: defaultScale.pattern,
+      intervals: pattern,
       notes,
-      name: defaultScale.name
+      name: selectedMode.charAt(0).toUpperCase() + selectedMode.slice(1)
     });
-  }, [selectedRoot]);
+    
+    // Update parent state
+    onStateChange({
+      root: selectedRoot,
+      mode: selectedMode,
+      note_pattern: pattern,
+      notes: notes,
+      source: 'keylink-playground',
+      timestamp: Date.now()
+    });
+  }, [selectedRoot, selectedMode, onStateChange]);
 
   if (!resolver) {
     return (
@@ -437,6 +475,12 @@ function PianoKeyboard({ root, activeNotes, pattern }: { root: string; activeNot
 
 // Staff Notation Component
 function StaffNotation({ root, activeNotes, pattern }: { root: string; activeNotes: string[]; pattern: NotePattern }) {
+  // Note positions on staff (relative to middle C)
+  const notePositions: { [key: string]: number } = {
+    'C': 0, 'C#': 0, 'D': 1, 'D#': 1, 'E': 2, 'F': 3, 'F#': 3, 
+    'G': 4, 'G#': 4, 'A': 5, 'A#': 5, 'B': 6
+  };
+  
   return (
     <div style={{ textAlign: 'center' }}>
       <h4 style={{ color: '#F5C242', margin: '0 0 10px 0' }}>Musical Staff - {root} Key</h4>
@@ -450,10 +494,11 @@ function StaffNotation({ root, activeNotes, pattern }: { root: string; activeNot
       }}>
         {/* Treble Clef Symbol */}
         <div style={{ 
-          fontSize: '24px', 
+          fontSize: '32px', 
           marginBottom: '10px',
           textAlign: 'left',
-          marginLeft: '10px'
+          marginLeft: '10px',
+          lineHeight: '1'
         }}>
           𝄞
         </div>
@@ -461,7 +506,7 @@ function StaffNotation({ root, activeNotes, pattern }: { root: string; activeNot
         {/* Staff Lines */}
         <div style={{ 
           position: 'relative',
-          height: '60px',
+          height: '80px',
           margin: '10px 0'
         }}>
           {/* Staff lines */}
@@ -470,40 +515,37 @@ function StaffNotation({ root, activeNotes, pattern }: { root: string; activeNot
               key={line}
               style={{
                 position: 'absolute',
-                left: '40px',
+                left: '50px',
                 right: '20px',
-                height: '1px',
+                height: '2px',
                 background: '#000',
-                top: `${line * 12}px`
+                top: `${line * 16}px`
               }}
             />
           ))}
           
           {/* Note positions on staff */}
-          <div style={{ 
-            position: 'absolute',
-            left: '60px',
-            right: '20px',
-            top: '0',
-            height: '100%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-around'
-          }}>
-            {activeNotes.slice(0, 8).map((note, index) => (
+          {activeNotes.slice(0, 8).map((note, index) => {
+            const position = notePositions[note] || 0;
+            const yPos = 64 - (position * 8); // Invert for staff positioning
+            
+            return (
               <div
                 key={note}
                 style={{
-                  fontSize: '16px',
+                  position: 'absolute',
+                  left: `${80 + index * 40}px`,
+                  top: `${yPos}px`,
+                  fontSize: '20px',
                   fontWeight: 'bold',
                   color: '#F5C242',
-                  transform: 'translateY(-2px)'
+                  transform: 'translateY(-8px)'
                 }}
               >
                 ♪
               </div>
-            ))}
-          </div>
+            );
+          })}
         </div>
         
         <div style={{ 
