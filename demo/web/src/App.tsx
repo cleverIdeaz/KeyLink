@@ -4,7 +4,7 @@ import MidiPlayer, { MidiData } from './components/MidiPlayer';
 import KeyLinkPlayground from './components/KeyLinkPlayground';
 import KeyLinkAliasResolver from './keylink-aliases';
 
-// Minimal, modern KeyLink Demo UI
+// Minimal, modern KeyLink Demo UI v2
 // Connects to relay server via WebSocket and syncs with LAN/Max/MSP/Node
 // Uses the KeyLink protocol (see README.md)
 
