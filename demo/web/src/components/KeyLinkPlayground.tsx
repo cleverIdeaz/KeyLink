@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import KeyLinkAliasResolver from '../keylink-aliases';
 
 interface NotePattern {
@@ -7,15 +7,25 @@ interface NotePattern {
   name: string;
 }
 
-type NotationView = 'piano' | 'staff';
+// Popular scales for the simplified interface
+const POPULAR_SCALES = [
+  { name: 'Major', pattern: [0, 2, 4, 5, 7, 9, 11] },
+  { name: 'Minor', pattern: [0, 2, 3, 5, 7, 8, 10] },
+  { name: 'Pentatonic', pattern: [0, 2, 4, 7, 9] },
+  { name: 'Blues', pattern: [0, 3, 5, 6, 7, 10] },
+  { name: 'Chromatic', pattern: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11] }
+];
+
+// Root notes - moved outside component to prevent recreation
+const ROOTS = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+
+// Notation view types
+type NotationView = 'piano' | 'staff' | 'guitar' | 'ukulele';
 
 interface KeyLinkPlaygroundProps {
   onStateChange: (state: any) => void;
   resolver: KeyLinkAliasResolver;
 }
-
-// Root notes - moved outside component to prevent recreation
-const ROOTS = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
 
 export default function KeyLinkPlayground({ onStateChange, resolver }: KeyLinkPlaygroundProps) {
   const [selectedRoot, setSelectedRoot] = useState<string>('C');
@@ -25,13 +35,13 @@ export default function KeyLinkPlayground({ onStateChange, resolver }: KeyLinkPl
   // Set default pattern on mount
   useEffect(() => {
     const rootIndex = ROOTS.indexOf(selectedRoot);
-    const defaultPattern = [0, 2, 4, 5, 7, 9, 11]; // Major scale pattern
-    const notes = defaultPattern.map((interval: number) => ROOTS[(rootIndex + interval) % 12]);
+    const defaultScale = POPULAR_SCALES[0]; // Major scale
+    const notes = defaultScale.pattern.map((interval: number) => ROOTS[(rootIndex + interval) % 12]);
     
     setCurrentPattern({
-      intervals: defaultPattern,
+      intervals: defaultScale.pattern,
       notes,
-      name: 'Major'
+      name: defaultScale.name
     });
   }, [selectedRoot]);
 
@@ -45,8 +55,8 @@ export default function KeyLinkPlayground({ onStateChange, resolver }: KeyLinkPl
         fontFamily: 'Arial, sans-serif',
         textAlign: 'center'
       }}>
-        <h2 style={{ color: '#F5C242', margin: '0 0 10px 0' }}>Visual Explorer</h2>
-        <p style={{ color: '#ccc', margin: 0 }}>Loading musical patterns...</p>
+        <h2 style={{ color: '#F5C242', margin: '0 0 10px 0' }}>KeyLink Interactive Playground</h2>
+        <p style={{ color: '#ccc', margin: 0 }}>Loading note primitives...</p>
       </div>
     );
   }
@@ -61,34 +71,80 @@ export default function KeyLinkPlayground({ onStateChange, resolver }: KeyLinkPl
     }}>
       {/* Header */}
       <div style={{ textAlign: 'center', marginBottom: '20px' }}>
-        <h2 style={{ color: '#F5C242', margin: '0 0 10px 0' }}>Visual Explorer</h2>
-        <p style={{ color: '#ccc', margin: 0 }}>Interactive piano and staff notation</p>
+        <h2 style={{ color: '#F5C242', margin: '0 0 10px 0' }}>Interactive Music Explorer</h2>
+        <p style={{ color: '#ccc', margin: 0 }}>Visualize scales, chords, and musical patterns</p>
       </div>
 
       {/* Root Selection */}
-      <div style={{ display: 'flex', gap: '8px', marginBottom: '20px', justifyContent: 'center', flexWrap: 'wrap' }}>
-        {ROOTS.map(root => (
-          <button
-            key={root}
-            onClick={() => setSelectedRoot(root)}
-            style={{
-              background: selectedRoot === root ? '#F5C242' : '#333',
-              color: selectedRoot === root ? '#222' : '#ccc',
-              border: '1px solid #555',
-              borderRadius: '4px',
-              padding: '8px 12px',
-              cursor: 'pointer',
-              fontSize: '14px',
-              fontWeight: 'bold',
-              minWidth: '40px'
-            }}
-          >
-            {root}
-          </button>
-        ))}
+      <div style={{ marginBottom: '20px', textAlign: 'center' }}>
+        <label style={{ display: 'block', marginBottom: '8px', color: '#F5C242', fontSize: '16px', fontWeight: 'bold' }}>Root Note</label>
+        <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap', justifyContent: 'center' }}>
+          {ROOTS.map(root => (
+            <button
+              key={root}
+              onClick={() => setSelectedRoot(root)}
+              style={{
+                background: selectedRoot === root ? '#F5C242' : '#333',
+                color: selectedRoot === root ? '#222' : '#ccc',
+                border: '1px solid #555',
+                borderRadius: '6px',
+                padding: '8px 12px',
+                cursor: 'pointer',
+                fontSize: '14px',
+                fontWeight: 'bold',
+                minWidth: '40px',
+                transition: 'all 0.2s ease'
+              }}
+            >
+              {root}
+            </button>
+          ))}
+        </div>
       </div>
 
-      {/* Notation View Selection */}
+      {/* Scale Selection */}
+      <div style={{ marginBottom: '20px', textAlign: 'center' }}>
+        <label style={{ display: 'block', marginBottom: '8px', color: '#F5C242', fontSize: '16px', fontWeight: 'bold' }}>Scale Type</label>
+        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', justifyContent: 'center' }}>
+          {POPULAR_SCALES.map((scale) => (
+            <button
+              key={scale.name}
+              onClick={() => {
+                const rootIndex = ROOTS.indexOf(selectedRoot);
+                const notes = scale.pattern.map((interval: number) => ROOTS[(rootIndex + interval) % 12]);
+                setCurrentPattern({
+                  intervals: scale.pattern,
+                  notes,
+                  name: scale.name
+                });
+                onStateChange({
+                  root: selectedRoot,
+                  mode: scale.name.toLowerCase(),
+                  note_pattern: scale.pattern,
+                  notes: notes,
+                  source: 'keylink-playground',
+                  timestamp: Date.now()
+                });
+              }}
+              style={{
+                background: currentPattern?.name === scale.name ? '#F5C242' : '#333',
+                color: currentPattern?.name === scale.name ? '#222' : '#ccc',
+                border: '1px solid #555',
+                borderRadius: '8px',
+                padding: '10px 16px',
+                cursor: 'pointer',
+                fontSize: '14px',
+                fontWeight: 'bold',
+                transition: 'all 0.2s ease'
+              }}
+            >
+              {scale.name}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* View Selection */}
       <div style={{ marginBottom: '20px', textAlign: 'center' }}>
         <div style={{ display: 'flex', gap: '8px', justifyContent: 'center' }}>
           {(['piano', 'staff'] as NotationView[]).map(view => (
@@ -100,11 +156,11 @@ export default function KeyLinkPlayground({ onStateChange, resolver }: KeyLinkPl
                 background: notationView === view ? '#F5C242' : '#333',
                 color: notationView === view ? '#000' : '#fff',
                 border: '1px solid #555',
-                borderRadius: '6px',
+                borderRadius: '8px',
                 cursor: 'pointer',
-                textTransform: 'capitalize',
                 fontSize: '16px',
-                fontWeight: 'bold'
+                fontWeight: 'bold',
+                transition: 'all 0.2s ease'
               }}
             >
               {view === 'piano' ? '🎹 Piano' : '🎼 Staff'}
@@ -115,52 +171,91 @@ export default function KeyLinkPlayground({ onStateChange, resolver }: KeyLinkPl
 
       {/* Visual Representation */}
       <div style={{ 
-        background: '#222', 
-        padding: '20px', 
-        borderRadius: '8px',
+        background: 'linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%)', 
+        padding: '30px', 
+        borderRadius: '12px',
         minHeight: '300px',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center'
+        border: '1px solid #333',
+        boxShadow: '0 4px 20px rgba(0,0,0,0.3)'
       }}>
-        <h3 style={{ color: '#F5C242', margin: '0 0 15px 0', textAlign: 'center' }}>
-          {currentPattern?.name || 'Major'} in {selectedRoot}
-        </h3>
+        <div style={{ textAlign: 'center', marginBottom: '20px' }}>
+          <h3 style={{ color: '#F5C242', margin: '0 0 10px 0', fontSize: '24px', fontWeight: 'bold' }}>
+            {currentPattern?.name || 'Select a scale'} in {selectedRoot}
+          </h3>
+          {currentPattern && (
+            <p style={{ color: '#ccc', margin: 0, fontSize: '14px' }}>
+              {currentPattern.notes.join(' - ')}
+            </p>
+          )}
+        </div>
         
         {/* Piano Keyboard View */}
         {notationView === 'piano' && currentPattern && (
-          <PianoKeyboard 
-            root={selectedRoot}
-            activeNotes={currentPattern.notes}
-            pattern={currentPattern}
-          />
+          <div style={{ background: '#1a1a1a', padding: '20px', borderRadius: '8px', border: '1px solid #333' }}>
+            <PianoKeyboard 
+              root={selectedRoot}
+              activeNotes={currentPattern.notes}
+              pattern={currentPattern}
+            />
+          </div>
         )}
 
         {/* Staff View */}
         {notationView === 'staff' && currentPattern && (
-          <StaffNotation 
-            root={selectedRoot}
-            activeNotes={currentPattern.notes}
-            pattern={currentPattern}
-          />
+          <div style={{ background: '#1a1a1a', padding: '20px', borderRadius: '8px', border: '1px solid #333' }}>
+            <StaffNotation 
+              root={selectedRoot}
+              activeNotes={currentPattern.notes}
+              pattern={currentPattern}
+            />
+          </div>
+        )}
+
+        {/* Guitar Tab View */}
+        {notationView === 'guitar' && currentPattern && (
+          <div style={{ background: '#1a1a1a', padding: '20px', borderRadius: '8px', border: '1px solid #333' }}>
+            <GuitarTab 
+              root={selectedRoot}
+              activeNotes={currentPattern.notes}
+              pattern={currentPattern}
+            />
+          </div>
+        )}
+
+        {/* Ukulele Tab View */}
+        {notationView === 'ukulele' && currentPattern && (
+          <div style={{ background: '#1a1a1a', padding: '20px', borderRadius: '8px', border: '1px solid #333' }}>
+            <UkuleleTab 
+              root={selectedRoot}
+              activeNotes={currentPattern.notes}
+              pattern={currentPattern}
+            />
+          </div>
+        )}
+
+        {!currentPattern && (
+          <div style={{ 
+            textAlign: 'center', 
+            padding: '40px', 
+            color: '#666',
+            fontSize: '16px'
+          }}>
+            Select a scale type to visualize the pattern
+          </div>
         )}
       </div>
 
       {/* Pattern Info */}
       {currentPattern && (
         <div style={{ 
-          background: '#2a2a2a', 
-          padding: '16px', 
-          borderRadius: '8px', 
-          marginTop: '16px',
-          textAlign: 'center'
+          marginTop: '15px', 
+          padding: '10px', 
+          background: '#333', 
+          borderRadius: '4px',
+          fontSize: '12px'
         }}>
-          <div style={{ color: '#F5C242', fontWeight: 'bold', marginBottom: '8px' }}>
-            Notes: {currentPattern.notes.join(' - ')}
-          </div>
-          <div style={{ color: '#ccc', fontSize: '14px' }}>
-            Intervals: {currentPattern.intervals.map(i => i === 0 ? 'R' : i).join(' - ')}
-          </div>
+          <strong>Intervals:</strong> [{currentPattern.intervals.join(', ')}] | 
+          <strong> Notes:</strong> {currentPattern.notes.join(', ')}
         </div>
       )}
     </div>
@@ -169,174 +264,36 @@ export default function KeyLinkPlayground({ onStateChange, resolver }: KeyLinkPl
 
 // Piano Keyboard Component
 function PianoKeyboard({ root, activeNotes, pattern }: { root: string; activeNotes: string[]; pattern: NotePattern }) {
-  // Create a full octave of keys
-  const allKeys = [
-    { note: 'C', isBlack: false },
-    { note: 'C#', isBlack: true },
-    { note: 'D', isBlack: false },
-    { note: 'D#', isBlack: true },
-    { note: 'E', isBlack: false },
-    { note: 'F', isBlack: false },
-    { note: 'F#', isBlack: true },
-    { note: 'G', isBlack: false },
-    { note: 'G#', isBlack: true },
-    { note: 'A', isBlack: false },
-    { note: 'A#', isBlack: true },
-    { note: 'B', isBlack: false }
-  ];
-
+  const whiteKeys = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
+  const blackKeys = ['C#', 'D#', 'F#', 'G#', 'A#'];
+  
   return (
-    <div style={{ 
-      display: 'flex', 
-      justifyContent: 'center', 
-      alignItems: 'center',
-      margin: '20px 0',
-      position: 'relative'
-    }}>
-      <div style={{
-        display: 'flex',
+    <div style={{ textAlign: 'center' }}>
+      <div style={{ 
+        display: 'flex', 
+        justifyContent: 'center', 
         position: 'relative',
-        height: '120px',
-        borderRadius: '8px',
-        overflow: 'hidden',
-        boxShadow: '0 4px 12px rgba(0,0,0,0.3)'
+        height: '120px'
       }}>
         {/* White Keys */}
-        {allKeys.map((key, index) => (
-          <div
-            key={key.note}
-            style={{
-              width: '40px',
-              height: '120px',
-              background: activeNotes.includes(key.note) ? '#F5C242' : '#fff',
-              color: activeNotes.includes(key.note) ? '#222' : '#333',
-              border: '1px solid #ccc',
-              display: 'flex',
-              alignItems: 'flex-end',
-              justifyContent: 'center',
-              paddingBottom: '8px',
-              fontSize: '12px',
-              fontWeight: 'bold',
-              cursor: 'pointer',
-              position: 'relative',
-              zIndex: key.isBlack ? 2 : 1,
-              marginLeft: key.isBlack ? '-12px' : '0',
-              marginRight: key.isBlack ? '-12px' : '0'
-            }}
-          >
-            {key.note}
-          </div>
-        ))}
-        
-        {/* Black Keys */}
-        {allKeys.map((key, index) => key.isBlack && (
-          <div
-            key={`black-${key.note}`}
-            style={{
-              width: '24px',
-              height: '80px',
-              background: activeNotes.includes(key.note) ? '#F5C242' : '#333',
-              color: activeNotes.includes(key.note) ? '#222' : '#fff',
-              border: '1px solid #222',
-              display: 'flex',
-              alignItems: 'flex-end',
-              justifyContent: 'center',
-              paddingBottom: '8px',
-              fontSize: '10px',
-              fontWeight: 'bold',
-              cursor: 'pointer',
-              position: 'absolute',
-              zIndex: 3,
-              left: `${index * 40 - 12}px`,
-              borderRadius: '0 0 4px 4px'
-            }}
-          >
-            {key.note}
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-// Staff Notation Component
-function StaffNotation({ root, activeNotes, pattern }: { root: string; activeNotes: string[]; pattern: NotePattern }) {
-  // Simple staff representation
-  const staffLines = 5;
-  const lineHeight = 8;
-  const staffWidth = 300;
-  
-  // Note positions (simplified - in a real implementation you'd use proper music notation)
-  const notePositions: { [key: string]: number } = {
-    'C': 0, 'C#': 0.5, 'D': 1, 'D#': 1.5, 'E': 2, 'F': 3, 'F#': 3.5,
-    'G': 4, 'G#': 4.5, 'A': 5, 'A#': 5.5, 'B': 6
-  };
-
-  return (
-    <div style={{ 
-      display: 'flex', 
-      flexDirection: 'column', 
-      alignItems: 'center',
-      margin: '20px 0'
-    }}>
-      {/* Treble Clef */}
-      <div style={{ 
-        fontSize: '24px', 
-        marginBottom: '10px',
-        color: '#F5C242'
-      }}>
-        𝄞
-      </div>
-      
-      {/* Staff */}
-      <div style={{
-        position: 'relative',
-        width: staffWidth,
-        height: staffLines * lineHeight + 20,
-        background: '#fff',
-        borderRadius: '4px',
-        padding: '10px',
-        boxShadow: '0 2px 8px rgba(0,0,0,0.2)'
-      }}>
-        {/* Staff Lines */}
-        {Array.from({ length: staffLines }, (_, i) => (
-          <div
-            key={i}
-            style={{
-              position: 'absolute',
-              left: 0,
-              right: 0,
-              top: `${i * lineHeight + 10}px`,
-              height: '1px',
-              background: '#333'
-            }}
-          />
-        ))}
-        
-        {/* Notes */}
-        {activeNotes.map((note, index) => {
-          const position = notePositions[note] || 0;
-          const x = 50 + (index * 30);
-          const y = 10 + (position * lineHeight / 2);
-          
+        {whiteKeys.map((note, index) => {
+          const isActive = activeNotes.includes(note);
           return (
             <div
-              key={`${note}-${index}`}
+              key={note}
               style={{
-                position: 'absolute',
-                left: `${x}px`,
-                top: `${y}px`,
-                width: '12px',
-                height: '12px',
-                background: '#F5C242',
-                borderRadius: '50%',
-                border: '2px solid #222',
+                width: '40px',
+                height: '120px',
+                background: isActive ? '#F5C242' : '#fff',
+                color: isActive ? '#000' : '#000',
+                border: '1px solid #000',
                 display: 'flex',
-                alignItems: 'center',
+                alignItems: 'flex-end',
                 justifyContent: 'center',
-                fontSize: '8px',
+                paddingBottom: '10px',
                 fontWeight: 'bold',
-                color: '#222'
+                position: 'relative',
+                zIndex: 1
               }}
             >
               {note}
@@ -344,27 +301,144 @@ function StaffNotation({ root, activeNotes, pattern }: { root: string; activeNot
           );
         })}
         
-        {/* Time Signature */}
-        <div style={{
-          position: 'absolute',
-          left: '10px',
-          top: '10px',
-          fontSize: '16px',
-          fontWeight: 'bold',
-          color: '#333'
+        {/* Black Keys */}
+        {blackKeys.map((note, index) => {
+          const isActive = activeNotes.includes(note);
+          return (
+            <div
+              key={note}
+              style={{
+                width: '24px',
+                height: '80px',
+                background: isActive ? '#F5C242' : '#000',
+                color: isActive ? '#000' : '#fff',
+                border: '1px solid #000',
+                display: 'flex',
+                alignItems: 'flex-end',
+                justifyContent: 'center',
+                paddingBottom: '10px',
+                fontWeight: 'bold',
+                position: 'absolute',
+                zIndex: 2,
+                left: `${(index < 2 ? index + 1 : index + 2) * 40 - 12}px`
+              }}
+            >
+              {note}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+// Staff Notation Component
+function StaffNotation({ root, activeNotes, pattern }: { root: string; activeNotes: string[]; pattern: NotePattern }) {
+  return (
+    <div style={{ textAlign: 'center' }}>
+      <div style={{ 
+        background: '#fff', 
+        color: '#000', 
+        padding: '20px', 
+        borderRadius: '4px',
+        fontFamily: 'serif'
+      }}>
+        <div style={{ fontSize: '14px', marginBottom: '10px' }}>
+          Treble Clef
+        </div>
+        <div style={{ 
+          display: 'flex', 
+          justifyContent: 'center', 
+          alignItems: 'center',
+          height: '80px',
+          border: '1px solid #ccc',
+          background: '#f9f9f9'
         }}>
-          4/4
+          <span style={{ fontSize: '12px' }}>
+            {activeNotes.join(' ')}
+          </span>
+        </div>
+        <div style={{ fontSize: '12px', marginTop: '10px', color: '#666' }}>
+          {pattern.name} in {root}
         </div>
       </div>
-      
-      {/* Pattern Name */}
-      <div style={{
-        marginTop: '10px',
-        fontSize: '14px',
-        color: '#F5C242',
-        fontWeight: 'bold'
+    </div>
+  );
+}
+
+// Guitar Tab Component
+function GuitarTab({ root, activeNotes, pattern }: { root: string; activeNotes: string[]; pattern: NotePattern }) {
+  const strings = ['E', 'A', 'D', 'G', 'B', 'E'];
+  
+  return (
+    <div style={{ textAlign: 'center' }}>
+      <div style={{ 
+        background: '#fff', 
+        color: '#000', 
+        padding: '15px', 
+        borderRadius: '4px',
+        fontFamily: 'monospace'
       }}>
-        {pattern.name} Scale
+        <div style={{ fontSize: '14px', marginBottom: '10px' }}>
+          Guitar Tab
+        </div>
+        {strings.map((string, index) => (
+          <div key={string} style={{ 
+            display: 'flex', 
+            alignItems: 'center',
+            borderBottom: '1px solid #ccc',
+            padding: '5px 0'
+          }}>
+            <span style={{ width: '20px', textAlign: 'right', marginRight: '10px' }}>
+              {string}
+            </span>
+            <span style={{ flex: 1, textAlign: 'left' }}>
+              {activeNotes.includes(string) ? '●' : '-'}
+            </span>
+          </div>
+        ))}
+        <div style={{ fontSize: '12px', marginTop: '10px', color: '#666' }}>
+          {pattern.name} in {root}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Ukulele Tab Component
+function UkuleleTab({ root, activeNotes, pattern }: { root: string; activeNotes: string[]; pattern: NotePattern }) {
+  const strings = ['G', 'C', 'E', 'A'];
+  
+  return (
+    <div style={{ textAlign: 'center' }}>
+      <div style={{ 
+        background: '#fff', 
+        color: '#000', 
+        padding: '15px', 
+        borderRadius: '4px',
+        fontFamily: 'monospace'
+      }}>
+        <div style={{ fontSize: '14px', marginBottom: '10px' }}>
+          Ukulele Tab
+        </div>
+        {strings.map((string, index) => (
+          <div key={string} style={{ 
+            display: 'flex', 
+            alignItems: 'center',
+            borderBottom: '1px solid #ccc',
+            padding: '5px 0'
+          }}>
+            <span style={{ width: '20px', textAlign: 'right', marginRight: '10px' }}>
+              {string}
+            </span>
+            <span style={{ flex: 1, textAlign: 'left' }}>
+              {activeNotes.includes(string) ? '●' : '-'}
+            </span>
+          </div>
+        ))}
+        <div style={{ fontSize: '12px', marginTop: '10px', color: '#666' }}>
+          {pattern.name} in {root}
+        </div>
       </div>
     </div>
   );

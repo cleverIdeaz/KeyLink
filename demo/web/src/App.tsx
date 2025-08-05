@@ -21,6 +21,26 @@ const ROOTS = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
 const MODES = ['Ionian', 'Dorian', 'Phrygian', 'Lydian', 'Mixolydian', 'Aeolian', 'Locrian'];
 const CHORD_TYPES = ['maj', 'min', '7', 'maj7', 'min7', 'dim', 'aug', 'sus2', 'sus4', 'none'];
 
+// Mode categories and their options
+const MODE_CATEGORIES = {
+  simple: {
+    name: 'Simple',
+    options: ['major', 'minor']
+  },
+  modes: {
+    name: 'Modes',
+    options: ['major', 'minor', 'dorian', 'phrygian', 'lydian', 'mixolydian', 'locrian']
+  },
+  chords: {
+    name: 'Chords',
+    options: ['maj', 'min', '7', 'maj7', 'min7', 'dim', 'aug', 'sus2', 'sus4']
+  },
+  scales: {
+    name: 'Scales',
+    options: ['major', 'minor', 'pentatonic', 'blues', 'harmonic-minor', 'melodic-minor', 'whole-tone', 'chromatic']
+  }
+};
+
 function now() {
   return new Date().toLocaleTimeString();
 }
@@ -68,6 +88,7 @@ export default function App() {
   const [root, setRoot] = useState('C');
   const [mode, setMode] = useState('major');
   const [showModeModal, setShowModeModal] = useState(false);
+  const [modeCategory, setModeCategory] = useState('simple');
   const [keylinkOn, setKeylinkOn] = useState(true);
   const [tempo, setTempo] = useState(120);
   const [chordLinkOn, setChordLinkOn] = useState(true);
@@ -85,6 +106,7 @@ export default function App() {
   const [showMaxDownload, setShowMaxDownload] = useState(false);
 
   // Add mode hot-swap state
+  const [modeHotSwap, setModeHotSwap] = useState(false);
   const [abletonLinkEnabled, setAbletonLinkEnabled] = useState(false);
   const [showPlayground, setShowPlayground] = useState(false);
   const [aliasResolver, setAliasResolver] = useState<KeyLinkAliasResolver | null>(null);
@@ -299,6 +321,20 @@ export default function App() {
     setHasUserInteracted(true);
   };
 
+  // Add mode hot-swap handler
+  const handleModeHotSwap = () => {
+    setModeHotSwap(!modeHotSwap);
+    if (mode === 'major') {
+      setMode('minor');
+    } else if (mode === 'minor') {
+      setMode('major');
+    } else {
+      setMode('major'); // Default to major for other modes
+    }
+    setHasUserInteracted(true);
+  };
+
+  // Add Ableton Link handler
   const handleAbletonLink = () => {
     setAbletonLinkEnabled(!abletonLinkEnabled);
     // TODO: Implement Ableton Link SDK integration
@@ -385,11 +421,10 @@ export default function App() {
         <button onClick={handleKeylinkToggle} style={{ flexGrow: 1, padding: '12px 24px', fontSize: '24px', background: keylinkOn ? '#F5C242' : '#888', color: '#222', border: 'none', borderRadius: '10px', cursor: 'pointer' }}>
           KeyLink
         </button>
-        {/* Root and Mode Controls */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '16px', justifyContent: 'center' }}>
-          {/* Root Selection */}
+        {/* Key and Mode Controls */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <label style={{ color: '#F5C242', fontSize: '14px', fontWeight: 'bold' }}>root()</label>
+            <label style={{ color: '#ccc', fontSize: '14px' }}>Root:</label>
             <select
               value={root}
               onChange={(e) => { setRoot(e.target.value); setHasUserInteracted(true); }}
@@ -399,103 +434,119 @@ export default function App() {
                 border: '1px solid #555',
                 borderRadius: '4px',
                 padding: '6px 8px',
-                fontSize: '14px',
-                minWidth: '60px'
+                fontSize: '14px'
               }}
             >
-              {ROOTS.map(r => (
-                <option key={r} value={r}>{r}</option>
+              {['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'].map(note => (
+                <option key={note} value={note}>{note}</option>
               ))}
             </select>
           </div>
 
-          {/* Mode Selection */}
+          {/* Mode Hot-Swap Button */}
+          <button
+            onClick={handleModeHotSwap}
+            style={{
+              background: modeHotSwap ? '#F5C242' : '#444',
+              color: modeHotSwap ? '#222' : '#ccc',
+              border: '1px solid #555',
+              borderRadius: '4px',
+              padding: '6px 8px',
+              cursor: 'pointer',
+              fontSize: '12px',
+              fontWeight: 'bold',
+              minWidth: '40px'
+            }}
+            title="Hot-swap between Major/Minor"
+          >
+            {mode === 'major' ? 'M' : mode === 'minor' ? 'm' : 'M/m'}
+          </button>
+
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <label style={{ color: '#F5C242', fontSize: '14px', fontWeight: 'bold' }}>mode()</label>
-            <div style={{ display: 'flex', gap: '4px' }}>
-              {/* Simple M/m Toggle */}
-              <button
-                onClick={() => { 
-                  setMode('major'); 
-                  setHasUserInteracted(true);
-                }}
-                style={{
-                  background: mode === 'major' ? '#F5C242' : '#333',
-                  color: mode === 'major' ? '#222' : '#ccc',
-                  border: '1px solid #555',
-                  borderRadius: '4px',
-                  padding: '6px 12px',
-                  cursor: 'pointer',
-                  fontSize: '14px',
-                  fontWeight: 'bold'
-                }}
-              >
-                M
-              </button>
-              <button
-                onClick={() => { 
-                  setMode('minor'); 
-                  setHasUserInteracted(true);
-                }}
-                style={{
-                  background: mode === 'minor' ? '#F5C242' : '#333',
-                  color: mode === 'minor' ? '#222' : '#ccc',
-                  border: '1px solid #555',
-                  borderRadius: '4px',
-                  padding: '6px 12px',
-                  cursor: 'pointer',
-                  fontSize: '14px',
-                  fontWeight: 'bold'
-                }}
-              >
-                m
-              </button>
-              
-              {/* Advanced Mode Selector */}
-              <select
-                value={mode}
-                onChange={(e) => { 
-                  setMode(e.target.value); 
-                  setHasUserInteracted(true);
-                }}
-                style={{
-                  background: '#333',
-                  color: '#fff',
-                  border: '1px solid #555',
-                  borderRadius: '4px',
-                  padding: '6px 8px',
-                  fontSize: '12px',
-                  minWidth: '100px'
-                }}
-              >
-                <optgroup label="Simple">
-                  <option value="major">Major</option>
-                  <option value="minor">Minor</option>
-                </optgroup>
-                <optgroup label="Modes">
-                  <option value="dorian">Dorian</option>
-                  <option value="phrygian">Phrygian</option>
-                  <option value="lydian">Lydian</option>
-                  <option value="mixolydian">Mixolydian</option>
-                  <option value="locrian">Locrian</option>
-                </optgroup>
-                <optgroup label="Chords">
-                  <option value="maj">Major Triad</option>
-                  <option value="min">Minor Triad</option>
-                  <option value="dim">Diminished</option>
-                  <option value="aug">Augmented</option>
-                  <option value="maj7">Major 7</option>
-                  <option value="m7">Minor 7</option>
-                  <option value="7">Dominant 7</option>
-                  <option value="sus2">Sus2</option>
-                  <option value="sus4">Sus4</option>
-                </optgroup>
-                <optgroup label="Scales">
-                  <option value="pentatonic">Pentatonic</option>
-                  <option value="blues">Blues</option>
-                  <option value="chromatic">Chromatic</option>
-                </optgroup>
-              </select>
+            <label style={{ color: '#ccc', fontSize: '14px' }}>Category:</label>
+            <select
+              value={modeCategory}
+              onChange={(e) => {
+                setModeCategory(e.target.value);
+                const category = MODE_CATEGORIES[e.target.value as keyof typeof MODE_CATEGORIES];
+                setMode(category.options[0]);
+                setHasUserInteracted(true);
+              }}
+              style={{
+                background: '#333',
+                color: '#fff',
+                border: '1px solid #555',
+                borderRadius: '4px',
+                padding: '6px 8px',
+                fontSize: '14px',
+                minWidth: '80px'
+              }}
+            >
+              {Object.entries(MODE_CATEGORIES).map(([key, cat]) => (
+                <option key={key} value={key}>{cat.name}</option>
+              ))}
+            </select>
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <label style={{ color: '#ccc', fontSize: '14px' }}>Mode:</label>
+            <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap' }}>
+              {modeCategory === 'simple' ? (
+                // Simple M/m buttons
+                <>
+                  <button
+                    onClick={() => { setMode('major'); setHasUserInteracted(true); }}
+                    style={{
+                      background: mode === 'major' ? '#F5C242' : '#333',
+                      color: mode === 'major' ? '#222' : '#ccc',
+                      border: '1px solid #555',
+                      borderRadius: '4px',
+                      padding: '6px 12px',
+                      cursor: 'pointer',
+                      fontSize: '14px',
+                      fontWeight: 'bold'
+                    }}
+                  >
+                    M
+                  </button>
+                  <button
+                    onClick={() => { setMode('minor'); setHasUserInteracted(true); }}
+                    style={{
+                      background: mode === 'minor' ? '#F5C242' : '#333',
+                      color: mode === 'minor' ? '#222' : '#ccc',
+                      border: '1px solid #555',
+                      borderRadius: '4px',
+                      padding: '6px 12px',
+                      cursor: 'pointer',
+                      fontSize: '14px',
+                      fontWeight: 'bold'
+                    }}
+                  >
+                    m
+                  </button>
+                </>
+              ) : (
+                // Dropdown for other categories
+                <select
+                  value={mode}
+                  onChange={(e) => { setMode(e.target.value); setHasUserInteracted(true); }}
+                  style={{
+                    background: '#333',
+                    color: '#fff',
+                    border: '1px solid #555',
+                    borderRadius: '4px',
+                    padding: '6px 8px',
+                    fontSize: '14px',
+                    minWidth: '100px'
+                  }}
+                >
+                  {MODE_CATEGORIES[modeCategory as keyof typeof MODE_CATEGORIES].options.map(option => (
+                    <option key={option} value={option}>
+                      {option.charAt(0).toUpperCase() + option.slice(1)}
+                    </option>
+                  ))}
+                </select>
+              )}
             </div>
           </div>
         </div>
@@ -540,8 +591,8 @@ export default function App() {
 
       <div style={{ display: 'flex', gap: '12px', marginBottom: '16px' }}>
         <button onClick={() => setShowAdvanced(a => !a)} style={{ background: '#333', color: '#F5C242', border: 'none', padding: '10px 20px', borderRadius: '8px', cursor: 'pointer' }}>
-          {showAdvanced ? 'Hide Advanced' : 'Show Advanced'}
-        </button>
+        {showAdvanced ? 'Hide Advanced' : 'Show Advanced'}
+      </button>
         <button onClick={handlePlaygroundToggle} style={{ background: showPlayground ? '#F5C242' : '#333', color: showPlayground ? '#222' : '#F5C242', border: 'none', padding: '10px 20px', borderRadius: '8px', cursor: 'pointer' }}>
           {showPlayground ? 'Hide Playground' : 'Show Playground'}
         </button>
