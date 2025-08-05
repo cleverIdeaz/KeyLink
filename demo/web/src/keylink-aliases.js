@@ -280,8 +280,18 @@ class KeyLinkAliasResolver {
     // Normalize pattern to start at 0 and sort
     const normalizedPattern = this.normalizePattern(pattern);
     
+    // First, check the comprehensive indexed list if available
+    if (this.standards.note_primitives.comprehensive_indexed_list) {
+      const indexedPrimitives = this.standards.note_primitives.comprehensive_indexed_list;
+      // Note: The comprehensive list is by index, so we'd need to load the full file
+      // For now, we'll check the standard categories
+    }
+    
     // Search through all primitive categories
     for (const [category, primitives] of Object.entries(this.standards.note_primitives)) {
+      // Skip the comprehensive_indexed_list as it's not a pattern category
+      if (category === 'comprehensive_indexed_list') continue;
+      
       for (const [primitiveName, primitiveData] of Object.entries(primitives)) {
         if (this.patternsMatch(normalizedPattern, primitiveData.pattern)) {
           return {
@@ -523,9 +533,59 @@ class KeyLinkAliasResolver {
 
     const result = {};
     for (const [category, primitives] of Object.entries(this.standards.note_primitives)) {
+      // Skip the comprehensive_indexed_list as it's not a pattern category
+      if (category === 'comprehensive_indexed_list') continue;
       result[category] = Object.keys(primitives);
     }
     return result;
+  }
+
+  /**
+   * Load the comprehensive indexed primitives list
+   * @returns {Promise<Object>} The comprehensive primitives data
+   */
+  async loadComprehensivePrimitives() {
+    if (!this.initialized) {
+      console.warn('KeyLinkAliasResolver not initialized');
+      return null;
+    }
+
+    try {
+      const response = await fetch('/comprehensive-note-primitives.json');
+      const comprehensiveData = await response.json();
+      return comprehensiveData;
+    } catch (error) {
+      console.warn('Could not load comprehensive note primitives:', error);
+      return null;
+    }
+  }
+
+  /**
+   * Resolve a note primitive by index from the comprehensive list
+   * @param {number} index - The primitive index
+   * @returns {Promise<Object|null>} The primitive data or null if not found
+   */
+  async resolvePrimitiveByIndex(index) {
+    const comprehensiveData = await this.loadComprehensivePrimitives();
+    if (!comprehensiveData || !comprehensiveData.indexed_primitives) {
+      return null;
+    }
+
+    const indexStr = String(index);
+    return comprehensiveData.indexed_primitives[indexStr] || null;
+  }
+
+  /**
+   * Get all comprehensive primitive indices
+   * @returns {Promise<Array>} Array of primitive indices
+   */
+  async getComprehensivePrimitiveIndices() {
+    const comprehensiveData = await this.loadComprehensivePrimitives();
+    if (!comprehensiveData || !comprehensiveData.indexed_primitives) {
+      return [];
+    }
+
+    return Object.keys(comprehensiveData.indexed_primitives).map(Number).sort((a, b) => a - b);
   }
 
   /**

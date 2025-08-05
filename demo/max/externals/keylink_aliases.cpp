@@ -21,6 +21,7 @@ static std::map<std::string, std::string> root_note_aliases;
 static std::map<std::string, std::string> mode_aliases;
 static std::map<std::string, std::string> chord_type_aliases;
 static std::map<std::string, std::vector<int>> note_pattern_aliases;
+static std::map<int, std::string> comprehensive_primitives;
 static bool aliases_initialized = false;
 
 // Initialize alias maps
@@ -240,6 +241,61 @@ void initialize_aliases() {
     note_pattern_aliases["chromatic scale"] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
     note_pattern_aliases["12-tone"] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
     
+    // Initialize comprehensive primitives (basic mapping for common indices)
+    // Note: Full comprehensive list would be loaded from file in a real implementation
+    comprehensive_primitives[0] = "null";
+    comprehensive_primitives[1] = "C";
+    comprehensive_primitives[2] = "C#";
+    comprehensive_primitives[3] = "D";
+    comprehensive_primitives[4] = "D#";
+    comprehensive_primitives[5] = "E";
+    comprehensive_primitives[6] = "F";
+    comprehensive_primitives[7] = "F#";
+    comprehensive_primitives[8] = "G";
+    comprehensive_primitives[9] = "G#";
+    comprehensive_primitives[10] = "A";
+    comprehensive_primitives[11] = "A#";
+    comprehensive_primitives[12] = "B";
+    comprehensive_primitives[13] = "SharponeInterval";
+    comprehensive_primitives[14] = "DoReWholetone";
+    comprehensive_primitives[15] = "FlattenedThirdInterval";
+    comprehensive_primitives[16] = "MajorThirdInterval";
+    comprehensive_primitives[17] = "Fourth";
+    comprehensive_primitives[18] = "FlatFifthInterval";
+    comprehensive_primitives[19] = "+";
+    comprehensive_primitives[20] = "SharpFifthInterval";
+    comprehensive_primitives[21] = "MajorSixthInterval";
+    comprehensive_primitives[22] = "FlatSeventhInterval";
+    comprehensive_primitives[23] = "MajorSeventhInterval";
+    comprehensive_primitives[52] = "dim";
+    comprehensive_primitives[53] = "min";
+    comprehensive_primitives[60] = "maj";
+    comprehensive_primitives[61] = "aug";
+    comprehensive_primitives[63] = "dom7";
+    comprehensive_primitives[66] = "sus4";
+    comprehensive_primitives[182] = "dim7";
+    comprehensive_primitives[183] = "m7b5";
+    comprehensive_primitives[207] = "maj6";
+    comprehensive_primitives[208] = "dominant-seventh";
+    comprehensive_primitives[209] = "maj7";
+    comprehensive_primitives[223] = "7sus4";
+    comprehensive_primitives[237] = "french-augmented-sixth";
+    comprehensive_primitives[324] = "dom7b5b9";
+    comprehensive_primitives[331] = "dom7b9b13";
+    comprehensive_primitives[389] = "minor-pentatonic";
+    comprehensive_primitives[391] = "m9";
+    comprehensive_primitives[400] = "MajorPentachord";
+    comprehensive_primitives[411] = "6sus4";
+    comprehensive_primitives[412] = "M9";
+    comprehensive_primitives[413] = "maj9";
+    comprehensive_primitives[415] = "WholeTone(Just)";
+    comprehensive_primitives[417] = "dom13";
+    comprehensive_primitives[427] = "9sus4";
+    comprehensive_primitives[464] = "dom7b5#9";
+    comprehensive_primitives[494] = "BluesMinorMaj7";
+    comprehensive_primitives[867] = "WholeTone";
+    comprehensive_primitives[2066] = "chromatic";
+    
     aliases_initialized = true;
 }
 
@@ -436,6 +492,31 @@ std::vector<std::string> apply_pattern_to_root(const std::string& root_note, con
     }
     
     return result;
+}
+
+// Resolve primitive by index from comprehensive list
+std::string resolve_primitive_by_index(int index) {
+    if (!aliases_initialized) initialize_aliases();
+    
+    auto it = comprehensive_primitives.find(index);
+    if (it != comprehensive_primitives.end()) {
+        return it->second;
+    }
+    
+    // Return empty string if not found
+    return "";
+}
+
+// Get comprehensive primitive indices
+std::vector<int> get_comprehensive_primitive_indices() {
+    if (!aliases_initialized) initialize_aliases();
+    
+    std::vector<int> indices;
+    for (const auto& pair : comprehensive_primitives) {
+        indices.push_back(pair.first);
+    }
+    std::sort(indices.begin(), indices.end());
+    return indices;
 }
 
 // Resolve complete message

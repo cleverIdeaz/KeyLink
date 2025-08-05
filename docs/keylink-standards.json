@@ -86,7 +86,13 @@
   },
 
   "note_primitives": {
-    "description": "Complete set of note combinations in 12-tone equal temperament, organized by interval patterns. Each primitive includes interval notation and common names.",
+    "description": "Complete set of note combinations in 12-tone equal temperament, organized by interval patterns and comprehensive indexed list. Each primitive includes interval notation and common names.",
+    "comprehensive_indexed_list": {
+      "description": "Complete set of 2067 note combinations in 12-tone equal temperament, organized by index and name. Each primitive includes interval notation and comprehensive aliases.",
+      "total_combinations": 2067,
+      "source": "User's comprehensive 12TET note primitive list",
+      "file_reference": "docs/comprehensive-note-primitives.json"
+    },
     "intervals": {
       "unison": {
         "pattern": [0],

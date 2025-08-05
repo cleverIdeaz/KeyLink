@@ -60,6 +60,44 @@ KeyLink introduces an **alias resolution system** that maps common synonyms, abb
 
 KeyLink introduces a **note primitives system** that provides interval-based representations for all musical constructs. This system allows for precise, mathematical representation of tonal relationships that can be transposed to any root note.
 
+### Comprehensive Indexed List
+
+KeyLink includes a complete set of **2067 note combinations** in 12-tone equal temperament, organized by index and name. This comprehensive list covers:
+
+- All possible note combinations from 1 to 12 notes
+- Traditional Western harmony (triads, seventh chords, etc.)
+- Extended harmony (ninth, eleventh, thirteenth chords)
+- Altered chords (sharp 5, flat 9, etc.)
+- Modal scales (dorian, phrygian, lydian, etc.)
+- Pentatonic scales (major, minor, blues variants)
+- World music scales (Japanese, Chinese, Indian, Arabic)
+- Messiaen modes and other modern scales
+- Bebop scales and jazz harmony
+- Cluster chords and dense harmonies
+- Quartal, quintal, secundal, and tertian harmony
+- Chromatic and atonal structures
+
+The comprehensive list is stored in `docs/comprehensive-note-primitives.json` and can be accessed by index number (0-2066).
+
+**Key Indices Include**:
+- `0`: null
+- `1-12`: Basic notes (C, C#, D, D#, E, F, F#, G, G#, A, A#, B)
+- `52`: dim (diminished triad)
+- `53`: min (minor triad)
+- `60`: maj (major triad)
+- `61`: aug (augmented triad)
+- `63`: dom7 (dominant seventh)
+- `182`: dim7 (diminished seventh)
+- `183`: m7b5 (half diminished)
+- `209`: maj7 (major seventh)
+- `223`: 7sus4 (dominant seventh suspended fourth)
+- `324`: dom7b5b9 (dominant seventh flat five flat nine)
+- `389`: minor-pentatonic
+- `391`: m9 (minor ninth)
+- `413`: maj9 (major ninth)
+- `867`: WholeTone
+- `2066`: chromatic (full 12-tone scale)
+
 ### Interval Patterns
 
 Each note primitive is defined by its **interval pattern** - an array of semitone distances from the root note. For example:
