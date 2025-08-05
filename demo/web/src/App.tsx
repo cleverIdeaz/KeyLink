@@ -106,8 +106,7 @@ export default function App() {
   // Add Max patch download state
   const [showMaxDownload, setShowMaxDownload] = useState(false);
 
-  // Add mode hot-swap state
-  const [modeHotSwap, setModeHotSwap] = useState(false);
+
   const [abletonLinkEnabled, setAbletonLinkEnabled] = useState(false);
   const [showPlayground, setShowPlayground] = useState(false);
   const [aliasResolver, setAliasResolver] = useState<KeyLinkAliasResolver | null>(null);
