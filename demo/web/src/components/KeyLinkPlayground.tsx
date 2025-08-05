@@ -131,8 +131,8 @@ interface KeyLinkPlaygroundProps {
 }
 
 export default function KeyLinkPlayground({ onStateChange, resolver }: KeyLinkPlaygroundProps) {
-  const [selectedCategory, setSelectedCategory] = useState<string>('simple');
-  const [selectedSubCategory, setSelectedSubCategory] = useState<string>('major');
+  const [selectedCategory] = useState<string>('simple');
+  const [selectedSubCategory] = useState<string>('major');
   const [selectedRoot, setSelectedRoot] = useState<string>('C');
   const [notationView, setNotationView] = useState<NotationView>('piano');
   const [currentPattern, setCurrentPattern] = useState<NotePattern | null>(null);
@@ -219,101 +219,106 @@ export default function KeyLinkPlayground({ onStateChange, resolver }: KeyLinkPl
     }}>
       {/* Header */}
       <div style={{ textAlign: 'center', marginBottom: '20px' }}>
-        <h2 style={{ color: '#F5C242', margin: '0 0 10px 0' }}>KeyLink Interactive Playground</h2>
-        <p style={{ color: '#ccc', margin: 0 }}>Explore all 2067 note combinations with visual feedback</p>
+        <h2 style={{ color: '#F5C242', margin: '0 0 10px 0' }}>Note Explorer</h2>
+        <p style={{ color: '#ccc', margin: 0 }}>Discover musical patterns and scales</p>
       </div>
 
-      {/* Main Selection Area */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '20px' }}>
-        {/* Category Selection */}
-        <div>
-          <label style={{ display: 'block', marginBottom: '8px', color: '#F5C242' }}>Category:</label>
-          <select 
-            value={selectedCategory}
-            onChange={(e) => {
-              setSelectedCategory(e.target.value);
-              setSelectedSubCategory(SUB_CATEGORIES[e.target.value]?.[0]?.id || '');
-            }}
-            style={{
-              width: '100%',
-              padding: '8px',
-              background: '#333',
-              color: '#fff',
-              border: '1px solid #555',
-              borderRadius: '4px'
-            }}
-          >
-            {CATEGORIES.map(cat => (
-              <option key={cat.id} value={cat.id}>{cat.name}</option>
-            ))}
-          </select>
-        </div>
-
+      {/* Simple Selection */}
+      <div style={{ display: 'flex', gap: '12px', marginBottom: '20px', justifyContent: 'center' }}>
         {/* Root Selection */}
         <div>
-          <label style={{ display: 'block', marginBottom: '8px', color: '#F5C242' }}>Root Note:</label>
-          <select 
-            value={selectedRoot}
-            onChange={(e) => setSelectedRoot(e.target.value)}
-            style={{
-              width: '100%',
-              padding: '8px',
-              background: '#333',
-              color: '#fff',
-              border: '1px solid #555',
-              borderRadius: '4px'
-            }}
-          >
+          <label style={{ display: 'block', marginBottom: '8px', color: '#F5C242', textAlign: 'center' }}>Root</label>
+          <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap', justifyContent: 'center' }}>
             {ROOTS.map(root => (
-              <option key={root} value={root}>{root}</option>
+              <button
+                key={root}
+                onClick={() => setSelectedRoot(root)}
+                style={{
+                  background: selectedRoot === root ? '#F5C242' : '#333',
+                  color: selectedRoot === root ? '#222' : '#ccc',
+                  border: '1px solid #555',
+                  borderRadius: '4px',
+                  padding: '6px 8px',
+                  cursor: 'pointer',
+                  fontSize: '12px',
+                  fontWeight: 'bold',
+                  minWidth: '32px'
+                }}
+              >
+                {root}
+              </button>
             ))}
-          </select>
+          </div>
         </div>
       </div>
 
-      {/* Sub-Category Selection */}
+      {/* Popular Scales */}
       <div style={{ marginBottom: '20px' }}>
-        <label style={{ display: 'block', marginBottom: '8px', color: '#F5C242' }}>Type:</label>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-          {currentSubCategories.map(sub => (
+        <label style={{ display: 'block', marginBottom: '8px', color: '#F5C242', textAlign: 'center' }}>Popular Scales</label>
+        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', justifyContent: 'center' }}>
+          {[
+            { name: 'Major', pattern: [0, 2, 4, 5, 7, 9, 11] },
+            { name: 'Minor', pattern: [0, 2, 3, 5, 7, 8, 10] },
+            { name: 'Pentatonic', pattern: [0, 2, 4, 7, 9] },
+            { name: 'Blues', pattern: [0, 3, 5, 6, 7, 10] },
+            { name: 'Chromatic', pattern: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11] }
+          ].map((scale) => (
             <button
-              key={sub.id}
-              onClick={() => setSelectedSubCategory(sub.id)}
+              key={scale.name}
+              onClick={() => {
+                const rootIndex = ROOTS.indexOf(selectedRoot);
+                const notes = scale.pattern.map((interval: number) => ROOTS[(rootIndex + interval) % 12]);
+                setCurrentPattern({
+                  intervals: scale.pattern,
+                  notes,
+                  name: scale.name
+                });
+                onStateChange({
+                  root: selectedRoot,
+                  mode: scale.name.toLowerCase(),
+                  note_pattern: scale.pattern,
+                  notes: notes,
+                  source: 'keylink-playground',
+                  timestamp: Date.now()
+                });
+              }}
               style={{
-                padding: '8px 12px',
-                background: selectedSubCategory === sub.id ? '#F5C242' : '#333',
-                color: selectedSubCategory === sub.id ? '#000' : '#fff',
+                background: '#333',
+                color: '#ccc',
                 border: '1px solid #555',
-                borderRadius: '4px',
+                borderRadius: '6px',
+                padding: '8px 12px',
                 cursor: 'pointer',
-                fontSize: '12px'
+                fontSize: '12px',
+                fontWeight: 'bold'
               }}
             >
-              {sub.name}
+              {scale.name}
             </button>
           ))}
         </div>
       </div>
 
       {/* Notation View Selection */}
-      <div style={{ marginBottom: '20px' }}>
-        <label style={{ display: 'block', marginBottom: '8px', color: '#F5C242' }}>Notation View:</label>
-        <div style={{ display: 'flex', gap: '8px' }}>
-          {(['piano', 'staff', 'guitar', 'ukulele'] as NotationView[]).map(view => (
+      <div style={{ marginBottom: '20px', textAlign: 'center' }}>
+        <div style={{ display: 'flex', gap: '8px', justifyContent: 'center' }}>
+          {(['piano', 'staff'] as NotationView[]).map(view => (
             <button
               key={view}
               onClick={() => setNotationView(view)}
               style={{
-                padding: '8px 12px',
+                padding: '8px 16px',
                 background: notationView === view ? '#F5C242' : '#333',
                 color: notationView === view ? '#000' : '#fff',
                 border: '1px solid #555',
-                borderRadius: '4px',
+                borderRadius: '6px',
                 cursor: 'pointer',
-                textTransform: 'capitalize'
+                textTransform: 'capitalize',
+                fontSize: '14px',
+                fontWeight: 'bold'
               }}
             >
-              {view}
+              {view === 'piano' ? '🎹 Piano' : '🎼 Staff'}
             </button>
           ))}
         </div>

@@ -66,7 +66,8 @@ export default function App() {
   const [wanChannel, setWanChannel] = useState<string>('public-lobby');
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [root, setRoot] = useState('C');
-  const [mode, setMode] = useState('Ionian');
+  const [mode, setMode] = useState('major');
+  const [showModeModal, setShowModeModal] = useState(false);
   const [keylinkOn, setKeylinkOn] = useState(true);
   const [tempo, setTempo] = useState(120);
   const [chordLinkOn, setChordLinkOn] = useState(true);
@@ -442,22 +443,54 @@ export default function App() {
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <label style={{ color: '#ccc', fontSize: '14px' }}>Mode:</label>
-            <select
-              value={mode}
-              onChange={(e) => { setMode(e.target.value); setHasUserInteracted(true); }}
-              style={{
-                background: '#333',
-                color: '#fff',
-                border: '1px solid #555',
-                borderRadius: '4px',
-                padding: '6px 8px',
-                fontSize: '14px'
-              }}
-            >
-              {['major', 'minor', 'dorian', 'phrygian', 'lydian', 'mixolydian', 'locrian', 'chromatic'].map(m => (
-                <option key={m} value={m}>{m.charAt(0).toUpperCase() + m.slice(1)}</option>
-              ))}
-            </select>
+            <div style={{ display: 'flex', gap: '4px' }}>
+              <button
+                onClick={() => { setMode('major'); setHasUserInteracted(true); }}
+                style={{
+                  background: mode === 'major' ? '#F5C242' : '#333',
+                  color: mode === 'major' ? '#222' : '#ccc',
+                  border: '1px solid #555',
+                  borderRadius: '4px',
+                  padding: '6px 12px',
+                  cursor: 'pointer',
+                  fontSize: '14px',
+                  fontWeight: 'bold'
+                }}
+              >
+                M
+              </button>
+              <button
+                onClick={() => { setMode('minor'); setHasUserInteracted(true); }}
+                style={{
+                  background: mode === 'minor' ? '#F5C242' : '#333',
+                  color: mode === 'minor' ? '#222' : '#ccc',
+                  border: '1px solid #555',
+                  borderRadius: '4px',
+                  padding: '6px 12px',
+                  cursor: 'pointer',
+                  fontSize: '14px',
+                  fontWeight: 'bold'
+                }}
+              >
+                m
+              </button>
+              <button
+                onClick={() => setShowModeModal(true)}
+                style={{
+                  background: '#333',
+                  color: '#ccc',
+                  border: '1px solid #555',
+                  borderRadius: '4px',
+                  padding: '6px 8px',
+                  cursor: 'pointer',
+                  fontSize: '14px',
+                  fontWeight: 'bold'
+                }}
+                title="More modes"
+              >
+                ⋯
+              </button>
+            </div>
           </div>
         </div>
 
@@ -731,6 +764,70 @@ export default function App() {
               </div>
             </div>
           )}
+        </div>
+      )}
+
+      {/* Mode Selection Modal */}
+      {showModeModal && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'rgba(0, 0, 0, 0.8)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 1000
+        }}>
+          <div style={{
+            background: '#1a1a1a',
+            padding: '24px',
+            borderRadius: '12px',
+            maxWidth: '400px',
+            width: '90%',
+            maxHeight: '80vh',
+            overflowY: 'auto'
+          }}>
+            <h3 style={{ margin: '0 0 16px 0', color: '#F5C242' }}>Select Mode</h3>
+            
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '8px', marginBottom: '16px' }}>
+              {['major', 'minor', 'dorian', 'phrygian', 'lydian', 'mixolydian', 'locrian', 'chromatic'].map(m => (
+                <button
+                  key={m}
+                  onClick={() => { setMode(m); setShowModeModal(false); setHasUserInteracted(true); }}
+                  style={{
+                    background: mode === m ? '#F5C242' : '#333',
+                    color: mode === m ? '#222' : '#ccc',
+                    border: '1px solid #555',
+                    borderRadius: '6px',
+                    padding: '12px 8px',
+                    cursor: 'pointer',
+                    fontSize: '14px',
+                    fontWeight: 'bold'
+                  }}
+                >
+                  {m.charAt(0).toUpperCase() + m.slice(1)}
+                </button>
+              ))}
+            </div>
+            
+            <button
+              onClick={() => setShowModeModal(false)}
+              style={{
+                background: 'transparent',
+                color: '#666',
+                border: '1px solid #666',
+                padding: '8px 16px',
+                borderRadius: '4px',
+                cursor: 'pointer',
+                width: '100%'
+              }}
+            >
+              Cancel
+            </button>
+          </div>
         </div>
       )}
 
