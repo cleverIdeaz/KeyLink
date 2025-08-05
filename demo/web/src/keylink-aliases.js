@@ -282,7 +282,6 @@ class KeyLinkAliasResolver {
     
     // First, check the comprehensive indexed list if available
     if (this.standards.note_primitives.comprehensive_indexed_list) {
-      const indexedPrimitives = this.standards.note_primitives.comprehensive_indexed_list;
       // Note: The comprehensive list is by index, so we'd need to load the full file
       // For now, we'll check the standard categories
     }
@@ -368,7 +367,7 @@ class KeyLinkAliasResolver {
     const normalized = this.normalizeInput(primitiveType);
 
     // Search through all primitive categories
-    for (const [category, primitives] of Object.entries(this.standards.note_primitives)) {
+    for (const [, primitives] of Object.entries(this.standards.note_primitives)) {
       for (const [primitiveName, primitiveData] of Object.entries(primitives)) {
         if (primitiveName === normalized || 
             (primitiveData.aliases && primitiveData.aliases.includes(normalized))) {

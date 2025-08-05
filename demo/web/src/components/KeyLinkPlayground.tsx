@@ -119,6 +119,9 @@ const SUB_CATEGORIES: Record<string, SubCategoryOption[]> = {
   ],
 };
 
+// Root notes - moved outside component to prevent recreation
+const ROOTS = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+
 // Notation view types
 type NotationView = 'piano' | 'staff' | 'guitar' | 'ukulele';
 
@@ -135,11 +138,11 @@ export default function KeyLinkPlayground({ onStateChange, resolver }: KeyLinkPl
   const [currentPattern, setCurrentPattern] = useState<NotePattern | null>(null);
   // const [showSubModal, setShowSubModal] = useState(false);
 
-  // Root notes
-  const ROOTS = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
-
-  // Get current sub-categories
-  const currentSubCategories = SUB_CATEGORIES[selectedCategory] || [];
+  // Get current sub-categories - memoized to prevent recreation
+  const currentSubCategories = React.useMemo(() => 
+    SUB_CATEGORIES[selectedCategory] || [], 
+    [selectedCategory]
+  );
 
   // Update pattern when selection changes
   useEffect(() => {
@@ -177,7 +180,7 @@ export default function KeyLinkPlayground({ onStateChange, resolver }: KeyLinkPl
     };
 
     updatePattern();
-  }, [selectedCategory, selectedSubCategory, selectedRoot, resolver, onStateChange, ROOTS, currentSubCategories]);
+  }, [selectedCategory, selectedSubCategory, selectedRoot, resolver, onStateChange, currentSubCategories]);
 
   return (
     <div className="keylink-playground" style={{
