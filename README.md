@@ -14,46 +14,69 @@ KeyLink enables seamless synchronization of musical parameters (key, tempo, chor
 
 ## 🚀 Quick Start
 
-### Option 1: Install as PWA (Recommended)
+### For End Users (PWA - Recommended)
 1. **Visit the demo** in your browser
 2. **Click "Install"** to add as a desktop/mobile app
 3. **Run local relay**: `cd relay && ./start-relay.sh`
 4. **Enjoy** zero-cost, zero-latency music sync!
 
-### Option 2: Web App
-- **LAN Mode**: Requires local relay server or PWA installation
-- **WAN Mode**: Works from anywhere via cloud relay
+### For Developers
+1. **Clone repository**: `git clone https://github.com/cleverIdeaz/KeyLink.git`
+2. **Choose your path**:
+   - **Web App**: `cd demo/web && npm install && npm start`
+   - **Max/MSP**: `cd demo/max/externals && ./build_keylink.sh`
+   - **Relay Server**: `cd relay && npm install && npm start`
+3. **Start building** with the comprehensive APIs and examples
 
-## 🛠️ For Developers
+### For Different Use Cases
+- **Live Performance**: PWA + local relay for ~1ms latency
+- **Studio Workflow**: Max/MSP + web app integration
+- **Remote Collaboration**: Cloud relay for global access
+- **Education**: PWA for classroom tempo coordination
 
-### Get the Source Code
+## 🛠️ Development Guide
+
+### Choose Your Implementation Path
+
+#### 🎵 **Web Application Development**
 ```bash
-git clone https://github.com/cleverIdeaz/KeyLink.git
-cd KeyLink
-```
-
-### Quick Development Setup
-```bash
-# Web app
 cd demo/web && npm install && npm start
+```
+- **SDK**: `demo/web/src/keylink-sdk.ts` - TypeScript SDK
+- **Alias Resolution**: `demo/web/src/keylink-aliases.js` - Universal naming
+- **Examples**: Working PWA with real-time sync
+- **Build**: `npm run build` for production
 
-# Relay server
-cd relay && npm install && npm start
-
-# Max external (macOS)
+#### 🎛️ **Max/MSP Integration**
+```bash
 cd demo/max/externals && ./build_keylink.sh
 ```
+- **External**: `keylink` object for UDP/WebSocket communication
+- **Alias Resolution**: `keylink_aliases` object for naming standards
+- **Examples**: Test patches in `demo/max/examples/`
+- **Protocol**: JSON messages over UDP multicast
 
-### Documentation
-- **[Protocol Specification](docs/protocol.md)** - Technical protocol details
+#### 🔌 **Relay Server Development**
+```bash
+cd relay && npm install && npm start
+```
+- **Bridge**: UDP multicast ↔ WebSocket communication
+- **Configuration**: Environment variables for different deployments
+- **Deployment**: Local, cloud, or hybrid setups
+- **Monitoring**: Real-time connection status and logging
+
+### 📚 Complete Documentation
+- **[Protocol Specification](docs/protocol.md)** - JSON message formats and transport
+- **[Naming Standards](docs/NAMING_STANDARDS.md)** - 2067 note primitives and aliases
 - **[API Reference](demo/web/src/keylink-sdk.ts)** - JavaScript/TypeScript SDK
-- **[Max/MSP Integration](demo/max/README.md)** - C++ external object
-- **[PWA Guide](demo/web/PWA_README.md)** - Progressive Web App setup
+- **[Max/MSP Guide](demo/max/README.md)** - C++ external setup and usage
+- **[PWA Guide](demo/web/PWA_README.md)** - Progressive Web App features
+- **[Relay Server](relay/README.md)** - Server setup and configuration
 
-### Contributing
-- **Issues**: [Report bugs or request features](https://github.com/cleverIdeaz/KeyLink/issues)
-- **Discussions**: [Join the conversation](https://github.com/cleverIdeaz/KeyLink/discussions)
-- **Contributing Guide**: [CONTRIBUTING.md](CONTRIBUTING.md)
+### 🛠️ Toolkit & Utilities
+- **[Examples](examples/)** - Code samples and usage patterns
+- **[Toolkit](toolkit/)** - MIDI bridge, transposer, OSC mapper utilities
+- **[Standards](docs/keylink-standards.json)** - Machine-readable protocol specs
 
 ## 🎯 Key Features
 
@@ -75,18 +98,47 @@ cd demo/max/externals && ./build_keylink.sh
 | **Cost** | $0/month | $5-50+/month |
 | **Installation** | One-click install | Browser only |
 
-## 🔧 Setup Guide
+## 🔧 Implementation Examples
 
-### For Users (PWA)
-1. **Install the app** from your browser
-2. **The PWA automatically discovers local relay servers**
-3. **Connect Max/MSP** using the external object (optional)
+### 🎵 **Basic Web App Integration**
+```javascript
+import { KeyLink } from './keylink-sdk';
 
-### For Developers
-1. **Clone repository**: `git clone https://github.com/cleverIdeaz/KeyLink.git`
-2. **Install dependencies**: `cd demo/web && npm install`
-3. **Start development**: `npm start`
-4. **Build PWA**: `npm run build`
+const kl = new KeyLink();
+kl.connect('ws://localhost:20801');
+kl.on('state', (state) => {
+  console.log('Key:', state.root, 'Mode:', state.mode);
+});
+```
+
+### 🎛️ **Max/MSP Patch Example**
+```maxmsp
+[keylink lan] → [start] → [bang]
+[tosymbol {"root":"C","mode":"major"}] → [keylink lan]
+```
+
+### 🔌 **Custom Relay Server**
+```javascript
+const relay = require('./relay');
+relay.start({
+  udpPort: 7474,
+  wsPort: 20801,
+  enableUdp: true
+});
+```
+
+### 🌍 **Universal Naming Standards**
+```javascript
+import { KeyLinkAliasResolver } from './keylink-aliases';
+
+const resolver = new KeyLinkAliasResolver();
+await resolver.initialize();
+
+// Resolve any naming convention
+const mode = resolver.resolveMode('Major'); // Returns 'major'
+const chord = resolver.resolveChordType('maj7'); // Returns 'maj7'
+const primitive = await resolver.resolvePrimitiveByIndex(60); // Major triad
+```
 
 ## 🌐 Network Modes
 
@@ -171,9 +223,12 @@ KeyLink establishes **comprehensive naming conventions** and **alias resolution*
 - **Alias Resolution**: Comprehensive naming standards
 - **License**: MIT (open source)
 
-## 🤝 Contributing
+## 🤝 Contributing & Support
 
-We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+### Get Help
+- **Issues**: [Report bugs or request features](https://github.com/cleverIdeaz/KeyLink/issues)
+- **Discussions**: [Join the conversation](https://github.com/cleverIdeaz/KeyLink/discussions)
+- **Documentation**: [Complete guides and examples](docs/)
 
 ### Ways to Contribute
 - 🐛 **Report bugs** via [GitHub Issues](https://github.com/cleverIdeaz/KeyLink/issues)
@@ -188,14 +243,13 @@ We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 git clone https://github.com/YOUR_USERNAME/KeyLink.git
 cd KeyLink
 
-# Install dependencies
-cd demo/web && npm install
-cd ../../relay && npm install
-
-# Start development
-cd ../demo/web && npm start
-cd ../../relay && npm start
+# Choose your development path
+cd demo/web && npm install && npm start    # Web development
+cd ../../relay && npm install && npm start  # Relay server
+cd ../max/externals && ./build_keylink.sh   # Max/MSP external
 ```
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.
 
 ## 📄 License
 
