@@ -1,21 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { KeyLinkClient } from './keylink-sdk';
+import { KeyLinkP2P } from './keylink-zero-config-sdk';
 import MidiPlayer, { MidiData } from './components/MidiPlayer';
 import KeyLinkPlayground from './components/KeyLinkPlayground';
 import KeyLinkAliasResolver from './keylink-aliases';
 
-// Minimal, modern KeyLink Demo UI v2
-// Connects to relay server via WebSocket and syncs with LAN/Max/MSP/Node
-// Uses the KeyLink protocol (see README.md)
+// KeyLink Zero-Config P2P Demo UI v3
+// True LAN peer-to-peer without cloud dependencies
+// Uses the KeyLink Zero-Config protocol
 
-const WAN_WS_URL = 'wss://keylink-relay.fly.dev/';
-const LAN_WS_URL = 'ws://localhost:20801';
-const LAN_DISCOVERY_URLS = [
-  'ws://localhost:20801',
-  'ws://192.168.1.1:20801',  // Common router IP
-  'ws://192.168.0.1:20801',  // Alternative router IP
-  'ws://10.0.0.1:20801',     // Another common range
-];
+// No more hardcoded URLs - everything is auto-discovered!
 
 const ROOTS = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
 const MODES = ['Ionian', 'Dorian', 'Phrygian', 'Lydian', 'Mixolydian', 'Aeolian', 'Locrian'];
@@ -45,40 +38,8 @@ function now() {
   return new Date().toLocaleTimeString();
 }
 
-// LAN discovery function
-async function discoverLANRelay(): Promise<string | null> {
-  // If we're on localhost, try local discovery
-  if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-    for (const url of LAN_DISCOVERY_URLS) {
-      try {
-        const ws = new WebSocket(url);
-        await new Promise((resolve, reject) => {
-          const timeout = setTimeout(() => {
-            ws.close();
-            reject(new Error('Timeout'));
-          }, 2000);
-          
-          ws.onopen = () => {
-            clearTimeout(timeout);
-            ws.close();
-            resolve(url);
-          };
-          
-          ws.onerror = () => {
-            clearTimeout(timeout);
-            reject(new Error('Connection failed'));
-          };
-        });
-        return url;
-      } catch (e) {
-        console.log(`LAN discovery failed for ${url}:`, e);
-      }
-    }
-  }
-  
-  // If deployed, don't try local discovery - use cloud relay
-  return null;
-}
+// Zero-config peer discovery is now handled by the KeyLinkP2P SDK
+// No manual discovery needed - everything is automatic!
 
 export default function App() {
   // UI state
@@ -100,7 +61,7 @@ export default function App() {
   const [isPWA, setIsPWA] = useState(false);
   const [hasUserInteracted, setHasUserInteracted] = useState(false);
   const [localRelayAvailable, setLocalRelayAvailable] = useState(false);
-  const kl = useRef<KeyLinkClient | null>(null);
+  const kl = useRef<KeyLinkP2P | null>(null);
   const keylinkOnRef = useRef(keylinkOn);
 
   // Add Max patch download state
