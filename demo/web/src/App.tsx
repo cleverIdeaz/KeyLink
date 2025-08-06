@@ -147,97 +147,62 @@ export default function App() {
   const addLog = (msg: string, type: 'sent' | 'received' | 'info' | 'error' = 'info') =>
     setLog(l => [{ time: now(), msg, type }, ...l.slice(0, 9)]);
 
-  // Connect SDK based on network mode and channel
+  // Connect to zero-config P2P network
   useEffect(() => {
-    const connectToRelay = async () => {
-      let url: string;
-      let isDeployed = false;
-      
-      if (networkMode === 'LAN') {
-        // Check if we're deployed or local
-        isDeployed = window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
-        
-        if (isDeployed && !isPWA) {
-          // Deployed web app (not PWA): Use cloud relay for LAN mode (web-to-web communication)
-          url = `${WAN_WS_URL}${wanChannel}`;
-          addLog('Deployed web app: Using cloud relay for LAN mode', 'info');
-        } else if (isPWA && localRelayAvailable) {
-          // PWA with local relay: Use local relay for true offline LAN
-          url = 'ws://localhost:20801';
-          addLog('PWA: Using local relay for offline LAN mode', 'info');
-        } else {
-          // Local or PWA: Try to discover local relay first
-          addLog('Discovering LAN relay server...', 'info');
-          const discoveredUrl = await discoverLANRelay();
-          if (discoveredUrl) {
-            url = discoveredUrl;
-            addLog(`Found LAN relay at ${discoveredUrl}`, 'info');
-          } else {
-            if (isPWA) {
-              // PWA with no local relay: fall back to cloud
-              url = `${WAN_WS_URL}${wanChannel}`;
-              addLog('PWA: No local relay found, using cloud relay', 'info');
-            } else {
-              addLog('No LAN relay found, falling back to localhost', 'info');
-              url = LAN_WS_URL;
-            }
-          }
-        }
-      } else {
-        // WAN mode: Always use cloud relay
-        isDeployed = true;
-        url = `${WAN_WS_URL}${wanChannel}`;
+    const connectToP2P = async () => {
+      addLog('Starting zero-config peer discovery...', 'info');
+      setStatus('Starting peer discovery...');
+
+      // Disconnect previous client if it exists
+      if (kl.current) {
+        kl.current.disconnect();
       }
-      
-    addLog(`Connecting to ${url}...`, 'info');
-    setStatus(`Connecting to ${networkMode}...`);
 
-    // Disconnect previous client if it exists
-    if (kl.current) {
-      kl.current.disconnect();
-    }
+      // Create new P2P client
+      kl.current = new KeyLinkP2P({
+        port: 20801,
+        discoveryInterval: 5000,
+        enableUdp: true
+      });
 
-    kl.current = new KeyLinkClient({ relayUrl: url });
-    kl.current.connect();
+      // Set up event listeners
+      kl.current.on('status', (s: string) => setStatus(s));
+      kl.current.on('open', () => {
+        addLog('Connected to P2P network', 'info');
+        setStatus('Connected to P2P network');
+      });
 
-    kl.current.on('status', (s: string) => setStatus(s));
-    kl.current.on('open', () => {
-       addLog(`Connected to ${url}`, 'info');
-         const connectionType = isDeployed ? 'Cloud' : 'Local';
-         setStatus(`Connected to ${networkMode} @ ${connectionType}`);
-         // Don't send state on connection - only receive
-         addLog('Connected - listening for updates from other clients', 'info');
-    });
+      kl.current.on('close', () => {
+        addLog('Disconnected from P2P network', 'info');
+        setStatus('Disconnected');
+      });
 
-    kl.current.on('close', () => {
-      addLog(`Disconnected from ${url}`, 'info');
-      setStatus('Disconnected');
-    });
+      kl.current.on('error', (error) => {
+        addLog(`P2P connection error: ${error}`, 'error');
+        setStatus('Connection error');
+      });
 
-    kl.current.on('error', () => {
-        addLog(`Connection error on ${url}`, 'error');
-        setStatus(`Error connecting to ${networkMode}`);
-    });
+      kl.current.on('state', (state: any) => {
+        if (!keylinkOnRef.current) return;
+        setRoot(state.key);
+        setMode(state.mode);
+        setTempo(state.tempo || 120);
+        setChordLinkOn(state.chordEnabled);
+        setChordRoot(state.chord.root);
+        setChordType(state.chord.type);
+        addLog('← Received: ' + JSON.stringify(state), 'received');
+      });
 
-    kl.current.on('state', (state: any) => {
-      if (!keylinkOnRef.current) return;
-      setRoot(state.key);
-      setMode(state.mode);
-      setTempo(state.tempo || 120);
-      setChordLinkOn(state.chordEnabled);
-      setChordRoot(state.chord.root);
-      setChordType(state.chord.type);
-      addLog('← Received: ' + JSON.stringify(state), 'received');
-    });
+      // Start connection
+      await kl.current.connect();
     };
 
-    connectToRelay();
+    connectToP2P();
 
     return () => {
       kl.current?.disconnect();
     };
-    // eslint-disable-next-line
-  }, [networkMode, wanChannel]);
+  }, []);
 
   // Send state on relevant changes
   useEffect(() => {

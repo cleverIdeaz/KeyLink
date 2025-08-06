@@ -55,6 +55,7 @@ export default function App() {
   const [hasUserInteracted, setHasUserInteracted] = useState(false);
   const [peerCount, setPeerCount] = useState(0);
   const [peers, setPeers] = useState<string[]>([]);
+  const [aliasResolver, setAliasResolver] = useState<KeyLinkAliasResolver | null>(null);
   const kl = useRef<KeyLinkP2P | null>(null);
   const keylinkOnRef = useRef(keylinkOn);
 
@@ -66,7 +67,9 @@ export default function App() {
   useEffect(() => {
     const initResolver = async () => {
       try {
-        await KeyLinkAliasResolver.initialize();
+        const resolver = new KeyLinkAliasResolver();
+        await resolver.initialize();
+        setAliasResolver(resolver);
         addLog('Alias resolver initialized', 'info');
       } catch (error) {
         addLog('Failed to initialize alias resolver', 'error');
@@ -229,7 +232,7 @@ export default function App() {
   };
 
   const handleMidiData = (data: MidiData) => {
-    addLog(`MIDI data received: ${data.tracks.length} tracks`, 'info');
+    addLog(`MIDI data received: ${data.key} ${data.mode} ${data.tempo}`, 'info');
   };
 
   const handleMaxDownload = () => {
@@ -550,9 +553,9 @@ export default function App() {
       </div>
 
       {/* Playground */}
-      {showPlayground && (
+      {showPlayground && aliasResolver && (
         <div style={{ marginTop: '24px' }}>
-          <KeyLinkPlayground onStateChange={handlePlaygroundStateChange} />
+          <KeyLinkPlayground resolver={aliasResolver} onStateChange={handlePlaygroundStateChange} />
         </div>
       )}
 

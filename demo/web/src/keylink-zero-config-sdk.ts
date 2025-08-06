@@ -261,8 +261,9 @@ export class KeyLinkP2P {
 
   private async startLocalRelay() {
     // Try to start a local relay server if we're in a Node.js environment
-    if (typeof window === 'undefined') {
+    if (typeof window === 'undefined' && typeof require !== 'undefined') {
       try {
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
         const { spawn } = require('child_process');
         const relay = spawn('node', ['relay.js'], {
           cwd: process.cwd() + '/relay',
