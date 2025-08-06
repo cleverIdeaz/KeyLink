@@ -221,7 +221,7 @@ await p2p.connect();  // Automatic discovery
 
 ### **Local Development**
 ```bash
-# Start the enhanced relay server
+# Start the enhanced relay server (optional, for Max/MSP integration)
 cd relay
 node relay-zero-config.js
 
@@ -325,6 +325,17 @@ npm start
 
 # Open on multiple devices on same network
 # Watch them automatically discover each other!
+```
+
+### **For Max/MSP Integration**
+```bash
+# Start the relay server for Max/MSP communication
+cd relay
+node relay-zero-config.js
+
+# Build Max/MSP external
+cd ../max/externals
+./build_keylink.sh
 ```
 
 ## 🤝 Contributing

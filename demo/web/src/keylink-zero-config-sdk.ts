@@ -260,27 +260,9 @@ export class KeyLinkP2P {
   }
 
   private async startLocalRelay() {
-    // Try to start a local relay server if we're in a Node.js environment
-    if (typeof window === 'undefined' && typeof require !== 'undefined') {
-      try {
-        // eslint-disable-next-line @typescript-eslint/no-var-requires
-        const { spawn } = require('child_process');
-        const relay = spawn('node', ['relay.js'], {
-          cwd: process.cwd() + '/relay',
-          stdio: 'pipe'
-        });
-        
-        relay.stdout.on('data', (data: Buffer) => {
-          console.log('Relay:', data.toString());
-        });
-        
-        relay.stderr.on('data', (data: Buffer) => {
-          console.error('Relay error:', data.toString());
-        });
-      } catch (error) {
-        console.log('Could not start local relay:', error);
-      }
-    }
+    // Note: Local relay server startup is not available in browser environment
+    // Users can manually start the relay server using: node relay/relay-zero-config.js
+    console.log('Local relay server startup not available in browser environment');
   }
 
   private handleMessage(data: any) {
