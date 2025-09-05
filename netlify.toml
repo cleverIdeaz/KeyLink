@@ -3,19 +3,6 @@
   publish = "build"
   command = "npm run build"
 
-# Static presentation files
-[[redirects]]
-  from = "/present/*"
-  to = "/present/index.html"
-  status = 200
-
-# Copy presentation files to build directory
-[[plugins]]
-  package = "@netlify/plugin-copy"
-  [plugins.inputs]
-    from = "present"
-    to = "present"
-
 [build.environment]
   NODE_VERSION = "18"
 
