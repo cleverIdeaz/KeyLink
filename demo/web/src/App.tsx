@@ -69,6 +69,7 @@ export default function App() {
 
   // Add Max patch download state
   const [showMaxDownload, setShowMaxDownload] = useState(false);
+  const [showDonationModal, setShowDonationModal] = useState(false);
 
 
   const [abletonLinkEnabled, setAbletonLinkEnabled] = useState(false);
@@ -962,14 +963,21 @@ export default function App() {
                   >
                     🐙 GitHub Repository
                   </a>
-                  <a 
-                    href="https://www.paypal.com/donate/?business=WMLNUNEFCS62S&no_recurring=0&item_name=KeyLink+Development+Support%E2%80%94Help+us+keep+the+global+music+collaboration+alive%21+%F0%9F%8E%B6&currency_code=USD&amount=7"
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    style={{ color: '#4CAF50', textDecoration: 'none', fontWeight: 'bold' }}
+                  <button
+                    onClick={() => setShowDonationModal(true)}
+                    style={{ 
+                      background: 'transparent', 
+                      border: 'none', 
+                      color: '#4CAF50', 
+                      textDecoration: 'none', 
+                      fontWeight: 'bold',
+                      cursor: 'pointer',
+                      fontSize: '11px',
+                      padding: 0
+                    }}
                   >
-                    💚 Donate $7
-                  </a>
+                    💚 Support KeyLink
+                  </button>
                 </div>
       </div>
 
@@ -980,6 +988,129 @@ export default function App() {
           </div>
         )) : <div>Log is empty.</div>}
       </div>
+
+      {/* Donation Modal */}
+      {showDonationModal && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'rgba(0, 0, 0, 0.8)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 1000
+        }}>
+          <div style={{
+            background: '#1a1a1a',
+            padding: '32px',
+            borderRadius: '16px',
+            maxWidth: '500px',
+            width: '90%',
+            maxHeight: '80vh',
+            overflowY: 'auto',
+            border: '2px solid #F5C242'
+          }}>
+            <div style={{ textAlign: 'center', marginBottom: '24px' }}>
+              <h2 style={{ margin: '0 0 8px 0', color: '#F5C242', fontSize: '24px' }}>
+                🎵 Support KeyLink Development
+              </h2>
+              <p style={{ margin: '0', color: '#ccc', fontSize: '14px' }}>
+                Help us keep the global music collaboration alive!
+              </p>
+            </div>
+
+            <div style={{ marginBottom: '24px' }}>
+              <h3 style={{ color: '#F5C242', fontSize: '18px', margin: '0 0 12px 0' }}>
+                Why $7 Recommended?
+              </h3>
+              <div style={{ background: '#2a2a2a', padding: '16px', borderRadius: '8px', marginBottom: '16px' }}>
+                <p style={{ margin: '0 0 8px 0', color: '#ccc', fontSize: '14px' }}>
+                  <strong style={{ color: '#F5C242' }}>Fly.io Infrastructure:</strong> $7/month covers our global public lobby
+                </p>
+                <p style={{ margin: '0 0 8px 0', color: '#ccc', fontSize: '14px' }}>
+                  <strong style={{ color: '#F5C242' }}>Last 2 months:</strong> Exactly $7 each month
+                </p>
+                <p style={{ margin: '0', color: '#ccc', fontSize: '14px' }}>
+                  <strong style={{ color: '#F5C242' }}>Goal:</strong> Keep KeyLink free for everyone
+                </p>
+              </div>
+            </div>
+
+            <div style={{ marginBottom: '24px' }}>
+              <h3 style={{ color: '#F5C242', fontSize: '18px', margin: '0 0 12px 0' }}>
+                🚀 Developer Tokens (Coming Soon)
+              </h3>
+              <div style={{ background: '#2a2a2a', padding: '16px', borderRadius: '8px', marginBottom: '16px' }}>
+                <p style={{ margin: '0 0 8px 0', color: '#ccc', fontSize: '14px' }}>
+                  <strong style={{ color: '#4CAF50' }}>API Tokens:</strong> For music developers integrating KeyLink
+                </p>
+                <p style={{ margin: '0 0 8px 0', color: '#ccc', fontSize: '14px' }}>
+                  <strong style={{ color: '#4CAF50' }}>Revenue Sharing:</strong> LAN splits, WAN commissions
+                </p>
+                <p style={{ margin: '0', color: '#ccc', fontSize: '14px' }}>
+                  <strong style={{ color: '#4CAF50' }}>Future:</strong> Sustainable funding model
+                </p>
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', marginBottom: '16px' }}>
+              <a
+                href="https://www.paypal.com/donate/?business=WMLNUNEFCS62S&no_recurring=0&item_name=KeyLink+Development+Support%E2%80%94Help+us+keep+the+global+music+collaboration+alive%21+%F0%9F%8E%B6&currency_code=USD&amount=7"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  background: '#4CAF50',
+                  color: 'white',
+                  padding: '12px 24px',
+                  borderRadius: '8px',
+                  textDecoration: 'none',
+                  fontWeight: 'bold',
+                  fontSize: '16px'
+                }}
+              >
+                💚 Donate $7 (Recommended)
+              </a>
+              <a
+                href="https://www.paypal.com/donate/?business=WMLNUNEFCS62S&no_recurring=0&item_name=KeyLink+Development+Support%E2%80%94Help+us+keep+the+global+music+collaboration+alive%21+%F0%9F%8E%B6&currency_code=USD"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  background: '#333',
+                  color: '#ccc',
+                  padding: '12px 24px',
+                  borderRadius: '8px',
+                  textDecoration: 'none',
+                  fontWeight: 'bold',
+                  fontSize: '16px',
+                  border: '1px solid #555'
+                }}
+              >
+                💰 Custom Amount
+              </a>
+            </div>
+
+            <div style={{ textAlign: 'center' }}>
+              <button
+                onClick={() => setShowDonationModal(false)}
+                style={{
+                  background: 'transparent',
+                  color: '#666',
+                  border: '1px solid #555',
+                  padding: '8px 16px',
+                  borderRadius: '6px',
+                  cursor: 'pointer',
+                  fontSize: '14px'
+                }}
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 } 
