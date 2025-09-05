@@ -713,6 +713,7 @@ body {
     cursor: pointer;
     transition: all 0.3s ease;
     text-align: center;
+    position: relative;
 }
 
 .donation-option:hover {
@@ -735,6 +736,37 @@ body {
 .donation-option .description {
     font-size: 0.9rem;
     opacity: 0.8;
+}
+
+.donation-option.recommended {
+    background: linear-gradient(135deg, #4CAF50, #45a049);
+    border-color: #4CAF50;
+    transform: scale(1.05);
+    box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+}
+
+.donation-option.recommended .amount {
+    color: white;
+    font-size: 1.4rem;
+}
+
+.donation-option.recommended .description {
+    color: white;
+    font-weight: 600;
+}
+
+.donation-option .badge {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: #ff6b6b;
+    color: white;
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 0.25rem 0.5rem;
+    border-radius: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .donate-large-btn {

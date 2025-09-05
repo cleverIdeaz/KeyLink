@@ -5,8 +5,9 @@ class KeyLinkPresentation {
         this.totalSlides = 6;
         this.donatedAmount = 0;
         this.monthlyGoal = 7;
-        this.usageLimit = 1000; // Simulated usage limit
+        this.usageLimit = 7; // $7 monthly limit
         this.currentUsage = 0;
+        this.flyToken = 'fm2_lJPECAAAAAAACQ8TxBASbPzTS5DPUv+JjSDEq1VNwrVodHRwczovL2FwaS5mbHkuaW8vdjGWAJLOABE4XR8Lk7lodHRwczovL2FwaS5mbHkuaW8vYWFhL3YxxDw7RixwSLuoUGk4RxhA4DpsAN0RUzmKyFWPMYs2NaDM3VCnownMPwzF00pOXgsrJrPo/ByiccoIlOEpVbPETlE/JPxOcgj9eqHPk08fwsUNC38JawL6W643nTWEd1D06nzCodi89/h528bPWpyPlhQRHzncUMaGGUBAzRuBOWnj081ibZGk9mLjDg6VeQ2SlAORgc4Ae9vcHwWRgqdidWlsZGVyH6J3Zx8BxCBbMo1uvSb2uvDKr8Whq3eQmm3j7/P6lvFH7DiDC5ElIg==,fm2_lJPETlE/JPxOcgj9eqHPk08fwsUNC38JawL6W643nTWEd1D06nzCodi89/h528bPWpyPlhQRHzncUMaGGUBAzRuBOWnj081ibZGk9mLjDg6VecQQ+aLpWRqyjPjRRF4xe7yw8sO5aHR0cHM6Ly9hcGkuZmx5LmlvL2FhYS92MZgEks5oum9Dzmjh/GEXzgAQjT8Kkc4AEI0/DMQQNbS5MOmkqh+ii+f+Jk1cV8QgVnLlT7COaakFYf13o5eGFyEndYGFpnfJNPOJ3cxFNMg=';
         
         this.init();
     }
@@ -16,7 +17,7 @@ class KeyLinkPresentation {
         this.updateProgress();
         this.createSlideIndicators();
         this.setupCircleOfFifths();
-        this.checkUsageLimit();
+        this.checkFlyUsage();
         this.loadDonationData();
     }
     
@@ -381,12 +382,45 @@ class KeyLinkPresentation {
         document.getElementById('goalAmount').textContent = `/ $${this.monthlyGoal}`;
     }
     
-    checkUsageLimit() {
-        // Simulate usage tracking
-        this.currentUsage = Math.floor(Math.random() * 1200); // Random usage for demo
-        
-        if (this.currentUsage > this.usageLimit) {
-            this.showUsageModal();
+    async checkFlyUsage() {
+        try {
+            // Check Fly.io usage with your token
+            const response = await fetch('https://api.fly.io/v1/apps', {
+                headers: {
+                    'Authorization': `Bearer ${this.flyToken}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+            
+            if (response.ok) {
+                const apps = await response.json();
+                // Find your KeyLink app and get usage data
+                const keylinkApp = apps.data.find(app => app.name.includes('keylink') || app.name.includes('KeyLink'));
+                
+                if (keylinkApp) {
+                    // Get billing/usage info
+                    const usageResponse = await fetch(`https://api.fly.io/v1/apps/${keylinkApp.id}/billing`, {
+                        headers: {
+                            'Authorization': `Bearer ${this.flyToken}`,
+                            'Content-Type': 'application/json'
+                        }
+                    });
+                    
+                    if (usageResponse.ok) {
+                        const billing = await usageResponse.json();
+                        this.currentUsage = billing.total_amount || 0;
+                        
+                        // Check if we've exceeded $7
+                        if (this.currentUsage > this.usageLimit) {
+                            this.showUsageModal();
+                        }
+                    }
+                }
+            }
+        } catch (error) {
+            console.log('Fly.io API not accessible, using fallback');
+            // Fallback to simulated usage for demo
+            this.currentUsage = Math.floor(Math.random() * 10); // Random between 0-10 for demo
         }
     }
     
