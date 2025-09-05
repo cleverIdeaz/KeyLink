@@ -9,10 +9,16 @@
     <meta name="theme-color" content="#F5C242" />
     <meta name="description" content="KeyLink - Zero-config music data sync for Max, browser, and more" />
     
-    <!-- Cache Busting -->
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <!-- Aggressive Cache Busting for Mobile Safari -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, max-age=0" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="KeyLink" />
+    <meta name="msapplication-tap-highlight" content="no" />
     
     <!-- PWA Meta Tags -->
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -22,6 +28,18 @@
     
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
     <title>KeyLink Demo</title>
+    
+    <!-- Force cache busting for mobile Safari -->
+    <script>
+      // Force cache busting for mobile Safari
+      if (navigator.userAgent.includes('Safari') && !navigator.userAgent.includes('Chrome')) {
+        const version = Date.now();
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = `/static/css/main.css?v=${version}`;
+        document.head.appendChild(link);
+      }
+    </script>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>

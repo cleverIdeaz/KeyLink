@@ -4,7 +4,7 @@
 const KEYLINK_PORT = 20801;
 const CACHE_NAME = 'keylink-v' + Date.now();
 
-// Install event - cache essential resources
+// Install event - cache essential resources and force update
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
@@ -16,8 +16,16 @@ self.addEventListener('install', (event) => {
         '/keylink-standards.json',
         '/KeyLink.png'
       ]);
+    }).then(() => {
+      // Force update for mobile Safari
+      self.skipWaiting();
     })
   );
+});
+
+// Activate event - claim clients immediately
+self.addEventListener('activate', (event) => {
+  event.waitUntil(self.clients.claim());
 });
 
 // Fetch event - serve from cache when possible
