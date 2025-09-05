@@ -953,7 +953,7 @@ export default function App() {
             📱 Running as installed app
           </div>
         )}
-                        <div style={{ marginTop: '12px', fontSize: '11px' }}>
+                        <div style={{ marginTop: '12px', fontSize: '11px', display: 'flex', gap: '16px', alignItems: 'center' }}>
                   <a 
                     href="https://github.com/cleverIdeaz/KeyLink" 
                     target="_blank" 
@@ -961,6 +961,14 @@ export default function App() {
                     style={{ color: '#F5C242', textDecoration: 'none' }}
                   >
                     🐙 GitHub Repository
+                  </a>
+                  <a 
+                    href="https://www.paypal.com/donate/?business=WMLNUNEFCS62S&no_recurring=0&item_name=KeyLink+Development+Support%E2%80%94Help+us+keep+the+global+music+collaboration+alive%21+%F0%9F%8E%B6&currency_code=USD&amount=7"
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    style={{ color: '#4CAF50', textDecoration: 'none', fontWeight: 'bold' }}
+                  >
+                    💚 Donate $7
                   </a>
                 </div>
       </div>
