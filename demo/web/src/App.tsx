@@ -149,72 +149,120 @@ export default function App() {
 
   // Connect to zero-config P2P network
   useEffect(() => {
-    const connectToP2P = async () => {
-      addLog('Starting zero-config peer discovery...', 'info');
-      setStatus('Starting peer discovery...');
+    // Initialize KeyLink P2P
+    const initKeyLink = async () => {
+      try {
+        // Initialize alias resolver
+        const resolver = new KeyLinkAliasResolver();
+        await resolver.initialize();
+        console.log('Alias resolver initialized successfully');
 
-      // Disconnect previous client if it exists
+        // Initialize KeyLink P2P client
+        kl.current = new KeyLinkP2P({
+          port: 20801,
+          multicastAddress: '239.255.0.1',
+          multicastPort: 7474
+        });
+
+        // Connect to KeyLink P2P
+        if (kl.current) {
+          await kl.current.connect();
+          
+          // Set up event listeners
+          kl.current.on('connected', (data: any) => {
+            console.log('Connected to peer:', data);
+            setStatus('Connected to peer');
+          });
+
+          kl.current.on('disconnected', () => {
+            console.log('Disconnected from peer');
+            setStatus('Disconnected');
+          });
+
+          kl.current.on('message', (data: any) => {
+            console.log('Received message:', data);
+            handleKeyLinkMessage(data);
+          });
+        }
+
+        // Set up service worker communication
+        if ('serviceWorker' in navigator) {
+          navigator.serviceWorker.addEventListener('message', (event) => {
+            const { type, data, channel, peerId } = event.data;
+            
+            switch (type) {
+              case 'peer-connected':
+                console.log(`Service Worker: Peer connected via ${channel}`, peerId);
+                setStatus(`Connected to peer ${peerId}`);
+                break;
+              case 'peer-disconnected':
+                console.log(`Service Worker: Peer disconnected from ${channel}`);
+                setStatus('Disconnected');
+                break;
+              case 'peer-message':
+                console.log('Service Worker: Received message:', data);
+                handleKeyLinkMessage(data);
+                break;
+            }
+          });
+
+          // Start service worker discovery
+          navigator.serviceWorker.ready.then((registration) => {
+            registration.active?.postMessage({ type: 'start-discovery' });
+          });
+        }
+
+      } catch (error) {
+        console.error('Failed to initialize KeyLink:', error);
+        setStatus('Failed to connect');
+      }
+    };
+
+    initKeyLink();
+
+    // Cleanup
+    return () => {
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.ready.then((registration) => {
+          registration.active?.postMessage({ type: 'stop-discovery' });
+        });
+      }
       if (kl.current) {
         kl.current.disconnect();
       }
-
-      // Create new P2P client
-      kl.current = new KeyLinkP2P({
-        port: 20801,
-        discoveryInterval: 5000,
-        enableUdp: true
-      });
-
-      // Set up event listeners
-      kl.current.on('status', (s: string) => setStatus(s));
-      kl.current.on('open', () => {
-        addLog('Connected to P2P network', 'info');
-        setStatus('Connected to P2P network');
-      });
-
-      kl.current.on('close', () => {
-        addLog('Disconnected from P2P network', 'info');
-        setStatus('Disconnected');
-      });
-
-      kl.current.on('error', (error) => {
-        addLog(`P2P connection error: ${error}`, 'error');
-        setStatus('Connection error');
-      });
-
-      kl.current.on('state', (state: any) => {
-        if (!keylinkOnRef.current) return;
-        setRoot(state.key);
-        setMode(state.mode);
-        setTempo(state.tempo || 120);
-        setChordLinkOn(state.chordEnabled);
-        setChordRoot(state.chord.root);
-        setChordType(state.chord.type);
-        addLog('← Received: ' + JSON.stringify(state), 'received');
-      });
-
-      // Start connection
-      await kl.current.connect();
-    };
-
-    connectToP2P();
-
-    return () => {
-      kl.current?.disconnect();
     };
   }, []);
 
-  // Send state on relevant changes
-  useEffect(() => {
-    if (!kl.current || !kl.current.isConnected()) return;
-    if (!keylinkOn) return; // Only send if enabled
-    if (!hasUserInteracted) return; // Only send after user has manually changed something
-    
-    const state = { key: root, mode, tempo, chordEnabled: chordLinkOn, chord: { root: chordRoot, type: chordType }};
-    kl.current.setState(state);
-    addLog('→ Sent: ' + JSON.stringify(state), 'sent');
-    // eslint-disable-next-line
-  }, [root, mode, tempo, chordLinkOn, chordRoot, chordType, keylinkOn, hasUserInteracted]);
+  const handleKeyLinkMessage = (data: any) => {
+    if (data.type === 'set-state' || data.type === 'keylink-state') {
+      setKeylinkOn(data.enabled);
+    } else if (data.type === 'set-chord') {
+      setChordRoot(data.chord.root);
+      setChordType(data.chord.type);
+      setChordLinkOn(data.chordEnabled);
+    } else if (data.type === 'toggle-chordlink') {
+      setChordLinkOn(data.enabled);
+    } else if (data.type === 'toggle-keylink') {
+      setKeylinkOn(data.enabled);
+    }
+  };
+
+  const sendKeyLinkMessage = (message: any) => {
+    // Send via main P2P connection
+    if (kl.current) {
+      kl.current.setState(message);
+    }
+
+    // Also send via service worker
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.ready.then((registration) => {
+        registration.active?.postMessage({
+          type: 'send-message',
+          data: message
+        });
+      });
+    }
+  };
 
   // UI event handlers
   const handleKeylinkToggle = () => { 

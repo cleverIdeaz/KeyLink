@@ -119,8 +119,8 @@ export default function App() {
       // Create new P2P client
       kl.current = new KeyLinkP2P({
         port: 20801,
-        discoveryInterval: 5000,
-        enableUdp: true
+        multicastAddress: '239.255.0.1',
+        multicastPort: 7474
       });
 
       // Set up event listeners
@@ -135,7 +135,7 @@ export default function App() {
         setStatus('Disconnected');
       });
 
-      kl.current.on('error', (error) => {
+      kl.current.on('error', (error: any) => {
         addLog(`P2P connection error: ${error}`, 'error');
         setStatus('Connection error');
       });

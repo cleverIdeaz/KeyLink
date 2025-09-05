@@ -2,141 +2,65 @@
 // True LAN peer-to-peer without cloud dependencies
 // Usage: import { KeyLinkP2P } from './keylink-zero-config-sdk';
 
-export type KeyLinkState = {
-  enabled: boolean;
-  key: string;
-  mode: string;
-  tempo: number;
-  chordEnabled: boolean;
-  chord: { root: string; type: string };
-};
+interface KeyLinkP2POptions {
+  port?: number;
+  multicastAddress?: string;
+  multicastPort?: number;
+}
 
-type Event = 'open' | 'close' | 'error' | 'status' | 'state' | 'peer-connected' | 'peer-disconnected';
-type Listener = (...args: any[]) => void;
-
-interface Peer {
-  id: string;
-  connection: RTCPeerConnection;
-  dataChannel: RTCDataChannel;
-  ip: string;
+export interface KeyLinkState {
+  enabled?: boolean;
+  chordEnabled?: boolean;
+  chord?: { root: string; type: string };
+  [key: string]: any;
 }
 
 export class KeyLinkP2P {
-  private peers = new Map<string, Peer>();
-  private listeners: { [key: string]: Listener[] } = {};
+  private opts: KeyLinkP2POptions;
+  private peers: Map<string, RTCPeerConnection> = new Map();
+  private dataChannels: Map<string, RTCDataChannel> = new Map();
+  private signalingChannel?: RTCDataChannel;
+  private localPeerId: string;
+  private _isConnected = false;
+  private eventListeners: Map<string, Function[]> = new Map();
   private state: Partial<KeyLinkState> = {};
-  private discoveryInterval: NodeJS.Timeout | null = null;
-  private isDiscovering = false;
-  private localId = this.generateId();
 
-  constructor(public opts: { 
-    port?: number;
-    discoveryInterval?: number;
-    enableUdp?: boolean;
-  } = {}) {
-    this.opts.port = this.opts.port || 20801;
-    this.opts.discoveryInterval = this.opts.discoveryInterval || 5000;
-    this.opts.enableUdp = this.opts.enableUdp !== false;
+  constructor(opts: KeyLinkP2POptions = {}) {
+    this.opts = {
+      port: 20801,
+      multicastAddress: '239.255.0.1',
+      multicastPort: 7474,
+      ...opts
+    };
+    this.localPeerId = this.generatePeerId();
   }
 
-  async connect() {
-    this.emit('status', 'Starting peer discovery...');
+  private generatePeerId(): string {
+    return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+  }
+
+  async connect(): Promise<void> {
+    console.log('Starting zero-config peer discovery...');
     
-    // Start automatic peer discovery
-    this.startDiscovery();
-    
-    // Also try to start a local relay server if possible
-    if (this.opts.enableUdp) {
-      this.startLocalRelay();
-    }
-  }
+    // First try to find existing relay servers
+    const localIPs = await this.getLocalNetworkIPs();
+    let relayFound = false;
 
-  disconnect() {
-    this.stopDiscovery();
-    
-    // Close all peer connections
-    Array.from(this.peers.values()).forEach(peer => {
-      peer.connection.close();
-    });
-    this.peers.clear();
-    
-    this.emit('close');
-    this.emit('status', 'Disconnected');
-  }
-
-  isConnected(): boolean {
-    return this.peers.size > 0;
-  }
-
-  on(event: Event, fn: Listener) {
-    if (!this.listeners[event]) {
-      this.listeners[event] = [];
-    }
-    this.listeners[event].push(fn);
-  }
-
-  setState(state: Partial<KeyLinkState>) {
-    this.state = { ...this.state, ...state };
-    this.broadcast({ type: 'set-state', state: this.state });
-  }
-
-  setChord(chord: { root: string; type: string }) {
-    this.state.chord = chord;
-    this.broadcast({ type: 'set-chord', chord });
-  }
-
-  toggleChordLink(enabled: boolean) {
-    this.state.chordEnabled = enabled;
-    this.broadcast({ type: 'toggle-chordlink', enabled });
-  }
-
-  toggleKeyLink(enabled: boolean) {
-    this.state.enabled = enabled;
-    this.broadcast({ type: 'toggle-keylink', enabled });
-  }
-
-  private emit(event: Event, ...args: any[]) {
-    const eventListeners = this.listeners[event];
-    if (eventListeners) {
-      eventListeners.forEach(fn => fn(...args));
-    }
-  }
-
-  private generateId(): string {
-    return Math.random().toString(36).substr(2, 9);
-  }
-
-  private async startDiscovery() {
-    if (this.isDiscovering) return;
-    this.isDiscovering = true;
-
-    // Initial discovery
-    await this.discoverPeers();
-
-    // Periodic discovery
-    this.discoveryInterval = setInterval(async () => {
-      await this.discoverPeers();
-    }, this.opts.discoveryInterval!);
-  }
-
-  private stopDiscovery() {
-    this.isDiscovering = false;
-    if (this.discoveryInterval) {
-      clearInterval(this.discoveryInterval);
-      this.discoveryInterval = null;
-    }
-  }
-
-  private async discoverPeers() {
-    try {
-      // Get local network IPs
-      const localIPs = await this.getLocalNetworkIPs();
-      
-      for (const ip of localIPs) {
-        await this.tryConnectToPeer(ip);
+    for (const ip of localIPs) {
+      try {
+        const connected = await this.tryConnectToRelay(ip);
+        if (connected) {
+          relayFound = true;
+          break;
+        }
+      } catch (error) {
+        console.log(`No relay found at ${ip}`);
       }
-    } catch (error) {
-      console.log('Discovery error:', error);
+    }
+
+    // If no relay found, start WebRTC peer discovery
+    if (!relayFound) {
+      await this.startWebRTCDiscovery();
     }
   }
 
@@ -202,109 +126,362 @@ export class KeyLinkP2P {
     }
   }
 
-  private async tryConnectToPeer(ip: string) {
-    try {
-      // Try WebSocket connection first (for relay servers)
-      const ws = new WebSocket(`ws://${ip}:${this.opts.port}`);
-      
-      await new Promise((resolve, reject) => {
-        const timeout = setTimeout(() => {
-          ws.close();
-          reject(new Error('Timeout'));
-        }, 1000);
+  private async tryConnectToRelay(ip: string): Promise<boolean> {
+    return new Promise((resolve) => {
+      const timeout = setTimeout(() => {
+        resolve(false);
+      }, 1000);
 
+      try {
+        // Try secure WebSocket first (for HTTPS compatibility)
+        const ws = new WebSocket(`wss://${ip}:${this.opts.port}`);
+        
         ws.onopen = () => {
           clearTimeout(timeout);
-          ws.close();
-          this.connectToRelayServer(ip);
+          console.log(`Connected to relay at ${ip}`);
+          this.setupRelayConnection(ws);
           resolve(true);
         };
 
         ws.onerror = () => {
-          clearTimeout(timeout);
-          reject(new Error('Connection failed'));
+          // Fallback to HTTP health check
+          this.checkRelayHealth(ip).then(healthy => {
+            clearTimeout(timeout);
+            if (healthy) {
+              console.log(`Found relay at ${ip} via health check`);
+              resolve(true);
+            } else {
+              resolve(false);
+            }
+          });
         };
-      });
-    } catch (error) {
-      // Not a relay server, try direct WebRTC
-      await this.tryDirectWebRTC(ip);
-    }
-  }
-
-  private async connectToRelayServer(ip: string) {
-    const ws = new WebSocket(`ws://${ip}:${this.opts.port}`);
-    
-    ws.onopen = () => {
-      this.emit('status', `Connected to relay at ${ip}`);
-      this.emit('open');
-    };
-
-    ws.onmessage = (event) => {
-      this.handleMessage(event.data);
-    };
-
-    ws.onclose = () => {
-      this.emit('status', `Disconnected from relay at ${ip}`);
-    };
-
-    ws.onerror = (error) => {
-      this.emit('error', error);
-    };
-  }
-
-  private async tryDirectWebRTC(ip: string) {
-    // For direct peer-to-peer, we'd need signaling
-    // This is a simplified version - in practice you'd need a signaling server
-    // or use a different approach like mDNS
-    console.log(`Would try direct WebRTC to ${ip}`);
-  }
-
-  private async startLocalRelay() {
-    // Note: Local relay server startup is not available in browser environment
-    // Users can manually start the relay server using: node relay/relay-zero-config.js
-    console.log('Local relay server startup not available in browser environment');
-  }
-
-  private handleMessage(data: any) {
-    try {
-      const msg = typeof data === 'string' ? JSON.parse(data) : data;
-      
-      if (msg.type === 'keylink-state' || msg.type === 'set-state') {
-        this.state = msg.state;
-        this.emit('state', this.state);
-      }
-    } catch (err) {
-      this.emit('error', 'Failed to parse message:', err);
-      console.error('[KeyLink P2P] Failed to parse message:', err);
-    }
-  }
-
-  private broadcast(msg: any) {
-    const message = JSON.stringify(msg);
-    
-    // Send to all connected peers
-    Array.from(this.peers.values()).forEach(peer => {
-      if (peer.dataChannel.readyState === 'open') {
-        peer.dataChannel.send(message);
+      } catch (error) {
+        clearTimeout(timeout);
+        resolve(false);
       }
     });
   }
 
-  // Public API methods
-  getPeers() {
-    return Array.from(this.peers.keys());
+  private async checkRelayHealth(ip: string): Promise<boolean> {
+    try {
+      const response = await fetch(`https://${ip}:${this.opts.port}/health`, {
+        method: 'GET',
+        mode: 'no-cors',
+        cache: 'no-cache'
+      });
+      return true;
+    } catch (error) {
+      return false;
+    }
   }
 
-  getPeerCount() {
-    return this.peers.size;
+  private setupRelayConnection(ws: WebSocket): void {
+    ws.onmessage = (event) => {
+      try {
+        const data = JSON.parse(event.data);
+        this.handleMessage(data);
+      } catch (error) {
+        console.error('Error parsing relay message:', error);
+      }
+    };
+
+          ws.onclose = () => {
+        console.log('Relay connection closed');
+        this._isConnected = false;
+      };
+  }
+
+  private async startWebRTCDiscovery(): Promise<void> {
+    console.log('Starting WebRTC peer discovery...');
+    
+    // Create a signaling peer connection for discovery
+    const signalingPC = new RTCPeerConnection({
+      iceServers: [
+        { urls: 'stun:stun.l.google.com:19302' },
+        { urls: 'stun:stun1.l.google.com:19302' }
+      ]
+    });
+
+    // Create data channel for signaling
+    this.signalingChannel = signalingPC.createDataChannel('keylink-signaling', {
+      ordered: true
+    });
+
+    this.signalingChannel.onopen = () => {
+      console.log('Signaling channel opened');
+      this.broadcastDiscovery();
+    };
+
+    this.signalingChannel.onmessage = (event) => {
+      this.handleSignalingMessage(event.data);
+    };
+
+    // Start listening for other peers
+    signalingPC.ondatachannel = (event) => {
+      const channel = event.channel;
+      if (channel.label === 'keylink-signaling') {
+        channel.onmessage = (event) => {
+          this.handleSignalingMessage(event.data);
+        };
+      } else if (channel.label === 'keylink-data') {
+        this.setupDataChannel(channel);
+      }
+    };
+
+    // Create offer for discovery
+    const offer = await signalingPC.createOffer();
+    await signalingPC.setLocalDescription(offer);
+
+    // Store the signaling connection
+    this.peers.set('signaling', signalingPC);
+  }
+
+  private broadcastDiscovery(): void {
+    if (this.signalingChannel?.readyState === 'open') {
+      const discoveryMessage = {
+        type: 'discovery',
+        peerId: this.localPeerId,
+        timestamp: Date.now()
+      };
+      this.signalingChannel.send(JSON.stringify(discoveryMessage));
+    }
+  }
+
+  private async handleSignalingMessage(data: any): Promise<void> {
+    try {
+      const message = typeof data === 'string' ? JSON.parse(data) : data;
+      
+      switch (message.type) {
+        case 'discovery':
+          await this.handleDiscovery(message);
+          break;
+        case 'offer':
+          await this.handleOffer(message);
+          break;
+        case 'answer':
+          await this.handleAnswer(message);
+          break;
+        case 'ice-candidate':
+          await this.handleICECandidate(message);
+          break;
+      }
+    } catch (error) {
+      console.error('Error handling signaling message:', error);
+    }
+  }
+
+  private async handleDiscovery(message: any): Promise<void> {
+    if (message.peerId === this.localPeerId) return;
+
+    console.log(`Discovered peer: ${message.peerId}`);
+    
+    // Create peer connection
+    const peerPC = new RTCPeerConnection({
+      iceServers: [
+        { urls: 'stun:stun.l.google.com:19302' },
+        { urls: 'stun:stun1.l.google.com:19302' }
+      ]
+    });
+
+    // Create data channel
+    const dataChannel = peerPC.createDataChannel('keylink-data', {
+      ordered: true
+    });
+
+    this.setupDataChannel(dataChannel);
+
+    // Store peer connection
+    this.peers.set(message.peerId, peerPC);
+    this.dataChannels.set(message.peerId, dataChannel);
+
+    // Create and send offer
+    const offer = await peerPC.createOffer();
+    await peerPC.setLocalDescription(offer);
+
+    const offerMessage = {
+      type: 'offer',
+      peerId: this.localPeerId,
+      targetPeerId: message.peerId,
+      offer: offer
+    };
+
+    if (this.signalingChannel?.readyState === 'open') {
+      this.signalingChannel.send(JSON.stringify(offerMessage));
+    }
+  }
+
+  private async handleOffer(message: any): Promise<void> {
+    if (message.targetPeerId !== this.localPeerId) return;
+
+    console.log(`Received offer from ${message.peerId}`);
+
+    const peerPC = new RTCPeerConnection({
+      iceServers: [
+        { urls: 'stun:stun.l.google.com:19302' },
+        { urls: 'stun:stun1.l.google.com:19302' }
+      ]
+    });
+
+    // Handle incoming data channel
+    peerPC.ondatachannel = (event) => {
+      if (event.channel.label === 'keylink-data') {
+        this.setupDataChannel(event.channel);
+        this.dataChannels.set(message.peerId, event.channel);
+      }
+    };
+
+    // Store peer connection
+    this.peers.set(message.peerId, peerPC);
+
+    // Set remote description
+    await peerPC.setRemoteDescription(new RTCSessionDescription(message.offer));
+
+    // Create and send answer
+    const answer = await peerPC.createAnswer();
+    await peerPC.setLocalDescription(answer);
+
+    const answerMessage = {
+      type: 'answer',
+      peerId: this.localPeerId,
+      targetPeerId: message.peerId,
+      answer: answer
+    };
+
+    if (this.signalingChannel?.readyState === 'open') {
+      this.signalingChannel.send(JSON.stringify(answerMessage));
+    }
+  }
+
+  private async handleAnswer(message: any): Promise<void> {
+    if (message.targetPeerId !== this.localPeerId) return;
+
+    console.log(`Received answer from ${message.peerId}`);
+
+    const peerPC = this.peers.get(message.peerId);
+    if (peerPC) {
+      await peerPC.setRemoteDescription(new RTCSessionDescription(message.answer));
+    }
+  }
+
+  private async handleICECandidate(message: any): Promise<void> {
+    if (message.targetPeerId !== this.localPeerId) return;
+
+    const peerPC = this.peers.get(message.peerId);
+    if (peerPC) {
+      await peerPC.addIceCandidate(new RTCIceCandidate(message.candidate));
+    }
+  }
+
+  private setupDataChannel(channel: RTCDataChannel): void {
+    channel.onopen = () => {
+      console.log(`Data channel opened: ${channel.label}`);
+      this._isConnected = true;
+      this.emit('connected', { channel: channel.label });
+    };
+
+    channel.onmessage = (event) => {
+      try {
+        const data = JSON.parse(event.data);
+        this.handleMessage(data);
+      } catch (error) {
+        console.error('Error parsing data channel message:', error);
+      }
+    };
+
+    channel.onclose = () => {
+      console.log(`Data channel closed: ${channel.label}`);
+      this._isConnected = false;
+      this.emit('disconnected', { channel: channel.label });
+    };
+  }
+
+  private handleMessage(data: any): void {
+    // Emit the message to listeners
+    this.emit('message', data);
+  }
+
+  private emit(event: string, ...args: any[]): void {
+    const listeners = this.eventListeners.get(event);
+    if (listeners) {
+      listeners.forEach(listener => listener(...args));
+    }
+  }
+
+  on(event: string, listener: Function): void {
+    if (!this.eventListeners.has(event)) {
+      this.eventListeners.set(event, []);
+    }
+    this.eventListeners.get(event)!.push(listener);
+  }
+
+  off(event: string, listener: Function): void {
+    const listeners = this.eventListeners.get(event);
+    if (listeners) {
+      const index = listeners.indexOf(listener);
+      if (index > -1) {
+        listeners.splice(index, 1);
+      }
+    }
+  }
+
+  disconnect(): void {
+    // Close all peer connections
+    this.peers.forEach(peer => peer.close());
+    this.peers.clear();
+    this.dataChannels.clear();
+    this._isConnected = false;
+    this.emit('disconnected');
+  }
+
+  setState(state: Partial<KeyLinkState>): void {
+    this.state = { ...this.state, ...state };
+    this.broadcast({ type: 'set-state', state: this.state });
+  }
+
+  setChord(chord: { root: string; type: string }): void {
+    this.state.chord = chord;
+    this.broadcast({ type: 'set-chord', chord });
+  }
+
+  toggleChordLink(enabled: boolean): void {
+    this.state.chordEnabled = enabled;
+    this.broadcast({ type: 'toggle-chordlink', enabled });
+  }
+
+  toggleKeyLink(enabled: boolean): void {
+    this.state.enabled = enabled;
+    this.broadcast({ type: 'toggle-keylink', enabled });
+  }
+
+  private broadcast(message: any): void {
+    const messageStr = JSON.stringify(message);
+    
+    // Send to all connected data channels
+    this.dataChannels.forEach(channel => {
+      if (channel.readyState === 'open') {
+        channel.send(messageStr);
+      }
+    });
   }
 
   getStatus() {
     return {
-      connected: this.isConnected(),
+      connected: this._isConnected,
       peerCount: this.getPeerCount(),
       peers: this.getPeers(),
       state: this.state
     };
+  }
+
+  isConnected(): boolean {
+    return this._isConnected;
+  }
+
+  getPeerCount(): number {
+    return this.peers.size;
+  }
+
+  getPeers(): string[] {
+    return Array.from(this.peers.keys());
   }
 } 
