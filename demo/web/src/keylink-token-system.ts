@@ -117,13 +117,13 @@ export class KeyLinkTokenSystem {
 
       const data = await response.json();
       const currentUsage = data.current_month_bill || 0;
-      const limit = 7; // $7 monthly limit
+      const limit = 7; // $7 monthly budget (not fixed cost)
       const percentage = (currentUsage / limit) * 100;
 
       return { currentUsage, limit, percentage };
     } catch (error) {
       console.error('Error fetching Fly.io usage:', error);
-      // Fallback to simulated data
+      // Fallback to simulated data - pay-as-you-go model
       return { currentUsage: 3.50, limit: 7, percentage: 50 };
     }
   }

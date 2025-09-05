@@ -1037,7 +1037,7 @@ export default function App() {
             <div style={{ marginBottom: '24px' }}>
               <div style={{ background: '#2a2a2a', padding: '16px', borderRadius: '8px', textAlign: 'center' }}>
                 <p style={{ margin: '0 0 8px 0', color: '#ccc', fontSize: '14px' }}>
-                  KeyLink currently costs <strong style={{ color: '#F5C242' }}>${flyUsage.currentUsage.toFixed(2)}/month</strong> to run on cloud servers
+                  KeyLink currently costs <strong style={{ color: '#F5C242' }}>${flyUsage.currentUsage.toFixed(2)} this month</strong> to run on cloud servers (pay-as-you-go)
                 </p>
                 <p style={{ margin: '0 0 8px 0', color: '#ccc', fontSize: '14px' }}>
                   Our goal is to make it work <strong style={{ color: '#4CAF50' }}>truly locally</strong> without cloud dependencies
