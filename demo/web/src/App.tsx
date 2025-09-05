@@ -53,6 +53,7 @@ export default function App() {
   const [showCategoryModal, setShowCategoryModal] = useState(false);
   const [keylinkOn, setKeylinkOn] = useState(true);
   const [tempo, setTempo] = useState(120);
+  const [tempoUpdateTimeout, setTempoUpdateTimeout] = useState<NodeJS.Timeout | null>(null);
   const [chordLinkOn, setChordLinkOn] = useState(true);
   const [chordRoot, setChordRoot] = useState('C');
   const [chordType, setChordType] = useState('maj');
@@ -307,7 +308,14 @@ export default function App() {
   const handleMidiData = (data: MidiData) => {
     setHasUserInteracted(true);
     if (data.tempo) {
-      setTempo(Math.round(data.tempo));
+      // Debounce tempo updates to prevent jitter
+      if (tempoUpdateTimeout) {
+        clearTimeout(tempoUpdateTimeout);
+      }
+      const timeout = setTimeout(() => {
+        setTempo(Math.round(data.tempo));
+      }, 100);
+      setTempoUpdateTimeout(timeout);
     }
     if (data.key) {
       const rootNote = data.key.charAt(0).toUpperCase() + data.key.slice(1).toLowerCase();
@@ -506,7 +514,17 @@ export default function App() {
               min="60"
               max="200"
               value={tempo}
-              onChange={(e) => { setTempo(parseInt(e.target.value)); setHasUserInteracted(true); }}
+              onChange={(e) => { 
+                const newTempo = parseInt(e.target.value);
+                if (tempoUpdateTimeout) {
+                  clearTimeout(tempoUpdateTimeout);
+                }
+                const timeout = setTimeout(() => {
+                  setTempo(newTempo);
+                  setHasUserInteracted(true);
+                }, 50);
+                setTempoUpdateTimeout(timeout);
+              }}
               style={{ width: '100px' }}
             />
             <span style={{ color: '#F5C242', fontSize: '14px', minWidth: '40px' }}>{tempo} BPM</span>

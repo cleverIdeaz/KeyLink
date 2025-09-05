@@ -9,6 +9,13 @@ class KeyLinkPresentation {
         this.currentUsage = 0;
         this.flyToken = 'fm2_lJPECAAAAAAACQ8TxBASbPzTS5DPUv+JjSDEq1VNwrVodHRwczovL2FwaS5mbHkuaW8vdjGWAJLOABE4XR8Lk7lodHRwczovL2FwaS5mbHkuaW8vYWFhL3YxxDw7RixwSLuoUGk4RxhA4DpsAN0RUzmKyFWPMYs2NaDM3VCnownMPwzF00pOXgsrJrPo/ByiccoIlOEpVbPETlE/JPxOcgj9eqHPk08fwsUNC38JawL6W643nTWEd1D06nzCodi89/h528bPWpyPlhQRHzncUMaGGUBAzRuBOWnj081ibZGk9mLjDg6VeQ2SlAORgc4Ae9vcHwWRgqdidWlsZGVyH6J3Zx8BxCBbMo1uvSb2uvDKr8Whq3eQmm3j7/P6lvFH7DiDC5ElIg==,fm2_lJPETlE/JPxOcgj9eqHPk08fwsUNC38JawL6W643nTWEd1D06nzCodi89/h528bPWpyPlhQRHzncUMaGGUBAzRuBOWnj081ibZGk9mLjDg6VecQQ+aLpWRqyjPjRRF4xe7yw8sO5aHR0cHM6Ly9hcGkuZmx5LmlvL2FhYS92MZgEks5oum9Dzmjh/GEXzgAQjT8Kkc4AEI0/DMQQNbS5MOmkqh+ii+f+Jk1cV8QgVnLlT7COaakFYf13o5eGFyEndYGFpnfJNPOJ3cxFNMg=';
         
+        // Multiplayer features
+        this.participants = new Map();
+        this.participantCount = 0;
+        this.cursorContainer = null;
+        this.donationPromptTimer = null;
+        this.usageCheckInterval = null;
+        
         this.init();
     }
     
@@ -17,8 +24,10 @@ class KeyLinkPresentation {
         this.updateProgress();
         this.createSlideIndicators();
         this.setupCircleOfFifths();
+        this.setupMultiplayerFeatures();
         this.checkFlyUsage();
         this.loadDonationData();
+        this.startUsageMonitoring();
     }
     
     setupEventListeners() {
@@ -451,6 +460,177 @@ class KeyLinkPresentation {
             lastUpdated: new Date().toISOString()
         };
         localStorage.setItem('keylinkDonations', JSON.stringify(data));
+    }
+    
+    // Multiplayer Features
+    setupMultiplayerFeatures() {
+        // Create cursor container
+        this.cursorContainer = document.createElement('div');
+        this.cursorContainer.id = 'cursor-container';
+        this.cursorContainer.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1000;
+        `;
+        document.body.appendChild(this.cursorContainer);
+        
+        // Create participant counter
+        this.participantCounter = document.createElement('div');
+        this.participantCounter.id = 'participant-counter';
+        this.participantCounter.style.cssText = `
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            color: #F5C242;
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            z-index: 1001;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        `;
+        document.body.appendChild(this.participantCounter);
+        
+        // Simulate participants for demo
+        this.simulateParticipants();
+    }
+    
+    simulateParticipants() {
+        // Simulate 3-8 participants for demo
+        const participantCount = Math.floor(Math.random() * 6) + 3;
+        
+        for (let i = 0; i < participantCount; i++) {
+            this.addParticipant(`user_${i}`, {
+                name: `Musician ${i + 1}`,
+                color: this.getRandomColor(),
+                lastActivity: Date.now()
+            });
+        }
+        
+        this.updateParticipantCounter();
+        this.animateCursors();
+    }
+    
+    addParticipant(id, data) {
+        this.participants.set(id, {
+            ...data,
+            cursor: this.createCursor(id, data.color),
+            lastMove: Date.now()
+        });
+        this.participantCount = this.participants.size;
+    }
+    
+    createCursor(id, color) {
+        const cursor = document.createElement('div');
+        cursor.className = 'participant-cursor';
+        cursor.style.cssText = `
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: ${color};
+            border-radius: 50%;
+            border: 2px solid white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            opacity: 0.8;
+            z-index: 1000;
+        `;
+        
+        // Add name label
+        const label = document.createElement('div');
+        label.style.cssText = `
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 10px;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        `;
+        label.textContent = this.participants.get(id)?.name || 'Musician';
+        cursor.appendChild(label);
+        
+        this.cursorContainer.appendChild(cursor);
+        return cursor;
+    }
+    
+    animateCursors() {
+        this.participants.forEach((participant, id) => {
+            if (Date.now() - participant.lastMove > 30000) {
+                // Fade out after 30 seconds of inactivity
+                participant.cursor.style.opacity = '0';
+                participant.cursor.style.transform = 'scale(0.5)';
+            } else {
+                // Random movement simulation
+                const x = Math.random() * (window.innerWidth - 20);
+                const y = Math.random() * (window.innerHeight - 20);
+                
+                participant.cursor.style.left = `${x}px`;
+                participant.cursor.style.top = `${y}px`;
+                participant.lastMove = Date.now();
+                
+                // Show name on hover
+                participant.cursor.addEventListener('mouseenter', () => {
+                    participant.cursor.querySelector('div').style.opacity = '1';
+                });
+                participant.cursor.addEventListener('mouseleave', () => {
+                    participant.cursor.querySelector('div').style.opacity = '0';
+                });
+            }
+        });
+        
+        // Continue animation
+        setTimeout(() => this.animateCursors(), 2000);
+    }
+    
+    updateParticipantCounter() {
+        const activeParticipants = Array.from(this.participants.values())
+            .filter(p => Date.now() - p.lastMove < 30000).length;
+            
+        this.participantCounter.innerHTML = `
+            <i class="fas fa-users"></i>
+            <span>${activeParticipants} active</span>
+        `;
+    }
+    
+    getRandomColor() {
+        const colors = ['#F5C242', '#4CAF50', '#2196F3', '#9C27B0', '#FF5722', '#00BCD4', '#FF9800'];
+        return colors[Math.floor(Math.random() * colors.length)];
+    }
+    
+    startUsageMonitoring() {
+        // Check usage every 5 minutes
+        this.usageCheckInterval = setInterval(() => {
+            this.checkFlyUsage();
+            this.updateParticipantCounter();
+            
+            // Show donation prompt if over capacity
+            if (this.currentUsage > this.usageLimit * 0.8) {
+                this.showDonationPrompt();
+            }
+        }, 300000); // 5 minutes
+    }
+    
+    showDonationPrompt() {
+        if (this.donationPromptTimer) return; // Already showing
+        
+        this.donationPromptTimer = setTimeout(() => {
+            this.showNotification('KeyLink is getting popular! Help keep it running with a donation 🎵', 5000);
+            this.openDonationModal();
+            this.donationPromptTimer = null;
+        }, 10000); // Show after 10 seconds
     }
 }
 
