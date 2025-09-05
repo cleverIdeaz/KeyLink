@@ -3,6 +3,7 @@ import { KeyLinkP2P } from './keylink-zero-config-sdk';
 import MidiPlayer, { MidiData } from './components/MidiPlayer';
 import KeyLinkPlayground from './components/KeyLinkPlayground';
 import KeyLinkAliasResolver from './keylink-aliases';
+import { keylinkTokenSystem, KeyLinkToken } from './keylink-token-system';
 
 // KeyLink Zero-Config P2P Demo UI v3
 // True LAN peer-to-peer without cloud dependencies
@@ -70,6 +71,10 @@ export default function App() {
   // Add Max patch download state
   const [showMaxDownload, setShowMaxDownload] = useState(false);
   const [showDonationModal, setShowDonationModal] = useState(false);
+  const [showTokenModal, setShowTokenModal] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [, setDeveloperTokens] = useState<KeyLinkToken[]>([]);
+  const [flyUsage, setFlyUsage] = useState({ currentUsage: 0, limit: 7, percentage: 0 });
 
 
   const [abletonLinkEnabled, setAbletonLinkEnabled] = useState(false);
@@ -272,6 +277,15 @@ export default function App() {
   React.useEffect(() => {
     // This ensures the function is considered "used" by ESLint
     sendKeyLinkMessage({ type: 'init' });
+  }, []);
+
+  // Load Fly.io usage data
+  React.useEffect(() => {
+    const loadFlyUsage = async () => {
+      const usage = await keylinkTokenSystem.getFlyUsage();
+      setFlyUsage(usage);
+    };
+    loadFlyUsage();
   }, []);
 
   // UI event handlers
@@ -1041,19 +1055,39 @@ export default function App() {
 
             <div style={{ marginBottom: '24px' }}>
               <h3 style={{ color: '#F5C242', fontSize: '18px', margin: '0 0 12px 0' }}>
-                🚀 Developer Tokens (Coming Soon)
+                🚀 Developer Tokens (Live!)
               </h3>
               <div style={{ background: '#2a2a2a', padding: '16px', borderRadius: '8px', marginBottom: '16px' }}>
                 <p style={{ margin: '0 0 8px 0', color: '#ccc', fontSize: '14px' }}>
                   <strong style={{ color: '#4CAF50' }}>API Tokens:</strong> For music developers integrating KeyLink
                 </p>
                 <p style={{ margin: '0 0 8px 0', color: '#ccc', fontSize: '14px' }}>
-                  <strong style={{ color: '#4CAF50' }}>Revenue Sharing:</strong> LAN splits, WAN commissions
+                  <strong style={{ color: '#4CAF50' }}>Real Usage Tracking:</strong> Connected to Fly.io infrastructure
+                </p>
+                <p style={{ margin: '0 0 8px 0', color: '#ccc', fontSize: '14px' }}>
+                  <strong style={{ color: '#4CAF50' }}>Current Usage:</strong> ${flyUsage.currentUsage.toFixed(2)} / ${flyUsage.limit} ({(flyUsage.percentage).toFixed(1)}%)
                 </p>
                 <p style={{ margin: '0', color: '#ccc', fontSize: '14px' }}>
-                  <strong style={{ color: '#4CAF50' }}>Future:</strong> Sustainable funding model
+                  <strong style={{ color: '#4CAF50' }}>Revenue Sharing:</strong> LAN splits, WAN commissions
                 </p>
               </div>
+              
+              <button
+                onClick={() => setShowTokenModal(true)}
+                style={{
+                  background: '#4CAF50',
+                  color: 'white',
+                  padding: '12px 24px',
+                  borderRadius: '8px',
+                  border: 'none',
+                  fontWeight: 'bold',
+                  fontSize: '16px',
+                  cursor: 'pointer',
+                  width: '100%'
+                }}
+              >
+                🔑 Manage Developer Tokens
+              </button>
             </div>
 
             <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', marginBottom: '16px' }}>
@@ -1106,6 +1140,129 @@ export default function App() {
                 }}
               >
                 Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Token Management Modal */}
+      {showTokenModal && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'rgba(0, 0, 0, 0.8)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 1001
+        }}>
+          <div style={{
+            background: '#1a1a1a',
+            padding: '32px',
+            borderRadius: '16px',
+            maxWidth: '600px',
+            width: '90%',
+            maxHeight: '80vh',
+            overflowY: 'auto',
+            border: '2px solid #4CAF50'
+          }}>
+            <div style={{ textAlign: 'center', marginBottom: '24px' }}>
+              <h2 style={{ margin: '0 0 8px 0', color: '#4CAF50', fontSize: '24px' }}>
+                🔑 Developer Token Management
+              </h2>
+              <p style={{ margin: '0', color: '#ccc', fontSize: '14px' }}>
+                Generate and manage API tokens for KeyLink integration
+              </p>
+            </div>
+
+            <div style={{ marginBottom: '24px' }}>
+              <h3 style={{ color: '#4CAF50', fontSize: '18px', margin: '0 0 12px 0' }}>
+                Current Infrastructure Status
+              </h3>
+              <div style={{ background: '#2a2a2a', padding: '16px', borderRadius: '8px', marginBottom: '16px' }}>
+                <p style={{ margin: '0 0 8px 0', color: '#ccc', fontSize: '14px' }}>
+                  <strong style={{ color: '#F5C242' }}>Fly.io Usage:</strong> ${flyUsage.currentUsage.toFixed(2)} / ${flyUsage.limit}
+                </p>
+                <div style={{ background: '#333', height: '8px', borderRadius: '4px', margin: '8px 0' }}>
+                  <div style={{ 
+                    background: flyUsage.percentage > 80 ? '#f55' : '#4CAF50', 
+                    height: '100%', 
+                    width: `${Math.min(flyUsage.percentage, 100)}%`, 
+                    borderRadius: '4px' 
+                  }}></div>
+                </div>
+                <p style={{ margin: '0', color: '#ccc', fontSize: '12px' }}>
+                  {flyUsage.percentage > 80 ? '⚠️ Approaching limit' : '✅ Healthy usage'}
+                </p>
+              </div>
+            </div>
+
+            <div style={{ marginBottom: '24px' }}>
+              <h3 style={{ color: '#4CAF50', fontSize: '18px', margin: '0 0 12px 0' }}>
+                Token Tiers & Pricing
+              </h3>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '12px' }}>
+                <div style={{ background: '#2a2a2a', padding: '16px', borderRadius: '8px', textAlign: 'center' }}>
+                  <h4 style={{ color: '#F5C242', margin: '0 0 8px 0' }}>Free</h4>
+                  <p style={{ color: '#ccc', fontSize: '12px', margin: '0 0 4px 0' }}>1,000 requests/month</p>
+                  <p style={{ color: '#ccc', fontSize: '12px', margin: '0 0 8px 0' }}>100MB bandwidth</p>
+                  <p style={{ color: '#4CAF50', fontSize: '16px', fontWeight: 'bold', margin: '0' }}>$0</p>
+                </div>
+                <div style={{ background: '#2a2a2a', padding: '16px', borderRadius: '8px', textAlign: 'center' }}>
+                  <h4 style={{ color: '#4CAF50', margin: '0 0 8px 0' }}>Pro</h4>
+                  <p style={{ color: '#ccc', fontSize: '12px', margin: '0 0 4px 0' }}>10,000 requests/month</p>
+                  <p style={{ color: '#ccc', fontSize: '12px', margin: '0 0 8px 0' }}>1GB bandwidth</p>
+                  <p style={{ color: '#4CAF50', fontSize: '16px', fontWeight: 'bold', margin: '0' }}>$5/month</p>
+                </div>
+                <div style={{ background: '#2a2a2a', padding: '16px', borderRadius: '8px', textAlign: 'center' }}>
+                  <h4 style={{ color: '#9C27B0', margin: '0 0 8px 0' }}>Enterprise</h4>
+                  <p style={{ color: '#ccc', fontSize: '12px', margin: '0 0 4px 0' }}>Unlimited requests</p>
+                  <p style={{ color: '#ccc', fontSize: '12px', margin: '0 0 8px 0' }}>100GB bandwidth</p>
+                  <p style={{ color: '#9C27B0', fontSize: '16px', fontWeight: 'bold', margin: '0' }}>$20/month</p>
+                </div>
+              </div>
+            </div>
+
+            <div style={{ textAlign: 'center' }}>
+              <button
+                onClick={() => setShowTokenModal(false)}
+                style={{
+                  background: 'transparent',
+                  color: '#666',
+                  border: '1px solid #555',
+                  padding: '8px 16px',
+                  borderRadius: '6px',
+                  cursor: 'pointer',
+                  fontSize: '14px',
+                  marginRight: '12px'
+                }}
+              >
+                Close
+              </button>
+              <button
+                onClick={() => {
+                  // Generate a free token for demo
+                  keylinkTokenSystem.generateToken('Demo Developer', 'demo@example.com', 'free')
+                    .then(token => {
+                      alert(`Token generated: ${token.id}\n\nThis is a demo token. In production, this would be sent to your email.`);
+                    });
+                }}
+                style={{
+                  background: '#4CAF50',
+                  color: 'white',
+                  border: 'none',
+                  padding: '8px 16px',
+                  borderRadius: '6px',
+                  cursor: 'pointer',
+                  fontSize: '14px',
+                  fontWeight: 'bold'
+                }}
+              >
+                Generate Free Token (Demo)
               </button>
             </div>
           </div>
