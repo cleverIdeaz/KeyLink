@@ -20,6 +20,7 @@ class KeyLinkPresentation {
     }
     
     init() {
+        console.log('KeyLink Presentation Initializing...');
         this.setupEventListeners();
         this.updateProgress();
         this.createSlideIndicators();
@@ -28,6 +29,7 @@ class KeyLinkPresentation {
         this.checkFlyUsage();
         this.loadDonationData();
         this.startUsageMonitoring();
+        console.log('KeyLink Presentation Ready! 🎵');
     }
     
     setupEventListeners() {
@@ -500,6 +502,9 @@ class KeyLinkPresentation {
         
         // Simulate participants for demo
         this.simulateParticipants();
+        
+        // Debug: Log that multiplayer features are loaded
+        console.log('KeyLink Multiplayer Features Loaded! 🎵');
     }
     
     simulateParticipants() {
