@@ -313,7 +313,7 @@ export default function App() {
         clearTimeout(tempoUpdateTimeout);
       }
       const timeout = setTimeout(() => {
-        setTempo(Math.round(data.tempo));
+        setTempo(Math.round(data.tempo || 120));
       }, 100);
       setTempoUpdateTimeout(timeout);
     }
