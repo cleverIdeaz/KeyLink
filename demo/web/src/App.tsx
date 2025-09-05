@@ -5,9 +5,10 @@ import KeyLinkPlayground from './components/KeyLinkPlayground';
 import KeyLinkAliasResolver from './keylink-aliases';
 import { keylinkTokenSystem } from './keylink-token-system';
 
-// KeyLink Zero-Config P2P Demo UI v3
+// KeyLink Zero-Config P2P Demo UI v4
 // True LAN peer-to-peer without cloud dependencies
 // Uses the KeyLink Zero-Config protocol
+// Version: 2024-09-05 (Cache busting enabled)
 
 // No more hardcoded URLs - everything is auto-discovered!
 
@@ -1026,61 +1027,23 @@ export default function App() {
           }}>
             <div style={{ textAlign: 'center', marginBottom: '24px' }}>
               <h2 style={{ margin: '0 0 8px 0', color: '#F5C242', fontSize: '24px' }}>
-                🎵 Support KeyLink Development
+                🎵 Support KeyLink
               </h2>
               <p style={{ margin: '0', color: '#ccc', fontSize: '14px' }}>
-                Help us keep the global music collaboration alive!
+                Help keep the music collaboration alive!
               </p>
             </div>
 
             <div style={{ marginBottom: '24px' }}>
-              <h3 style={{ color: '#F5C242', fontSize: '18px', margin: '0 0 12px 0' }}>
-                Why $7 Recommended?
-              </h3>
-              <div style={{ background: '#2a2a2a', padding: '16px', borderRadius: '8px', marginBottom: '16px' }}>
+              <div style={{ background: '#2a2a2a', padding: '16px', borderRadius: '8px', textAlign: 'center' }}>
                 <p style={{ margin: '0 0 8px 0', color: '#ccc', fontSize: '14px' }}>
-                  <strong style={{ color: '#F5C242' }}>Fly.io Infrastructure:</strong> $7/month covers our global public lobby
+                  KeyLink currently costs <strong style={{ color: '#F5C242' }}>${flyUsage.currentUsage.toFixed(2)}/month</strong> to run on cloud servers
                 </p>
                 <p style={{ margin: '0 0 8px 0', color: '#ccc', fontSize: '14px' }}>
-                  <strong style={{ color: '#F5C242' }}>Last 2 months:</strong> Exactly $7 each month
+                  Our goal is to make it work <strong style={{ color: '#4CAF50' }}>truly locally</strong> without cloud dependencies
                 </p>
                 <p style={{ margin: '0', color: '#ccc', fontSize: '14px' }}>
-                  <strong style={{ color: '#F5C242' }}>Goal:</strong> Keep KeyLink free for everyone
-                </p>
-              </div>
-            </div>
-
-            <div style={{ marginBottom: '24px' }}>
-              <h3 style={{ color: '#F5C242', fontSize: '18px', margin: '0 0 12px 0' }}>
-                🚀 API Tokens (Coming Soon)
-              </h3>
-              <div style={{ background: '#2a2a2a', padding: '16px', borderRadius: '8px', marginBottom: '16px' }}>
-                <p style={{ margin: '0 0 8px 0', color: '#ccc', fontSize: '14px' }}>
-                  <strong style={{ color: '#4CAF50' }}>Current Status:</strong> KeyLink is completely free to use
-                </p>
-                <p style={{ margin: '0 0 8px 0', color: '#ccc', fontSize: '14px' }}>
-                  <strong style={{ color: '#4CAF50' }}>Infrastructure Usage:</strong> ${flyUsage.currentUsage.toFixed(2)} / ${flyUsage.limit} ({(flyUsage.percentage).toFixed(1)}%)
-                </p>
-                <p style={{ margin: '0 0 8px 0', color: '#ccc', fontSize: '14px' }}>
-                  <strong style={{ color: '#4CAF50' }}>Future API Tokens:</strong> For advanced developer features
-                </p>
-                <p style={{ margin: '0', color: '#ccc', fontSize: '14px' }}>
-                  <strong style={{ color: '#4CAF50' }}>Revenue Sharing:</strong> LAN splits, WAN commissions (planned)
-                </p>
-              </div>
-              
-              <div style={{ 
-                background: '#333', 
-                padding: '12px', 
-                borderRadius: '8px', 
-                textAlign: 'center',
-                border: '1px solid #555'
-              }}>
-                <p style={{ margin: '0', color: '#F5C242', fontSize: '14px', fontWeight: 'bold' }}>
-                  🎵 KeyLink is FREE for everyone!
-                </p>
-                <p style={{ margin: '4px 0 0 0', color: '#ccc', fontSize: '12px' }}>
-                  No API keys needed - just start using it
+                  For now, your donation helps keep it free for everyone! 🎵
                 </p>
               </div>
             </div>

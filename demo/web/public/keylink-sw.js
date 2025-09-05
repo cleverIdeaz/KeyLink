@@ -2,7 +2,7 @@
 // Handles background peer discovery and caching
 
 const KEYLINK_PORT = 20801;
-const CACHE_NAME = 'keylink-v1';
+const CACHE_NAME = 'keylink-v' + Date.now();
 
 // Install event - cache essential resources
 self.addEventListener('install', (event) => {
