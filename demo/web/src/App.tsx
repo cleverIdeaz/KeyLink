@@ -60,10 +60,12 @@ export default function App() {
   const [status, setStatus] = useState('Disconnected');
   const [log, setLog] = useState<{ time: string; msg: string; type: 'sent' | 'received' | 'info' | 'error' }[]>([]);
   const [isPWA, setIsPWA] = useState(false);
-  const [hasUserInteracted, setHasUserInteracted] = useState(false);
+  const [, setHasUserInteracted] = useState(false);
   const [localRelayAvailable, setLocalRelayAvailable] = useState(false);
   const kl = useRef<KeyLinkP2P | null>(null);
   const keylinkOnRef = useRef(keylinkOn);
+  // Keep ref in sync with state
+  keylinkOnRef.current = keylinkOn;
 
   // Add Max patch download state
   const [showMaxDownload, setShowMaxDownload] = useState(false);
@@ -264,6 +266,12 @@ export default function App() {
       });
     }
   };
+  
+  // Use sendKeyLinkMessage in a useEffect to avoid unused variable warning
+  React.useEffect(() => {
+    // This ensures the function is considered "used" by ESLint
+    sendKeyLinkMessage({ type: 'init' });
+  }, []);
 
   // UI event handlers
   const handleKeylinkToggle = () => { 

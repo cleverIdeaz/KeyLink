@@ -164,7 +164,7 @@ export class KeyLinkP2P {
 
   private async checkRelayHealth(ip: string): Promise<boolean> {
     try {
-      const response = await fetch(`https://${ip}:${this.opts.port}/health`, {
+      await fetch(`https://${ip}:${this.opts.port}/health`, {
         method: 'GET',
         mode: 'no-cors',
         cache: 'no-cache'
