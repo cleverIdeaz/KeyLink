@@ -72,6 +72,7 @@ export default function App() {
   // Add Max patch download state
   const [showMaxDownload, setShowMaxDownload] = useState(false);
   const [showDonationModal, setShowDonationModal] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [flyUsage, setFlyUsage] = useState({ currentUsage: 0, limit: 7, percentage: 0 });
 
 
@@ -1037,13 +1038,13 @@ export default function App() {
             <div style={{ marginBottom: '24px' }}>
               <div style={{ background: '#2a2a2a', padding: '16px', borderRadius: '8px', textAlign: 'center' }}>
                 <p style={{ margin: '0 0 8px 0', color: '#ccc', fontSize: '14px' }}>
-                  KeyLink currently costs <strong style={{ color: '#F5C242' }}>${flyUsage.currentUsage.toFixed(2)} this month</strong> to run on cloud servers (pay-as-you-go)
+                  KeyLink costs money to keep alive and running
                 </p>
                 <p style={{ margin: '0 0 8px 0', color: '#ccc', fontSize: '14px' }}>
-                  Our goal is to make it work <strong style={{ color: '#4CAF50' }}>truly locally</strong> without cloud dependencies
+                  We're working to optimize it and keep it free
                 </p>
                 <p style={{ margin: '0', color: '#ccc', fontSize: '14px' }}>
-                  For now, your donation helps keep it free for everyone! 🎵
+                  Your donation helps keep it going! 🎵
                 </p>
               </div>
             </div>
