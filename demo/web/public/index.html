@@ -31,10 +31,7 @@
     
     <!-- Force cache busting for all browsers -->
     <script>
-      // Force cache busting for all browsers
-      const version = Date.now() + '-' + Math.random().toString(36).substr(2, 9);
-      
-      // Clear all caches
+      // Clear all caches on page load
       if ('caches' in window) {
         caches.keys().then(function(names) {
           for (let name of names) {
@@ -42,17 +39,6 @@
           }
         });
       }
-      
-      // Force reload CSS
-      const link = document.createElement('link');
-      link.rel = 'stylesheet';
-      link.href = `/static/css/main.css?v=${version}`;
-      document.head.appendChild(link);
-      
-      // Force reload JS
-      const script = document.createElement('script');
-      script.src = `/static/js/main.js?v=${version}`;
-      document.head.appendChild(script);
     </script>
   </head>
   <body>
