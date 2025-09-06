@@ -58,9 +58,21 @@ export class KeyLinkP2P {
       }
     }
 
-    // If no relay found, start WebRTC peer discovery
+    // If no relay found, try cloud relay as fallback
     if (!relayFound) {
-      await this.startWebRTCDiscovery();
+      console.log('No local relay found, trying cloud relay...');
+      try {
+        const cloudConnected = await this.tryConnectToCloudRelay();
+        if (cloudConnected) {
+          console.log('Connected to cloud relay');
+        } else {
+          console.log('Cloud relay also failed, starting WebRTC discovery...');
+          await this.startWebRTCDiscovery();
+        }
+      } catch (error) {
+        console.log('Cloud relay failed, starting WebRTC discovery...');
+        await this.startWebRTCDiscovery();
+      }
     }
   }
 
@@ -189,6 +201,41 @@ export class KeyLinkP2P {
         console.log('Relay connection closed');
         this._isConnected = false;
       };
+  }
+
+  private async tryConnectToCloudRelay(): Promise<boolean> {
+    return new Promise((resolve) => {
+      const timeout = setTimeout(() => {
+        resolve(false);
+      }, 5000);
+
+      try {
+        const ws = new WebSocket('wss://keylink-relay.fly.dev/public-lobby');
+        
+        ws.onopen = () => {
+          clearTimeout(timeout);
+          console.log('Connected to cloud relay');
+          this.setupRelayConnection(ws);
+          resolve(true);
+        };
+
+        ws.onerror = () => {
+          clearTimeout(timeout);
+          console.log('Cloud relay connection failed');
+          resolve(false);
+        };
+
+        ws.onclose = () => {
+          clearTimeout(timeout);
+          console.log('Cloud relay connection closed');
+          resolve(false);
+        };
+      } catch (error) {
+        clearTimeout(timeout);
+        console.log('Cloud relay connection error:', error);
+        resolve(false);
+      }
+    });
   }
 
   private async startWebRTCDiscovery(): Promise<void> {
