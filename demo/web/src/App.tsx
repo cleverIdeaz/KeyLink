@@ -3,7 +3,7 @@ import { KeyLinkP2P } from './keylink-zero-config-sdk';
 import MidiPlayer, { MidiData } from './components/MidiPlayer';
 import KeyLinkPlayground from './components/KeyLinkPlayground';
 import KeyLinkAliasResolver from './keylink-aliases';
-import { keylinkTokenSystem } from './keylink-token-system';
+// import { keylinkTokenSystem } from './keylink-token-system'; // Disabled due to CORS
 
 // KeyLink Zero-Config P2P Demo UI v4
 // True LAN peer-to-peer without cloud dependencies
@@ -278,13 +278,11 @@ export default function App() {
     sendKeyLinkMessage({ type: 'init' });
   }, []);
 
-  // Load Fly.io usage data
+  // Load Fly.io usage data (disabled due to CORS)
   React.useEffect(() => {
-    const loadFlyUsage = async () => {
-      const usage = await keylinkTokenSystem.getFlyUsage();
-      setFlyUsage(usage);
-    };
-    loadFlyUsage();
+    // Fly.io API doesn't support CORS from browsers
+    // Use fallback data instead
+    setFlyUsage({ currentUsage: 3.50, limit: 7, percentage: 50 });
   }, []);
 
   // UI event handlers

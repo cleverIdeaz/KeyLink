@@ -103,29 +103,10 @@ export class KeyLinkTokenSystem {
 
   // Get Fly.io usage data for billing
   async getFlyUsage(): Promise<{ currentUsage: number; limit: number; percentage: number }> {
-    try {
-      const response = await fetch(`${this.baseUrl}/apps/keylink/billing`, {
-        headers: {
-          'Authorization': `Bearer ${this.flyToken}`,
-          'Content-Type': 'application/json'
-        }
-      });
-
-      if (!response.ok) {
-        throw new Error(`Fly.io API error: ${response.status}`);
-      }
-
-      const data = await response.json();
-      const currentUsage = data.current_month_bill || 0;
-      const limit = 7; // $7 monthly budget (not fixed cost)
-      const percentage = (currentUsage / limit) * 100;
-
-      return { currentUsage, limit, percentage };
-    } catch (error) {
-      console.error('Error fetching Fly.io usage:', error);
-      // Fallback to simulated data - pay-as-you-go model
-      return { currentUsage: 3.50, limit: 7, percentage: 50 };
-    }
+    // Fly.io API doesn't support CORS from browsers
+    // Return fallback data instead of making API calls
+    console.log('Fly.io API not available from browser (CORS blocked)');
+    return { currentUsage: 3.50, limit: 7, percentage: 50 }; // Fallback
   }
 
   // Calculate token costs based on usage

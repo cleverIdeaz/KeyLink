@@ -29,16 +29,30 @@
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
     <title>KeyLink Demo</title>
     
-    <!-- Force cache busting for mobile Safari -->
+    <!-- Force cache busting for all browsers -->
     <script>
-      // Force cache busting for mobile Safari
-      if (navigator.userAgent.includes('Safari') && !navigator.userAgent.includes('Chrome')) {
-        const version = Date.now();
-        const link = document.createElement('link');
-        link.rel = 'stylesheet';
-        link.href = `/static/css/main.css?v=${version}`;
-        document.head.appendChild(link);
+      // Force cache busting for all browsers
+      const version = Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+      
+      // Clear all caches
+      if ('caches' in window) {
+        caches.keys().then(function(names) {
+          for (let name of names) {
+            caches.delete(name);
+          }
+        });
       }
+      
+      // Force reload CSS
+      const link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = `/static/css/main.css?v=${version}`;
+      document.head.appendChild(link);
+      
+      // Force reload JS
+      const script = document.createElement('script');
+      script.src = `/static/js/main.js?v=${version}`;
+      document.head.appendChild(script);
     </script>
   </head>
   <body>
