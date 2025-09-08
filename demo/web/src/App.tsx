@@ -105,7 +105,7 @@ export default function App() {
 
   // Add Max patch download state
   const [showMaxDownload, setShowMaxDownload] = useState(false);
-
+  const [showDonationModal, setShowDonationModal] = useState(false);
 
   const [abletonLinkEnabled, setAbletonLinkEnabled] = useState(false);
   const [showPlayground, setShowPlayground] = useState(false);
@@ -953,7 +953,7 @@ export default function App() {
             📱 Running as installed app
           </div>
         )}
-                        <div style={{ marginTop: '12px', fontSize: '11px' }}>
+                        <div style={{ marginTop: '12px', fontSize: '11px', display: 'flex', gap: '12px', justifyContent: 'center' }}>
                   <a 
                     href="https://github.com/cleverIdeaz/KeyLink" 
                     target="_blank" 
@@ -962,6 +962,21 @@ export default function App() {
                   >
                     🐙 GitHub Repository
                   </a>
+                  <button
+                    onClick={() => setShowDonationModal(true)}
+                    style={{ 
+                      background: 'transparent', 
+                      border: 'none', 
+                      color: '#4CAF50', 
+                      textDecoration: 'none', 
+                      fontWeight: 'bold',
+                      cursor: 'pointer',
+                      fontSize: '11px',
+                      padding: 0
+                    }}
+                  >
+                    💚 Support KeyLink
+                  </button>
                 </div>
       </div>
 
@@ -972,6 +987,93 @@ export default function App() {
           </div>
         )) : <div>Log is empty.</div>}
       </div>
+
+      {/* Donation Modal */}
+      {showDonationModal && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'rgba(0, 0, 0, 0.8)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 1000
+        }}>
+          <div style={{
+            background: '#1a1a1a',
+            padding: '32px',
+            borderRadius: '16px',
+            maxWidth: '500px',
+            width: '90%',
+            maxHeight: '80vh',
+            overflowY: 'auto',
+            color: '#fff'
+          }}>
+            <h2 style={{ color: '#F5C242', marginBottom: '16px', textAlign: 'center' }}>
+              Support KeyLink Development
+            </h2>
+            <p style={{ marginBottom: '20px', textAlign: 'center', color: '#ccc' }}>
+              Help us keep the global music collaboration alive! KeyLink costs money to run for now, goal is to make it work truly locally without cloud dependencies. For now, your donation helps keep it free for everyone! 🎵
+            </p>
+            
+            <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', marginBottom: '16px' }}>
+              <a
+                href="https://www.paypal.com/donate/?business=WMLNUNEFCS62S&no_recurring=0&item_name=KeyLink+Development+Support%E2%80%94Help+us+keep+the+global+music+collaboration+alive%21+%F0%9F%8E%B6&currency_code=USD&amount=7"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  background: '#4CAF50',
+                  color: 'white',
+                  padding: '12px 24px',
+                  borderRadius: '8px',
+                  textDecoration: 'none',
+                  fontWeight: 'bold',
+                  fontSize: '16px'
+                }}
+              >
+                💚 Donate $7 (Recommended)
+              </a>
+              <a
+                href="https://www.paypal.com/donate/?business=WMLNUNEFCS62S&no_recurring=0&item_name=KeyLink+Development+Support%E2%80%94Help+us+keep+the+global+music+collaboration+alive%21+%F0%9F%8E%B6&currency_code=USD"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  background: '#333',
+                  color: '#ccc',
+                  padding: '12px 24px',
+                  borderRadius: '8px',
+                  textDecoration: 'none',
+                  fontWeight: 'bold',
+                  fontSize: '16px',
+                  border: '1px solid #555'
+                }}
+              >
+                💝 Custom Amount
+              </a>
+            </div>
+
+            <div style={{ textAlign: 'center' }}>
+              <button
+                onClick={() => setShowDonationModal(false)}
+                style={{
+                  background: 'transparent',
+                  color: '#666',
+                  border: '1px solid #555',
+                  padding: '8px 16px',
+                  borderRadius: '6px',
+                  cursor: 'pointer',
+                  fontSize: '14px'
+                }}
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 } 
